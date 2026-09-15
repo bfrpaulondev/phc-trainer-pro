@@ -12,9 +12,13 @@ Material de estudo **não oficial**. *Cegid PHC® é marca da Cegid; Brawl Stars
 
 | Recurso | Descrição |
 |---|---|
-| 🎯 **57 missões práticas (L00–L56)** | Passos exatos para executar num PHC instalado, do SQL/instalação até desenvolvimento Xbase/C# e projeto final (implementar a STARR PARK COMERCIAL) |
+| 🏢 **Empresa de treino personalizável** | 12 segmentos portugueses realistas (hotel, eletrónica, restauração, distribuição, construção, clínica, consultoria IT, indústria, oficina, agro, e-commerce, transportes) com empresa fictícia completa: nome Lda./S.A., **NIF com dígito de controlo válido**, CAE, morada, artigos com preços reais e necessidades do negócio — os textos das missões e da IA adaptam-se automaticamente |
+| 🎓 **Curso personalizado por IA** | Entrevista de 3 passos (interesses → empresa → objetivos) e a IA gera o seu plano (destaques + ordem das missões); fallback offline com plano calibrado por segmento. Preparado para os futuros módulos de Contabilidade e Vencimentos |
+| 🎠 **Circuitos interativos (carrosséis)** | Os 10 grandes fluxos do Gestão passo-a-passo em carrossel (vendas, compras, séries, transporte/AT, SAF-T, C/C, tesouraria, integração contabilística, personalização, fecho do mês) — com narração TTS e explicação da IA aplicada à sua empresa |
+| 📖 **Dicionário PHC (94 termos)** | ATCUD, SAF-T, PCMP, CEVMC, aging, CIUS-PT… explicação simples + detalhe "na prática" + botão 🧠 para o Professor aprofundar com os seus exemplos |
+| 🎯 **57 missões práticas (L00–L56)** | Passos exatos para executar num PHC instalado, do SQL/instalação até desenvolvimento Xbase/C# e projeto final (implementar a sua empresa de treino) — conceitos-chave em **carrossel** |
 | 📖 **Conceito antes da prática** | Cada missão abre com teoria: o que é, conceitos-chave e erros comuns |
-| 🎓 **Aula Guiada Brawl (IA)** | O Professor Brawleinstein explica **parágrafo a parágrafo**, como se fosse para um burro, com analogias de Brawl Stars (Gem Grab = ciclo de vendas, Heist = compras, arbusto = dado sem prova, Poder de Estrela = personalização…) — com **voz TTS pt-BR** e avanço automático |
+| 🎓 **Aula Guiada Brawl (IA)** | O Professor Brawleinstein explica **parágrafo a parágrafo**, como se fosse para um burro, com analogias de Brawl Stars (Gem Grab = vendas, Heist = compras, arbusto = dado sem prova…) aplicadas à **sua empresa de treino** — com voz TTS pt-BR e avanço automático |
 | 🧠 **Tutor IA (chat)** | Pergunte qualquer coisa sobre PHC Gestão; contexto automático da missão em que você está (OpenRouter, respostas em cache) |
 | 🎭 **Mascote 2D animado** | Einstein gamer (SVG): **pisca**, mexe a boca ao falar, "pensa" durante a IA e celebra — com dicas por aba |
 | 🏆 **9 ranks (Bronze → Lenda de Starr)** | Substituem os cinturões: missões 🧠 "de cor" + teste ≥ 80% = sobe de rank |
@@ -67,10 +71,11 @@ phc-evolution-sensei/
 ## 🧭 Como treinar
 
 1. **📜 Protocolo** — regras da arena (regra 0: conceito antes da prática).
-2. Missões **L00–L05** — ambiente: SQL Server, PHC demo, backups, acessos, Dicionário de Dados.
-3. Em cada missão: **📖 Conceito** → **🎓 Aula guiada Brawl** (opcional) → passos no PHC → **📸 provas** → ✅ Registar repetição.
-4. Da 3ª repetição em diante, **cronometre** (meta 🏁). Bateu 2×? **🧠 Sei de cor**.
-5. Rank sobe com missões 🧠 + teste ≥ 80%. GG!
+2. Aba **🏢 Empresa** — escolha o segmento (ou faça a entrevista IA) e conheça a sua empresa de treino.
+3. Missões **L00–L05** — ambiente: SQL Server, PHC demo, backups, acessos, Dicionário de Dados.
+4. Em cada missão: **📖 Conceito** (carrossel) → **🎓 Aula guiada Brawl** (opcional) → passos no PHC → **📸 provas** → ✅ Registar repetição.
+5. Da 3ª repetição em diante, **cronometre** (meta 🏁). Bateu 2×? **🧠 Sei de cor**.
+6. Rank sobe com missões 🧠 + teste ≥ 80%. GG!
 
 ## 🛣 Roadmap
 

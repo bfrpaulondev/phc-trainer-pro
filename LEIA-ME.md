@@ -10,10 +10,11 @@ Transformei o guia teórico num **sistema de prática deliberada**. São 3 fiche
 
 ## Comece agora (nesta ordem)
 
-1. Abra `phc-dojo.html` → leia a aba **📜 Protocolo** (as 8 regras do dojo).
-2. Prepare o ambiente: faça a missão **L00** (pastas, ferramentas) e **L01–L05** (SQL, instalação PHC, backups, acessos, Dicionário de Dados).
-3. Siga a aba **📌 Hoje** todos os dias: ela diz exatamente o que fazer — cartas vencidas, missões a repetir e a próxima missão nova.
-4. **Toda missão exige PROVA** (print, SQL, ficheiro ou áudio): guarde em `C:\PHC-Dojo\evidencias\L<nn>\` e registe na aba **📸 Provas**.
+1. Leia a aba **📜 Protocolo** (regras da arena).
+2. Aba **🏢 Empresa**: escolha o seu segmento de treino (hotel, eletrónica, obras, clínica… 12 opções realistas portuguesas) ou faça a **entrevista de 3 passos** e deixe a IA gerar o seu **curso personalizado**. Todas as missões e aulas passam a usar a SUA empresa.
+3. Prepare o ambiente: missões **L00–L05** (pastas, SQL, instalação PHC, backups, acessos, Dicionário de Dados).
+4. Siga a aba **📌 Hoje** todos os dias: ela diz exatamente o que fazer — cartas vencidas, missões a repetir e a próxima missão nova.
+5. **Toda missão exige PROVA** (print, SQL, ficheiro ou áudio): guarde em `C:\PHC-Dojo\evidencias\L<nn>\` e registe na aba **📸 Provas**.
 5. Em cada missão: leia o **📖 Conceito** → toque em **🎓 Aula guiada Brawl** (o Professor explica parágrafo a parágrafo, como se fosse para um burro, com voz) → execute os passos no PHC.
 6. Ao terminar: **✅ Registar repetição** — ela volta em 1, 2, 4, 7, 14, 30 e 60 dias. A partir da 3ª vez, **cronometre** (cada missão tem meta 🏁).
 7. Na 5ª repetição, se bater a meta 2× seguidas: **🧠 Sei fazer de cor e salteado**.
@@ -45,3 +46,12 @@ Boa sorte — e lembre-se: **sem prova, não aconteceu.** 🏆
 - **🎓 Aula guiada**: em cada missão (e em cada capítulo da Teoria) o Professor explica cada parágrafo aplicado à **STARR PARK COMERCIAL LTDA** com analogias de **Brawl Stars** — com avanço automático e voz.
 - **⚙️ Definições**: cole a SUA chave OpenRouter (fica só no seu navegador) ou abra uma vez o seu link pessoal `…/#aik=SUA_CHAVE`; escolha modelo de IA, voz on/off, velocidade, **modo econômico** (sem IA: só leitura do texto original), limpar cache, exportar/importar/apagar progresso. Dica: defina limite de créditos no painel OpenRouter.
 - As explicações ficam em **cache no navegador**: cada parágrafo só gasta créditos uma vez.
+
+
+## 🆕 v3.0 — Empresa real + curso personalizado + carrosséis + dicionário
+
+- **🏢 Empresa**: 12 segmentos com empresa portuguesa fictícia completa (NIF válido, CAE, artigos, necessidades). Os textos das missões, aulas da IA e chat usam-na automaticamente. Pode editar nomes/armazéns e trocar de segmento quando quiser treinar outro tipo de cliente.
+- **🎓 Curso personalizado**: a entrevista (interesses, objetivos, tempo/dia) gera destaques e ordem das missões via IA — ou use o plano padrão do segmento (sem créditos).
+- **🎠 Circuitos**: 10 fluxos essenciais em carrossel interativo (arraste ou use ◀ ▶), com 🔊 narração e 🧠 explicação da IA com a sua empresa.
+- **📖 Dicionário**: 94 termos (ATCUD, SAF-T, PCMP, CEVMC, aging, CIUS-PT, Xbase…) com procura, filtros por tema, detalhe "na prática", 🔊 voz e 🧠 Professor.
+- Conceitos de cada missão agora em **carrossel** (1 cartão por conceito).
