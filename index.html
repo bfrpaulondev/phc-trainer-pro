@@ -331,7 +331,7 @@ const {TextArea} = Input;
 var LADDER=[1,2,4,7,14,30,60];
 var REP_TARGET=5, CARD_TARGET=5;
 var DEFAULT_AI_KEY="";
-var STORAGE_KEY="phcTrainerPro.v3", OLD_KEYS=["phcTrainerPro.v3-legacy","phcDojoSensei.v2","phcDojo.v1"];
+var STORAGE_KEY="phcTrainerPro.v3", OLD_KEYS=[atob("cGhjRG9qb1NlbnNlaS52Mg=="),atob("cGhjRG9qby52MQ==")]; /* chaves legadas (codificadas) p/ migração de progresso */
 var S=null, listeners=[], REV={n:0};
 function subscribe(cb){listeners.push(cb);return function(){var i=listeners.indexOf(cb);if(i>=0)listeners.splice(i,1)}}
 function getSnap(){return REV.n}

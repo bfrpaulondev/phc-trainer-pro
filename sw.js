@@ -1,4 +1,4 @@
-/* PHC DOJO SENSEI — service worker (offline-first) */
+/* PHC Trainer Pro — service worker (offline-first) */
 var CACHE = 'phc-trainer-v5';
 var CDN = [
   'https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.production.min.js',
