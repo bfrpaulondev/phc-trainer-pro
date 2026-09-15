@@ -21,6 +21,7 @@ Transformei o guia teórico num **sistema de prática deliberada**. São 3 fiche
 ## A rotina diária (45–90 min)
 
 ```
+ 5 min → ler o 📖 Conceito da missão do dia (+ capítulo indicado na aba 📚 Teoria)
 10 min → cartas do dia (aba 🃏)
 20 min → repetições vencidas (sem ler os passos!)
 30 min → 1 missão nova no PHC instalado

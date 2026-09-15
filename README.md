@@ -13,6 +13,8 @@ Material de estudo **não oficial**, baseado em fontes públicas da Cegid PHC (H
 | Recurso | Descrição |
 |---|---|
 | 🎯 **57 missões práticas (L00–L56)** | Passos exatos para executar num PHC instalado, do SQL/instalação até desenvolvimento Xbase/C# e um projeto final de implementação |
+| 📖 **Conceito antes da prática** | Cada missão abre com um bloco de teoria: o que é, conceitos-chave e erros comuns |
+| 📚 **Aba Teoria** | O guia completo do expert (15 capítulos) embutido no app, com navegação por capítulo |
 | 🥋 **9 cinturões** | Branca → Amarela → Laranja → Verde → Azul → Roxa → Marrom → Preta → Grão-Mestre |
 | 📸 **Provas obrigatórias** | Cada missão exige evidência (print nomeado, consulta SQL, ficheiro gerado ou explicação gravada) — "sem prova, não aconteceu" |
 | 🔁 **Repetição espaçada** | Missões voltam em 1, 2, 4, 7, 14, 30 e 60 dias; metas cronometradas por missão |
@@ -64,9 +66,9 @@ phc-dojo/
 
 ## 🧭 Como treinar (resumo)
 
-1. Aba **📜 Protocolo** — leia as 8 regras do dojo.
+1. Aba **📜 Protocolo** — leia as regras do dojo (regra 0: **conceito antes da prática**).
 2. Missões **L00–L05** — prepare ambiente (pastas, SQL Server, PHC demo, backups, acessos, Dicionário de Dados).
-3. Siga a aba **📌 Hoje** diariamente: cartas vencidas → repetições → 1 missão nova → provas → explicação em voz alta.
+3. Siga a aba **📌 Hoje** diariamente: 📖 conceito → cartas vencidas → repetições → 1 missão nova → provas → explicação em voz alta.
 4. A partir da 3ª repetição, **cronometre** (cada missão tem meta). Bateu 2×? **🧠 Sei de cor**.
 5. Cinturão = missões dominadas + teste ≥ 80%.
 
