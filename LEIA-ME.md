@@ -14,7 +14,7 @@ Transformei o guia teórico num **sistema de prática deliberada**. São 3 fiche
 2. Prepare o ambiente: faça a missão **L00** (pastas, ferramentas) e **L01–L05** (SQL, instalação PHC, backups, acessos, Dicionário de Dados).
 3. Siga a aba **📌 Hoje** todos os dias: ela diz exatamente o que fazer — cartas vencidas, missões a repetir e a próxima missão nova.
 4. **Toda missão exige PROVA** (print, SQL, ficheiro ou áudio): guarde em `C:\PHC-Dojo\evidencias\L<nn>\` e registe na aba **📸 Provas**.
-5. Em cada missão: leia o **📖 Conceito** → toque em **🎓 Aula guiada ACME** (o Professor explica parágrafo a parágrafo, como se fosse para um burro, com voz) → execute os passos no PHC.
+5. Em cada missão: leia o **📖 Conceito** → toque em **🎓 Aula guiada Brawl** (o Professor explica parágrafo a parágrafo, como se fosse para um burro, com voz) → execute os passos no PHC.
 6. Ao terminar: **✅ Registar repetição** — ela volta em 1, 2, 4, 7, 14, 30 e 60 dias. A partir da 3ª vez, **cronometre** (cada missão tem meta 🏁).
 7. Na 5ª repetição, se bater a meta 2× seguidas: **🧠 Sei fazer de cor e salteado**.
 8. Cinturão só sobe com **todas** as missões do nível dominadas **+ teste ≥ 80%** (aba 📝 Testes).
