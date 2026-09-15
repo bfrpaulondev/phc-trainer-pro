@@ -1,0 +1,8 @@
+# SO / editores
+.DS_Store
+Thumbs.db
+*.swp
+*~
+# backups locais de progresso (exportações do dojo)
+phc-dojo-progresso-*.json
+phc-dojo-provas-*.csv
