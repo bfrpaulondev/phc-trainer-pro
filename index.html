@@ -429,7 +429,7 @@ var S=null, listeners=[], REV={n:0};
 function subscribe(cb){listeners.push(cb);return function(){var i=listeners.indexOf(cb);if(i>=0)listeners.splice(i,1)}}
 function getSnap(){return REV.n}
 function useStore(){useSyncExternalStore(subscribe,getSnap);return S}
-function defaultSettings(){return{aiKey:DEFAULT_AI_KEY,aiModel:"openai/gpt-4o-mini",tts:true,rate:1,economy:false,welcomePlayed:false,freeMode:false}}
+function defaultSettings(){return{aiKey:DEFAULT_AI_KEY,aiModel:"openai/gpt-4o-mini",tts:true,rate:1,economy:false,welcomePlayed:false,freeMode:false,ttsProvider:"browser",browserVoice:null,elKey:"",elVoice:"ErXwobaYiN019PkySvjV",grKey:"",grVoice:"troy",ttsFallback:true}}
 function defaultState(){return{v:2,rev:0,labs:{},cards:{},quiz:{},evid:[],streak:{last:null,n:0},settings:defaultSettings(),ai:{},ui:{lastLab:null,tab:"hoje"},company:defaultCompany(),plan:null,stats:{lessons:0,chats:0,dict:0,circ:0,explics:0},achs:{},contexto:{pais:"PT",gama:"Advanced"},profile:{nome:""},team:[],onboarded:false,daily:{d:"",reps:0,cards:0,proofs:0,lessons:0}}}
 function persist(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(S))}catch(e){}}
 function mut(fn){fn(S);REV.n++;persist();listeners.slice().forEach(function(f){try{f()}catch(e){}})}
@@ -479,33 +479,7 @@ function touchStreak(){var t=todayISO();if(S.streak.last===t)return;S.streak.n=(
 var MascotBus={mood:"idle",bubble:"",ls:[],
   set:function(k,v){this[k]=v;this.ls.slice().forEach(function(f){try{f()}catch(e){}})},
   sub:function(f){this.ls.push(f);return function(){var i=MascotBus.ls.indexOf(f);if(i>=0)MascotBus.ls.splice(i,1)}}};
-var TTS={q:[],on:false,done:null};
-function pickVoice(){try{var vs=speechSynthesis.getVoices()||[];
-  return vs.find(function(v){return /pt[-_]BR/i.test(v.lang)})||vs.find(function(v){return /^pt/i.test(v.lang)})||null}catch(e){return null}}
-function stopSpeak(){try{speechSynthesis.cancel()}catch(e){}TTS.q=[];TTS.on=false;TTS.done=null;MascotBus.set("mood","idle");MascotBus.set("bubble","")}
-function speak(text,done){
-  if(!S.settings.tts||!text){if(done)done();return}
-  stopSpeak();
-  var parts=String(text).match(/[^.!?]+[.!?]*/g)||[String(text)];
-  var chunks=[],cur="";
-  parts.forEach(function(p){if((cur+p).length>170){chunks.push(cur);cur=p}else{cur+=p}});
-  if(cur.trim())chunks.push(cur);
-  TTS.q=chunks;TTS.on=true;TTS.done=done||null;
-  MascotBus.set("mood","talk");
-  nextChunk();
-}
-function nextChunk(){
-  if(!TTS.q.length){TTS.on=false;var d=TTS.done;TTS.done=null;MascotBus.set("mood","idle");MascotBus.set("bubble","");if(d)d();return}
-  var c=TTS.q.shift().trim();
-  try{
-    var u=new SpeechSynthesisUtterance(c);
-    var v=pickVoice();if(v)u.voice=v;
-    u.lang=(v&&v.lang)||"pt-BR";u.rate=S.settings.rate||1;u.pitch=1.05;
-    u.onend=nextChunk;u.onerror=nextChunk;
-    MascotBus.set("bubble",c);
-    speechSynthesis.speak(u);
-  }catch(e){nextChunk()}
-}
+/* (motor de voz v4.1 — ver secção "Motor de voz" mais abaixo) */
 
 /* ============ IA · OpenRouter ============ */
 var PERSONA="Você é o Professor Einstein: um Albert Einstein em ilustração 2D — sereno, sábio e levemente bem-humorado — tutor de IA da plataforma profissional de formação PHC Trainer Pro, focada no módulo Gestão do ERP Cegid PHC Evolution/PHC CS Desktop. Missão: ensinar com clareza máxima. Explique todo conteúdo como para um leigo completo: frases curtas, analogias simples do quotidiano (comércio, escritório, logística, vida doméstica — NUNCA jogos), zero jargão sem explicação, aplicando SEMPRE à EMPRESA EM FOCO definida no perfil do aluno (empresa portuguesa realista, com NIF, CAE e necessidades reais). Regras: (1) Seja tecnicamente correto sobre o PHC — baseie-se no contexto fornecido; na dúvida, mande consultar o Help Center oficial e os manuais in-app. (2) Português do BRASIL, tom profissional e encorajador; humor leve, sem palhaçadas. (3) O aluno é um técnico em formação para expert: valorize precisão, boas práticas e conformidade legal/fiscal (AT). (4) Nunca invente funcionalidades, menus ou tabelas do PHC. (5) Termine explicações com '💡 Dica prática:' + uma frase aplicável.";
@@ -741,13 +715,8 @@ function SettingsDrawer(){
         <Button onClick={async function(){MascotBus.set("mood","think");try{var t=await testAI();MascotBus.set("mood","cheer");MSG.success(t.slice(0,120));if(S.settings.tts)speak(t)}catch(e){MascotBus.set("mood","idle");MSG.error(String(e.message||e))}}}>🧪 Testar ligação IA</Button>
         <Button danger onClick={function(){Modal.confirm({title:"Apagar cache de explicações da IA?",onOk:function(){mut(function(s){s.ai={}});MSG.success("Cache limpo.")}})}}>🗑 Limpar cache IA ({Object.keys(S.ai).length})</Button>
       </Space>
-      <Divider orientation="left" plain>🔊 Voz do Professor (TTS)</Divider>
-      <Space direction="vertical" style={{width:"100%"}}>
-        <Space>Ativar voz <Switch checked={S.settings.tts} onChange={function(v){mut(function(s){s.settings.tts=v});if(!v)stopSpeak()}}/></Space>
-        <span className="mut" style={{fontSize:12}}>Velocidade: {S.settings.rate}x</span>
-        <Slider min={0.6} max={1.6} step={0.1} value={S.settings.rate} onChange={function(v){mut(function(s){s.settings.rate=v})}}/>
-        <Button size="small" onClick={function(){speak("Relatividade é quando você lê um manual do PHC por uma hora, e parece um século. Ha, ha, ha!")}}>🎤 Testar voz</Button>
-      </Space>
+      <Divider orientation="left" plain>🔊 Voz do Professor</Divider>
+      <VoiceSettings/>
       <Divider orientation="left" plain>🧭 Modo de estudo</Divider>
       <Space>Missões em sequência guiada <Switch checked={!S.settings.freeMode} onChange={function(v){mut(function(s){s.settings.freeMode=!v});MSG.success(v?"Modo guiado ativo: cada missão libera a seguinte.":"Modo livre: todas as missões destrancadas.")}}/></Space>
       <p className="mut" style={{fontSize:12,margin:"6px 0 12px"}}>Guiado (recomendado): o foco é uma missão de cada vez e a trilha libera progressivamente. Livre: tudo destrancado (útil para consulta e formadores).</p>
@@ -758,7 +727,7 @@ function SettingsDrawer(){
         <Button danger onClick={function(){Modal.confirm({title:"Apagar TODO o progresso?",content:"Missões, cartas, testes e provas serão perdidos neste navegador.",okText:"Apagar tudo",okButtonProps:{danger:true},onOk:function(){S=defaultState();persist();REV.n++;listeners.slice().forEach(function(f){f()});MSG.success("Recomeço do zero. Bom treino!")}})}}>♻ Reiniciar progresso</Button>
       </Space>
       <input type="file" id="impFile2" accept=".json" style={{display:"none"}} onChange={importar}/>
-      <p className="mut" style={{fontSize:11,marginTop:16}}>PHC Trainer Pro v4.0 · PWA instalável (ícone ⊕ na barra do navegador) · funciona offline após a 1ª visita.</p>
+      <p className="mut" style={{fontSize:11,marginTop:16}}>PHC Trainer Pro v4.1 · PWA instalável (ícone ⊕ na barra do navegador) · funciona offline após a 1ª visita.</p>
     </Drawer>
   );
 }
@@ -1678,6 +1647,188 @@ function TeamPanel(){
   </Card>);
 }
 
+/* ============ v4.1 · Motor de voz: Navegador / ElevenLabs / Groq ============ */
+var TTS={on:false,done:null,audio:null,gen:0,memCache:{}};
+var VOICEIDB={db:undefined,
+  open:function(){return new Promise(function(res){
+    if(VOICEIDB.db!==undefined)return res(VOICEIDB.db||null);
+    try{var r=indexedDB.open("phcTrainerVoice",1);
+      r.onupgradeneeded=function(){try{r.result.createObjectStore("audio")}catch(e){}};
+      r.onsuccess=function(){VOICEIDB.db=r.result;res(VOICEIDB.db)};
+      r.onerror=function(){VOICEIDB.db=null;res(null)}}catch(e){VOICEIDB.db=null;res(null)}})},
+  get:async function(k){var db=await VOICEIDB.open();if(!db)return null;
+    return new Promise(function(res){try{var q=db.transaction("audio","readonly").objectStore("audio").get(k);
+      q.onsuccess=function(){res(q.result||null)};q.onerror=function(){res(null)}}catch(e){res(null)}})},
+  set:function(k,b){VOICEIDB.open().then(function(db){if(!db)return;
+    try{db.transaction("audio","readwrite").objectStore("audio").put(b,k)}catch(e){}})},
+  clear:function(){VOICEIDB.open().then(function(db){if(!db)return;
+    try{db.transaction("audio","readwrite").objectStore("audio").clear()}catch(e){}});TTS.memCache={}}};
+function chunkText(text,max){
+  var parts=String(text).match(/[^.!?]+[.!?]*/g)||[String(text)];
+  var out=[],cur="";
+  parts.forEach(function(p){if((cur+p).length>max){if(cur)out.push(cur);cur=p}else{cur+=p}});
+  if(cur.trim())out.push(cur);
+  return out.filter(function(x){return x.trim()});
+}
+function allVoices(){try{return speechSynthesis.getVoices()||[]}catch(e){return []}}
+function ptVoices(){return allVoices().filter(function(v){return /^pt/i.test(v.lang)})}
+function isNeuralName(n){return /natural|online|neural|neuronal/i.test(n)}
+function pickBrowserVoice(){
+  var vs=ptVoices();
+  if(S.settings.browserVoice){var sv=allVoices().find(function(v){return v.voiceURI===S.settings.browserVoice});if(sv)return sv}
+  return vs.find(function(v){return isNeuralName(v.name)&&/pt[-_]BR/i.test(v.lang)})
+    ||vs.find(function(v){return isNeuralName(v.name)})
+    ||vs.find(function(v){return /pt[-_]BR/i.test(v.lang)})
+    ||vs[0]||null;
+}
+function stopSpeak(){
+  TTS.gen++;TTS.on=false;TTS.done=null;
+  try{speechSynthesis.cancel()}catch(e){}
+  if(TTS.audio){try{TTS.audio.pause()}catch(e){}TTS.audio=null}
+  MascotBus.set("mood","idle");MascotBus.set("bubble","");
+}
+function endSpeak(){TTS.on=false;var d=TTS.done;TTS.done=null;MascotBus.set("mood","idle");MascotBus.set("bubble","");if(d)d()}
+function playBrowserChunk(text,gen){return new Promise(function(res){
+  try{
+    var u=new SpeechSynthesisUtterance(text);
+    var v=pickBrowserVoice();if(v)u.voice=v;
+    u.lang=(v&&v.lang)||"pt-BR";u.rate=S.settings.rate||1;u.pitch=1.02;
+    u.onend=function(){res()};u.onerror=function(){res()};
+    MascotBus.set("bubble",text);
+    speechSynthesis.speak(u);
+  }catch(e){res()}})}
+function speakBrowser(text,gen){
+  var chunks=chunkText(text,170);
+  (function next(){
+    if(gen!==TTS.gen||!TTS.on)return;
+    if(!chunks.length){endSpeak();return}
+    playBrowserChunk(chunks.shift(),gen).then(function(){if(gen===TTS.gen)setTimeout(next,70)});
+  })();
+}
+async function cloudAudioURL(prov,text){
+  var isEL=prov==="elevenlabs";
+  var key=isEL?S.settings.elKey:S.settings.grKey;
+  var voice=isEL?(S.settings.elVoice||"ErXwobaYiN019PkySvjV"):(S.settings.grVoice||"troy");
+  var h=hashStr(prov+"|"+voice+"|"+text);
+  if(TTS.memCache[h])return TTS.memCache[h];
+  var cached=await VOICEIDB.get(h);
+  if(cached){var u0=URL.createObjectURL(cached);TTS.memCache[h]=u0;return u0}
+  var r;
+  if(isEL){
+    r=await fetch("https://api.elevenlabs.io/v1/text-to-speech/"+encodeURIComponent(voice)+"?output_format=mp3_44100_128",
+      {method:"POST",headers:{"xi-api-key":key,"Content-Type":"application/json"},
+       body:JSON.stringify({text:text,model_id:"eleven_multilingual_v2",voice_settings:{stability:0.5,similarity_boost:0.75}})});
+  }else{
+    r=await fetch("https://api.groq.com/openai/v1/audio/speech",
+      {method:"POST",headers:{"Authorization":"Bearer "+key,"Content-Type":"application/json"},
+       body:JSON.stringify({model:"canopylabs/orpheus-v1-english",voice:voice,input:text,response_format:"mp3"})});
+  }
+  if(!r.ok){
+    var t="";try{t=(await r.text()).slice(0,200)}catch(e){}
+    if(r.status===401||r.status===403)throw new Error(prov+": chave inválida ("+r.status+")");
+    if(r.status===429)throw new Error(prov+": limite de uso atingido (429) — aguarde ou troque de provedor");
+    if(t.indexOf("terms acceptance")>=0)throw new Error("Groq: aceite os termos do modelo Orpheus uma vez em console.groq.com/playground e tente de novo");
+    throw new Error(prov+" HTTP "+r.status+" "+t);
+  }
+  var b=await r.blob();
+  VOICEIDB.set(h,b);
+  var u=URL.createObjectURL(b);TTS.memCache[h]=u;return u;
+}
+function playAudioURL(url,subtitle,gen){return new Promise(function(res){
+  try{
+    var a=new Audio(url);a.volume=1;TTS.audio=a;
+    MascotBus.set("bubble",subtitle);
+    a.onended=function(){if(gen===TTS.gen)TTS.audio=null;res()};
+    a.onerror=function(){res()};
+    a.play().catch(function(){res()});
+  }catch(e){res()}})}
+async function speakCloud(prov,text,gen){
+  var chunks=chunkText(text,420);
+  for(var i=0;i<chunks.length;i++){
+    if(gen!==TTS.gen||!TTS.on)return;
+    try{
+      var url=await cloudAudioURL(prov,chunks[i]);
+      if(gen!==TTS.gen||!TTS.on)return;
+      await playAudioURL(url,chunks[i],gen);
+    }catch(e){
+      if(gen!==TTS.gen||!TTS.on)return;
+      if(S.settings.ttsFallback!==false){await playBrowserChunk(chunks[i],gen)}
+      else{MascotBus.set("bubble","⚠ "+String(e.message||e));if(MSG)MSG.warning(String(e.message||e))}
+    }
+    if(gen!==TTS.gen||!TTS.on)return;
+  }
+  if(gen===TTS.gen)endSpeak();
+}
+function speak(text,done){
+  if(!S.settings.tts||!text){if(done)done();return}
+  stopSpeak();
+  var gen=TTS.gen;
+  TTS.on=true;TTS.done=done||null;
+  MascotBus.set("mood","talk");
+  var prov=S.settings.ttsProvider||"browser";
+  if(prov==="elevenlabs"&&S.settings.elKey)speakCloud("elevenlabs",String(text),gen);
+  else if(prov==="groq"&&S.settings.grKey)speakCloud("groq",String(text),gen);
+  else speakBrowser(String(text),gen);
+}
+/* ---------- UI de voz ---------- */
+var EL_VOICES=[
+["Antoni — masculina calma (recomendada p/ Professor)","ErXwobaYiN019PkySvjV"],
+["Adam — masculina grave","pNInz6obpgDQGcFmaJgB"],
+["Arnold — masculina forte","VR6AewLTigWG4xSOukaG"],
+["Sam — masculina jovem","yoZ06aMxZJJ28mfd3POQ"],
+["Josh — masculina narrativa","TxGEqnHWrfWFTfGW9XjX"],
+["Charlie — masculina britânica","IKne3meq5aSn9XLyUdCD"],
+["Rachel — feminina","21m00Tcm4TlvDq8ikWAM"],
+["Domi — feminina firme","AZnzlk1XvdvUeBnXmlld"],
+["Bella — feminina suave","EXAVITQu4vr4xnSDxMaL"],
+["Charlotte — feminina britânica","Xb7hH06UJpJdRQ0yWdEw"]];
+var GR_VOICES=[["troy (masculina)","troy"],["hannah (feminina)","hannah"],["austin (masculina)","austin"]];
+function VoiceSettings(){
+  var _f=useStore();
+  var st=S.settings;
+  var pv=ptVoices();
+  var prov=st.ttsProvider||"browser";
+  return (<Space direction="vertical" style={{width:"100%"}}>
+    <Space>Ativar voz <Switch checked={st.tts} onChange={function(v){mut(function(s){s.settings.tts=v});if(!v)stopSpeak()}}/></Space>
+    <span className="mut" style={{fontSize:12}}>Provedor de voz:</span>
+    <Select style={{width:"100%"}} value={prov} onChange={function(v){mut(function(s){s.settings.ttsProvider=v})}}
+      options={[
+        {value:"browser",label:"🖥 Navegador (grátis, offline — use Edge p/ voz neural)"},
+        {value:"elevenlabs",label:"🎙 ElevenLabs (neural pt-BR premium · chave própria)"},
+        {value:"groq",label:"⚡ Groq Orpheus (experimental · só inglês)"}]}/>
+    {prov==="browser"?<div>
+      <Alert type="info" showIcon style={{margin:"8px 0"}} message="Como ter voz humana de graça"
+        description="Abra o app no Microsoft Edge: as vozes 'Online (Natural)' da Microsoft são neurais — escolha abaixo '⭐ Microsoft Francisca Online (Natural) — Português (Brasil)' (ou Antônio). No Windows dá para instalar vozes em Definições → Hora e idioma → Fala. No Chrome, a voz Google pt-BR é a disponível (mais robótica)."/>
+      <span className="mut" style={{fontSize:12}}>Voz ({pv.length} em português detetadas):</span>
+      <Select style={{width:"100%"}} allowClear placeholder="Automática (melhor pt disponível)" value={st.browserVoice||undefined}
+        onChange={function(v){mut(function(s){s.settings.browserVoice=v||null})}}
+        options={pv.map(function(v){return {value:v.voiceURI,label:(isNeuralName(v.name)?"⭐ ":"")+v.name+" ("+v.lang+")"}})}/>
+      <span className="mut" style={{fontSize:12}}>Velocidade: {st.rate}x</span>
+      <Slider min={0.6} max={1.4} step={0.05} value={st.rate} onChange={function(v){mut(function(s){s.settings.rate=v})}}/>
+    </div>:null}
+    {prov==="elevenlabs"?<div>
+      <Alert type="info" showIcon style={{margin:"8px 0"}} message="ElevenLabs — a melhor qualidade em português"
+        description="Crie conta grátis em elevenlabs.io (10.000 caracteres/mês) e cole a chave API — fica só neste navegador. O áudio gerado fica em CACHE local: o mesmo texto nunca gasta créditos duas vezes. Alternativa sem digitar: abra o link …/#elk=SUA_CHAVE."/>
+      <Input.Password value={st.elKey||""} placeholder="chave ElevenLabs (sk_...)" onChange={function(e){mut(function(s){s.settings.elKey=e.target.value})}}/>
+      <span className="mut" style={{fontSize:12,marginTop:8,display:"block"}}>Voz (modelo multilíngue v2 — fala português com sotaque natural):</span>
+      <Select style={{width:"100%"}} value={EL_VOICES.some(function(x){return x[1]===st.elVoice})?(st.elVoice||"ErXwobaYiN019PkySvjV"):"ErXwobaYiN019PkySvjV"}
+        onChange={function(v){mut(function(s){s.settings.elVoice=v})}}
+        options={EL_VOICES.map(function(x){return {value:x[1],label:x[0]}})}/>
+    </div>:null}
+    {prov==="groq"?<div>
+      <Alert type="warning" showIcon style={{margin:"8px 0"}} message="Groq Orpheus: apenas INGLÊS e árabe"
+        description="Confirmado na documentação e em teste: o TTS atual do Groq não fala português — texto em PT sai com sotaque inglês forte. É preciso aceitar os termos do modelo uma vez em console.groq.com/playground. Para português: use Navegador (Edge) ou ElevenLabs. Chave via campo abaixo ou link …/#grk=SUA_CHAVE."/>
+      <Input.Password value={st.grKey||""} placeholder="chave Groq (gsk_...)" onChange={function(e){mut(function(s){s.settings.grKey=e.target.value})}}/>
+      <Select style={{width:"100%",marginTop:6}} value={st.grVoice||"troy"} onChange={function(v){mut(function(s){s.settings.grVoice=v})}} options={GR_VOICES.map(function(x){return {value:x[1],label:x[0]}})}/>
+    </div>:null}
+    <Space style={{marginTop:4}}>Se a voz cloud falhar, usar a do navegador <Switch size="small" checked={st.ttsFallback!==false} onChange={function(v){mut(function(s){s.settings.ttsFallback=v})}}/></Space>
+    <Space wrap style={{marginTop:4}}>
+      <Button size="small" type="primary" ghost onClick={function(){speak("Olá! Sou o Professor Einstein. Vamos transformar teoria em prática — um passo de cada vez, com evidência no final. Sem evidência, não há aprendizado!")}}>🎤 Testar voz</Button>
+      <Button size="small" onClick={function(){VOICEIDB.clear();MSG.success("Cache de áudio limpo.")}}>🗑 Limpar cache de áudio</Button>
+    </Space>
+  </Space>);
+}
+
 /* ============ App principal ============ */
 var MSG=null;
 function MsgBridge(){var api=AntApp.useApp();useEffect(function(){MSG=api.message},[]);return null}
@@ -1694,7 +1845,7 @@ function AppMain(){
       window.addEventListener("click",play,{once:true});
       window.addEventListener("keydown",play,{once:true});
     }
-    try{var vs=speechSynthesis;vs&&vs.getVoices&&vs.getVoices()}catch(e){}
+    try{speechSynthesis.getVoices();speechSynthesis.onvoiceschanged=function(){REV.n++;listeners.slice().forEach(function(f){try{f()}catch(e){}})}}catch(e){}
   },[]);
   var tabs=[
     {key:"hoje",label:"🎯 Jornada",children:<JornadaTab/>},
@@ -1725,7 +1876,7 @@ function AppMain(){
         <Tabs activeKey={S.ui.tab} onChange={gTab} items={tabs} type="card" size="middle"/>
       </Content>
       <Footer className="appFooter">
-        PHC Trainer Pro v4.0 · material educativo não oficial — Cegid PHC® é marca dos respetivos proprietários; projeto sem afiliação · teoria: docs/guia-expert-phc-gestao-evolution.md ·{" "}
+        PHC Trainer Pro v4.1 · material educativo não oficial — Cegid PHC® é marca dos respetivos proprietários; projeto sem afiliação · teoria: docs/guia-expert-phc-gestao-evolution.md ·{" "}
         <a href="https://github.com/bfrpaulondev/phc-trainer-pro" target="_blank" rel="noopener">GitHub</a> · progresso guardado neste navegador (exporte backups 💾)
       </Footer>
       <Mascot tip={TAB_HINTS[S.ui.tab]||""} onClick={openChat}/>
@@ -2020,11 +2171,17 @@ function OnboardTour(){
 /* ============ arranque ============ */
 S=loadState();
 try{
-  var _hm=(location.hash||"").match(/aik=([A-Za-z0-9_\-\.]+)/);
-  if(_hm&&_hm[1]){
-    S.settings.aiKey=_hm[1];persist();
+  var _hh=location.hash||"";var _anyKey=false;
+  var _hm=_hh.match(/aik=([A-Za-z0-9_\-\.]+)/);
+  if(_hm&&_hm[1]){S.settings.aiKey=_hm[1];_anyKey=true}
+  var _em=_hh.match(/elk=([A-Za-z0-9_\-\.]+)/);
+  if(_em&&_em[1]){S.settings.elKey=_em[1];S.settings.ttsProvider="elevenlabs";_anyKey=true}
+  var _gm=_hh.match(/grk=([A-Za-z0-9_\-\.]+)/);
+  if(_gm&&_gm[1]){S.settings.grKey=_gm[1];S.settings.ttsProvider="groq";_anyKey=true}
+  if(_anyKey){
+    persist();
     history.replaceState(null,"",location.pathname+location.search);
-    setTimeout(function(){if(MSG)MSG.success("🔑 Chave de IA guardada NESTE navegador. Link limpo — pode fechar.")},1600);
+    setTimeout(function(){if(MSG)MSG.success("🔑 Chave(s) guardada(s) NESTE navegador. O link foi limpo — pode fechar.")},1600);
   }
 }catch(e){}
 checkAchievements();
