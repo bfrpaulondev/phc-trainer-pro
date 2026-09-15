@@ -37,11 +37,12 @@ Material educativo **não oficial**, baseado em fontes públicas da Cegid PHC (H
 - Aulas guiadas e chat usam a API do [OpenRouter](https://openrouter.ai) (modelo padrão `openai/gpt-4o-mini`). Explicações ficam em **cache no navegador** — cada parágrafo só consome créditos uma vez.
 - **Modo econômico** (⚙️ Definições): desliga a IA; a aula passa a ler o texto original em voz alta.
 - 🔑 **Chave:** nenhuma chave vem no código (repositório público). Cada utilizador cola a sua em **⚙️ Definições** (fica só no `localStorage`) **ou** abre uma vez um link pessoal `…/#aik=SUA_CHAVE` (o fragmento nunca chega ao servidor). Recomenda-se **limite de créditos** no painel OpenRouter.
-- **Voz (3 provedores):**
-  - 🖥 **Navegador** (grátis/offline) com seleção inteligente — **dica: no Microsoft Edge as vozes "Online (Natural)" são neurais** (ex.: *Microsoft Francisca Online (Natural) — Português do Brasil*);
-  - 🎙 **ElevenLabs** (neural pt-BR premium, chave própria, plano grátis ~10k caracteres/mês) com **cache de áudio em IndexedDB** — o mesmo texto nunca gasta créditos duas vezes;
-  - ⚡ **Groq Orpheus** (experimental): a documentação oficial confirma que o TTS atual do Groq fala **apenas inglês e árabe** — incluído com aviso honesto.
-  - Fallback automático cloud→navegador + áudio de boas-vindas pré-gravado.
+- **Voz (4 provedores):**
+  - 🇧🇷 **Gemini TTS (RECOMENDADO)** — vozes neurais do Google em **português do Brasil natural e humano** (30 vozes; femininas: Sulafat ⭐, Kore, Leda, Aoede…), modelos 2.5/3.1 flash e pro; chave grátis no AI Studio; **cache de áudio em IndexedDB** (o mesmo texto nunca gera custo 2×); ativação por link `…/#gmk=CHAVE`;
+  - 🖥 **Navegador** (grátis/offline) com seleção inteligente — no **Microsoft Edge** as vozes "Online (Natural)" são neurais;
+  - 🎙 **ElevenLabs** (neural pt-BR premium, chave própria, cache local);
+  - ⚡ **Groq Orpheus** (experimental — docs oficiais: só inglês/árabe).
+  - Fallback automático cloud→navegador + boas-vindas pré-gravadas (voz feminina pt-BR).
 
 ## 🚀 Executar localmente
 

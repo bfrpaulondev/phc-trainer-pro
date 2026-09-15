@@ -429,7 +429,7 @@ var S=null, listeners=[], REV={n:0};
 function subscribe(cb){listeners.push(cb);return function(){var i=listeners.indexOf(cb);if(i>=0)listeners.splice(i,1)}}
 function getSnap(){return REV.n}
 function useStore(){useSyncExternalStore(subscribe,getSnap);return S}
-function defaultSettings(){return{aiKey:DEFAULT_AI_KEY,aiModel:"openai/gpt-4o-mini",tts:true,rate:1,economy:false,welcomePlayed:false,freeMode:false,ttsProvider:"browser",browserVoice:null,elKey:"",elVoice:"ErXwobaYiN019PkySvjV",grKey:"",grVoice:"troy",ttsFallback:true}}
+function defaultSettings(){return{aiKey:DEFAULT_AI_KEY,aiModel:"openai/gpt-4o-mini",tts:true,rate:1,economy:false,welcomePlayed:false,freeMode:false,ttsProvider:"browser",browserVoice:null,elKey:"",elVoice:"ErXwobaYiN019PkySvjV",grKey:"",grVoice:"troy",ttsFallback:true,gmKey:"",gmVoice:"Sulafat",gmModel:"gemini-3.1-flash-tts-preview"}}
 function defaultState(){return{v:2,rev:0,labs:{},cards:{},quiz:{},evid:[],streak:{last:null,n:0},settings:defaultSettings(),ai:{},ui:{lastLab:null,tab:"hoje"},company:defaultCompany(),plan:null,stats:{lessons:0,chats:0,dict:0,circ:0,explics:0},achs:{},contexto:{pais:"PT",gama:"Advanced"},profile:{nome:""},team:[],onboarded:false,daily:{d:"",reps:0,cards:0,proofs:0,lessons:0}}}
 function persist(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(S))}catch(e){}}
 function mut(fn){fn(S);REV.n++;persist();listeners.slice().forEach(function(f){try{f()}catch(e){}})}
@@ -727,7 +727,7 @@ function SettingsDrawer(){
         <Button danger onClick={function(){Modal.confirm({title:"Apagar TODO o progresso?",content:"Missões, cartas, testes e provas serão perdidos neste navegador.",okText:"Apagar tudo",okButtonProps:{danger:true},onOk:function(){S=defaultState();persist();REV.n++;listeners.slice().forEach(function(f){f()});MSG.success("Recomeço do zero. Bom treino!")}})}}>♻ Reiniciar progresso</Button>
       </Space>
       <input type="file" id="impFile2" accept=".json" style={{display:"none"}} onChange={importar}/>
-      <p className="mut" style={{fontSize:11,marginTop:16}}>PHC Trainer Pro v4.1 · PWA instalável (ícone ⊕ na barra do navegador) · funciona offline após a 1ª visita.</p>
+      <p className="mut" style={{fontSize:11,marginTop:16}}>PHC Trainer Pro v4.2 · PWA instalável (ícone ⊕ na barra do navegador) · funciona offline após a 1ª visita.</p>
     </Drawer>
   );
 }
@@ -1706,15 +1706,20 @@ function speakBrowser(text,gen){
   })();
 }
 async function cloudAudioURL(prov,text){
-  var isEL=prov==="elevenlabs";
-  var key=isEL?S.settings.elKey:S.settings.grKey;
-  var voice=isEL?(S.settings.elVoice||"ErXwobaYiN019PkySvjV"):(S.settings.grVoice||"troy");
-  var h=hashStr(prov+"|"+voice+"|"+text);
+  var key,voice,h;
+  if(prov==="gemini"){key=S.settings.gmKey;voice=S.settings.gmVoice||"Sulafat"}
+  else if(prov==="elevenlabs"){key=S.settings.elKey;voice=S.settings.elVoice||"ErXwobaYiN019PkySvjV"}
+  else{key=S.settings.grKey;voice=S.settings.grVoice||"troy"}
+  h=hashStr(prov+"|"+voice+"|"+(S.settings.gmModel||"")+"|"+text);
   if(TTS.memCache[h])return TTS.memCache[h];
   var cached=await VOICEIDB.get(h);
   if(cached){var u0=URL.createObjectURL(cached);TTS.memCache[h]=u0;return u0}
   var r;
-  if(isEL){
+  if(prov==="gemini"){
+    r=await fetch("https://generativelanguage.googleapis.com/v1beta/models/"+(S.settings.gmModel||"gemini-3.1-flash-tts-preview")+":generateContent",
+      {method:"POST",headers:{"x-goog-api-key":key,"Content-Type":"application/json"},
+       body:JSON.stringify({contents:[{parts:[{text:text}]}],generationConfig:{responseModalities:["AUDIO"],speechConfig:{voiceConfig:{prebuiltVoiceConfig:{voiceName:voice}},languageCode:"pt-BR"}}})});
+  }else if(prov==="elevenlabs"){
     r=await fetch("https://api.elevenlabs.io/v1/text-to-speech/"+encodeURIComponent(voice)+"?output_format=mp3_44100_128",
       {method:"POST",headers:{"xi-api-key":key,"Content-Type":"application/json"},
        body:JSON.stringify({text:text,model_id:"eleven_multilingual_v2",voice_settings:{stability:0.5,similarity_boost:0.75}})});
@@ -1725,14 +1730,27 @@ async function cloudAudioURL(prov,text){
   }
   if(!r.ok){
     var t="";try{t=(await r.text()).slice(0,200)}catch(e){}
-    if(r.status===401||r.status===403)throw new Error(prov+": chave inválida ("+r.status+")");
-    if(r.status===429)throw new Error(prov+": limite de uso atingido (429) — aguarde ou troque de provedor");
-    if(t.indexOf("terms acceptance")>=0)throw new Error("Groq: aceite os termos do modelo Orpheus uma vez em console.groq.com/playground e tente de novo");
+    if(r.status===400||r.status===401||r.status===403)throw new Error(prov+": chave inválida/restrita ou pedido recusado ("+r.status+")");
+    if(r.status===429)throw new Error(prov+": limite de uso atingido (429) — aguarde um pouco");
+    if(t.indexOf("terms acceptance")>=0)throw new Error("Groq: aceite os termos do modelo Orpheus em console.groq.com/playground");
     throw new Error(prov+" HTTP "+r.status+" "+t);
   }
-  var b=await r.blob();
-  VOICEIDB.set(h,b);
-  var u=URL.createObjectURL(b);TTS.memCache[h]=u;return u;
+  var blob;
+  if(prov==="gemini"){
+    var j=await r.json();
+    var cand=j&&j.candidates&&j.candidates[0];
+    var part=cand&&cand.content&&cand.content.parts&&cand.content.parts[0];
+    var inline=part&&(part.inlineData||part.inline_data);
+    if(!inline||!inline.data)throw new Error("Gemini: resposta sem áudio (verifique cota/modelo)");
+    var mime=String(inline.mimeType||inline.mime_type||"");
+    var rm=mime.match(/rate=(\d+)/);var rate=rm?parseInt(rm[1]):24000;
+    var bytes=b64ToBytes(inline.data);
+    blob=(/L16|pcm/i.test(mime))?pcmToWavBlob(bytes,rate):new Blob([bytes],{type:"audio/mpeg"});
+  }else{
+    blob=await r.blob();
+  }
+  VOICEIDB.set(h,blob);
+  var u=URL.createObjectURL(blob);TTS.memCache[h]=u;return u;
 }
 function playAudioURL(url,subtitle,gen){return new Promise(function(res){
   try{
@@ -1766,7 +1784,8 @@ function speak(text,done){
   TTS.on=true;TTS.done=done||null;
   MascotBus.set("mood","talk");
   var prov=S.settings.ttsProvider||"browser";
-  if(prov==="elevenlabs"&&S.settings.elKey)speakCloud("elevenlabs",String(text),gen);
+  if(prov==="gemini"&&S.settings.gmKey)speakCloud("gemini",String(text),gen);
+  else if(prov==="elevenlabs"&&S.settings.elKey)speakCloud("elevenlabs",String(text),gen);
   else if(prov==="groq"&&S.settings.grKey)speakCloud("groq",String(text),gen);
   else speakBrowser(String(text),gen);
 }
@@ -1783,6 +1802,31 @@ var EL_VOICES=[
 ["Bella — feminina suave","EXAVITQu4vr4xnSDxMaL"],
 ["Charlotte — feminina britânica","Xb7hH06UJpJdRQ0yWdEw"]];
 var GR_VOICES=[["troy (masculina)","troy"],["hannah (feminina)","hannah"],["austin (masculina)","austin"]];
+function b64ToBytes(b64){var bin=atob(b64);var n=bin.length;var a=new Uint8Array(n);for(var i=0;i<n;i++)a[i]=bin.charCodeAt(i);return a}
+function pcmToWavBlob(bytes,rate){
+  var hdr=new ArrayBuffer(44);var v=new DataView(hdr);
+  function ws(o,x){for(var i=0;i<x.length;i++)v.setUint8(o+i,x.charCodeAt(i))}
+  ws(0,"RIFF");v.setUint32(4,36+bytes.length,true);ws(8,"WAVE");ws(12,"fmt ");
+  v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,1,true);
+  v.setUint32(24,rate,true);v.setUint32(28,rate*2,true);v.setUint16(32,2,true);v.setUint16(34,16,true);
+  ws(36,"data");v.setUint32(40,bytes.length,true);
+  return new Blob([hdr,bytes],{type:"audio/wav"});
+}
+var GEMINI_VOICES=[
+["⭐ Sulafat — feminina, calorosa (recomendada)","Sulafat"],
+["Kore — feminina, firme","Kore"],
+["Leda — feminina, jovem","Leda"],
+["Aoede — feminina, leve","Aoede"],
+["Achernar — feminina, suave","Achernar"],
+["Laomedeia — feminina, animada","Laomedeia"],
+["Gacrux — feminina, madura","Gacrux"],
+["Vindemiatrix — feminina, gentil","Vindemiatrix"],
+["Puck — masculina, animada","Puck"],
+["Charon — masculina, grave","Charon"],
+["Fenrir — masculina, expressiva","Fenrir"],
+["Orus — masculina, firme","Orus"],
+["Sadaltager — masculina, informativa","Sadaltager"]];
+var GEMINI_MODELS=[["gemini-3.1-flash-tts-preview (novo · rápido)","gemini-3.1-flash-tts-preview"],["gemini-2.5-flash-preview-tts","gemini-2.5-flash-preview-tts"],["gemini-2.5-pro-preview-tts (máxima qualidade · mais lento)","gemini-2.5-pro-preview-tts"]];
 function VoiceSettings(){
   var _f=useStore();
   var st=S.settings;
@@ -1793,6 +1837,7 @@ function VoiceSettings(){
     <span className="mut" style={{fontSize:12}}>Provedor de voz:</span>
     <Select style={{width:"100%"}} value={prov} onChange={function(v){mut(function(s){s.settings.ttsProvider=v})}}
       options={[
+        {value:"gemini",label:"🇧🇷 Gemini TTS — voz feminina brasileira natural (RECOMENDADO)"},
         {value:"browser",label:"🖥 Navegador (grátis, offline — use Edge p/ voz neural)"},
         {value:"elevenlabs",label:"🎙 ElevenLabs (neural pt-BR premium · chave própria)"},
         {value:"groq",label:"⚡ Groq Orpheus (experimental · só inglês)"}]}/>
@@ -1805,6 +1850,17 @@ function VoiceSettings(){
         options={pv.map(function(v){return {value:v.voiceURI,label:(isNeuralName(v.name)?"⭐ ":"")+v.name+" ("+v.lang+")"}})}/>
       <span className="mut" style={{fontSize:12}}>Velocidade: {st.rate}x</span>
       <Slider min={0.6} max={1.4} step={0.05} value={st.rate} onChange={function(v){mut(function(s){s.settings.rate=v})}}/>
+    </div>:null}
+    {prov==="gemini"?<div>
+      <Alert type="success" showIcon style={{margin:"8px 0"}} message="Gemini TTS — português do Brasil natural (vozes femininas)"
+        description="Vozes neurais do Google (30 vozes, 24 idiomas). Crie uma chave grátis em aistudio.google.com → API Keys e cole abaixo — fica só neste navegador. O áudio fica em CACHE local: o mesmo texto nunca gera custo duas vezes. Atalho: abra uma vez o link …/#gmk=SUA_CHAVE. Segurança: restrinja a chave à API 'Generative Language' e ao domínio bfrpaulondev.github.io no console do Google."/>
+      <Input.Password value={st.gmKey||""} placeholder="chave Gemini (AIza... ou AQ....)" onChange={function(e){mut(function(s){s.settings.gmKey=e.target.value})}}/>
+      <span className="mut" style={{fontSize:12,marginTop:8,display:"block"}}>Voz:</span>
+      <Select style={{width:"100%"}} value={st.gmVoice||"Sulafat"} onChange={function(v){mut(function(s){s.settings.gmVoice=v})}}
+        options={GEMINI_VOICES.map(function(x){return {value:x[1],label:x[0]}})}/>
+      <span className="mut" style={{fontSize:12,marginTop:8,display:"block"}}>Modelo:</span>
+      <Select style={{width:"100%"}} value={st.gmModel||"gemini-3.1-flash-tts-preview"} onChange={function(v){mut(function(s){s.settings.gmModel=v})}}
+        options={GEMINI_MODELS.map(function(x){return {value:x[1],label:x[0]}})}/>
     </div>:null}
     {prov==="elevenlabs"?<div>
       <Alert type="info" showIcon style={{margin:"8px 0"}} message="ElevenLabs — a melhor qualidade em português"
@@ -1876,7 +1932,7 @@ function AppMain(){
         <Tabs activeKey={S.ui.tab} onChange={gTab} items={tabs} type="card" size="middle"/>
       </Content>
       <Footer className="appFooter">
-        PHC Trainer Pro v4.1 · material educativo não oficial — Cegid PHC® é marca dos respetivos proprietários; projeto sem afiliação · teoria: docs/guia-expert-phc-gestao-evolution.md ·{" "}
+        PHC Trainer Pro v4.2 · material educativo não oficial — Cegid PHC® é marca dos respetivos proprietários; projeto sem afiliação · teoria: docs/guia-expert-phc-gestao-evolution.md ·{" "}
         <a href="https://github.com/bfrpaulondev/phc-trainer-pro" target="_blank" rel="noopener">GitHub</a> · progresso guardado neste navegador (exporte backups 💾)
       </Footer>
       <Mascot tip={TAB_HINTS[S.ui.tab]||""} onClick={openChat}/>
@@ -2178,6 +2234,8 @@ try{
   if(_em&&_em[1]){S.settings.elKey=_em[1];S.settings.ttsProvider="elevenlabs";_anyKey=true}
   var _gm=_hh.match(/grk=([A-Za-z0-9_\-\.]+)/);
   if(_gm&&_gm[1]){S.settings.grKey=_gm[1];S.settings.ttsProvider="groq";_anyKey=true}
+  var _gg=_hh.match(/gmk=([A-Za-z0-9_\-\.]+)/);
+  if(_gg&&_gg[1]){S.settings.gmKey=_gg[1];S.settings.ttsProvider="gemini";if(!S.settings.gmVoice)S.settings.gmVoice="Sulafat";_anyKey=true}
   if(_anyKey){
     persist();
     history.replaceState(null,"",location.pathname+location.search);
