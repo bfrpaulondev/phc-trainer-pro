@@ -12,7 +12,7 @@ Material educativo **não oficial**, baseado em fontes públicas da Cegid PHC (H
 
 | Recurso | Descrição |
 |---|---|
-| 🎯 **75 missões práticas (L00–L74)** | Passos exatos num PHC instalado: infraestrutura, ficheiros, vendas, compras/stocks, financeiro, fiscal, análises, desenvolvimento (Xbase/C#), projeto final + **packs de especialização: Contabilidade (L57–L66) e Pessoal/Vencimentos (L67–L74)** — tudo com a mesma empresa de treino |
+| 🎯 **90 missões práticas (L00–L89)** | Passos exatos num PHC instalado: infraestrutura, ficheiros, vendas, compras/stocks, financeiro, fiscal, análises, desenvolvimento (Xbase/C#), projeto final + **4 packs de especialização: Contabilidade (L57–L66), Pessoal/Vencimentos (L67–L74), POS & Retalho (L75–L82) e Suporte/Pós-venda (L83–L89)** — tudo com a mesma empresa de treino |
 | 🏢 **Empresa de treino personalizável** | 12 segmentos portugueses realistas (hotelaria, eletrónica, restauração, distribuição, construção, clínica, consultoria IT, indústria, oficina, agricultura, e-commerce, transportes) — cada um com empresa fictícia completa: nome, **NIF com dígito de controlo válido**, CAE, morada, artigos com preços e necessidades reais do negócio. Os textos das missões e da IA **adaptam-se automaticamente** à empresa escolhida |
 | 🎓 **Curso personalizado por IA** | Entrevista de 3 passos (segmento → empresa → objetivos/interesses/tempo) gera destaques e ordem das missões; alternativa offline: plano padrão calibrado por segmento |
 | 📖 **Conceito antes da prática** | Cada missão abre com teoria em **carrossel interativo**: o que é, conceitos-chave (1 cartão por conceito) e erros comuns |
@@ -22,9 +22,11 @@ Material educativo **não oficial**, baseado em fontes públicas da Cegid PHC (H
 | 🔄 **Circuitos interativos** | 10 grandes fluxos em carrossel (56 passos): vendas, compras, séries de documentos, transporte/AT, SAF-T, conta corrente, tesouraria, integração contabilística, personalização e fecho do mês — com narração e explicação da IA |
 | 📖 **Dicionário (94 termos)** | ATCUD, SAF-T, e-Fatura, CIUS-PT, PCMP, CEVMC, aging, reverse charge… com busca, filtros por tema, detalhe prático, voz e aprofundamento do Professor |
 | 🗂 **126 flashcards (SRS)** | Repetição espaçada 1→2→4→7→14→30→60 dias; também em `assets/flashcards-phc.csv` (Anki) |
-| 📝 **11 testes de nível** | 66 perguntas com explicação; aprovação ≥ 80% (inclui Contabilidade e Pessoal) |
+| 📝 **13 testes de nível** | 78 perguntas com explicação; aprovação ≥ 80% |
+| 🌍 **Contexto país + gama** | Seletor PT/ES/AO/MZ/CV/PE com ficha de obrigações fiscais e particularidades do software (SII/TicketBAI, AGT/SAF-T AO, retenções PE…); gama Corporate/Advanced/Enterprise com **avisos de requisitos em cada missão** |
+| 👥 **Progresso de equipa** | Cada técnico exporta a sua ficha (JSON); o formador importa e compara a equipa numa tabela (com export CSV) — para parceiros que formam vários técnicos |
 | 📸 **Portfólio de evidências** | "Sem evidência, não aconteceu": registo de provas por missão, exportável em CSV |
-| 🏅 **22 conquistas** | Marcos profissionais desbloqueáveis (constância, exames, portefólio, especializações em Contabilidade e RH) com data de obtenção |
+| 🏅 **24 conquistas** | Marcos profissionais desbloqueáveis (constância, exames, portefólio e as 4 especializações: Contabilidade, Pessoal, Retalho, Pós-venda) com data de obtenção |
 | 📚 **Teoria completa embutida** | Guia do expert (15 capítulos) no app, com Aula Guiada por capítulo |
 | 📱 **PWA** | Instalável e **offline** após a 1ª visita (service worker) |
 | 💾 **Sem backend** | Progresso em `localStorage` + Exportar/Importar JSON |
@@ -82,9 +84,9 @@ phc-trainer-pro/
 
 - [x] Packs de missões: **Contabilidade** (L57–L66) e **Pessoal/Vencimentos** (L67–L74) ✔ v3.2
 - [x] **Conquistas** profissionais (22 marcos) ✔ v3.2
-- [ ] Pack POS/Retalho e Suporte (missões dedicadas)
-- [ ] Variantes por país (PT/ES/PE/AO/MZ) e por gama (Corporate/Advanced/Enterprise)
-- [ ] Indicadores de progresso por turma/equipa (export partilhado)
+- [x] Pack POS/Retalho (L75–L82) e Suporte/Pós-venda (L83–L89) ✔ v3.3
+- [x] Contexto por país (PT/ES/AO/MZ/CV/PE) e por gama com avisos de requisitos ✔ v3.3
+- [x] Progresso de equipa (fichas exportáveis + painel comparativo) ✔ v3.3
 
 ## 📄 Licença
 
