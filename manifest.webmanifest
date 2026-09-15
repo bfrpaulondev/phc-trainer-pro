@@ -1,7 +1,7 @@
 {
-  "name": "PHC DOJO SENSEI — Arena Starr Park (Brawl Stars Edition)",
-  "short_name": "PHC Dojo",
-  "description": "Treino prático gamificado com tutor IA (Professor Brawleinstein) para dominar o módulo Gestão do Cegid PHC Evolution/CS Desktop — analogias de Brawl Stars. Projeto educativo de fã, não afiliado à Supercell.",
+  "name": "PHC Trainer Pro — Formação · Gestão Cegid PHC Evolution",
+  "short_name": "PHC Trainer",
+  "description": "Formação profissional prática com tutor IA para dominar o módulo Gestão do Cegid PHC Evolution/CS Desktop: 57 missões, curso personalizado por segmento, dicionário, circuitos e flashcards.",
   "lang": "pt-BR",
   "start_url": "./",
   "scope": "./",

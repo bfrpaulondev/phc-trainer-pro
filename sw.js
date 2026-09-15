@@ -1,5 +1,5 @@
 /* PHC DOJO SENSEI — service worker (offline-first) */
-var CACHE = 'phc-dojo-v4';
+var CACHE = 'phc-trainer-v5';
 var CDN = [
   'https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.production.min.js',
   'https://cdn.jsdelivr.net/npm/react-dom@18.3.1/umd/react-dom.production.min.js',
@@ -9,7 +9,7 @@ var CDN = [
   'https://cdn.jsdelivr.net/npm/@babel/standalone@7.25.6/babel.min.js'
 ];
 var SHELL = ['./', './index.html', './manifest.webmanifest',
-  './assets/img/hero-arena.jpg', './assets/img/einstein-brawl.jpg',
+  './assets/img/hero-pro.jpg', './assets/img/einstein-pro.jpg',
   './assets/audio/bemvindo.mp3',
   './icons/icon-192.png', './icons/icon-512.png', './icons/apple-touch-icon.png', './icons/favicon-64.png'];
 self.addEventListener('install', function (e) {
