@@ -12,6 +12,7 @@ Material educativo **não oficial**, baseado em fontes públicas da Cegid PHC (H
 
 | Recurso | Descrição |
 |---|---|
+| 🧭 **Jornada guiada (v4.0)** | Liberação progressiva: cada missão concluída libera a seguinte; níveis abrem com 50% do anterior. Página inicial mostra apenas o essencial: missão atual, revisões do dia e meta diária (5 ações). **Modo Foco**: missão em wizard passo-a-passo (🔊 ouvir, 🧠 explicar com IA, ✅ feito) → evidências → perguntas. Modo livre opcional em ⚙️ |
 | 🎯 **90 missões práticas (L00–L89)** | Passos exatos num PHC instalado: infraestrutura, ficheiros, vendas, compras/stocks, financeiro, fiscal, análises, desenvolvimento (Xbase/C#), projeto final + **4 packs de especialização: Contabilidade (L57–L66), Pessoal/Vencimentos (L67–L74), POS & Retalho (L75–L82) e Suporte/Pós-venda (L83–L89)** — tudo com a mesma empresa de treino |
 | 🏢 **Empresa de treino personalizável** | 12 segmentos portugueses realistas (hotelaria, eletrónica, restauração, distribuição, construção, clínica, consultoria IT, indústria, oficina, agricultura, e-commerce, transportes) — cada um com empresa fictícia completa: nome, **NIF com dígito de controlo válido**, CAE, morada, artigos com preços e necessidades reais do negócio. Os textos das missões e da IA **adaptam-se automaticamente** à empresa escolhida |
 | 🎓 **Curso personalizado por IA** | Entrevista de 3 passos (segmento → empresa → objetivos/interesses/tempo) gera destaques e ordem das missões; alternativa offline: plano padrão calibrado por segmento |

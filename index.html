@@ -126,6 +126,12 @@ body{font-family:'Segoe UI',system-ui,-apple-system,Arial,sans-serif}
 .achIco{font-size:22px}
 .achT{font-size:11px;font-weight:700;margin-top:4px;line-height:1.25}
 .achD{font-size:9.5px;color:#93a0bd;margin-top:2px}
+
+.ringRow{display:flex;gap:10px;flex-wrap:wrap}
+.ringCard{flex:1;min-width:150px;text-align:center}
+.focusCard{background:#101c30!important;border:1px solid #2a4a7a!important}
+.focusStep{font-size:17px;line-height:1.55;margin-top:6px;color:#eef2fb}
+.lockedRow{opacity:.5;border-style:dashed!important}
 @media print{.appHeader,.mascotWrap,.appFooter,.ant-tabs-nav{display:none!important}}
 </style>
 </head>
@@ -423,8 +429,8 @@ var S=null, listeners=[], REV={n:0};
 function subscribe(cb){listeners.push(cb);return function(){var i=listeners.indexOf(cb);if(i>=0)listeners.splice(i,1)}}
 function getSnap(){return REV.n}
 function useStore(){useSyncExternalStore(subscribe,getSnap);return S}
-function defaultSettings(){return{aiKey:DEFAULT_AI_KEY,aiModel:"openai/gpt-4o-mini",tts:true,rate:1,economy:false,welcomePlayed:false}}
-function defaultState(){return{v:2,rev:0,labs:{},cards:{},quiz:{},evid:[],streak:{last:null,n:0},settings:defaultSettings(),ai:{},ui:{lastLab:null,tab:"hoje"},company:defaultCompany(),plan:null,stats:{lessons:0,chats:0,dict:0,circ:0,explics:0},achs:{},contexto:{pais:"PT",gama:"Advanced"},profile:{nome:""},team:[]}}
+function defaultSettings(){return{aiKey:DEFAULT_AI_KEY,aiModel:"openai/gpt-4o-mini",tts:true,rate:1,economy:false,welcomePlayed:false,freeMode:false}}
+function defaultState(){return{v:2,rev:0,labs:{},cards:{},quiz:{},evid:[],streak:{last:null,n:0},settings:defaultSettings(),ai:{},ui:{lastLab:null,tab:"hoje"},company:defaultCompany(),plan:null,stats:{lessons:0,chats:0,dict:0,circ:0,explics:0},achs:{},contexto:{pais:"PT",gama:"Advanced"},profile:{nome:""},team:[],onboarded:false,daily:{d:"",reps:0,cards:0,proofs:0,lessons:0}}}
 function persist(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(S))}catch(e){}}
 function mut(fn){fn(S);REV.n++;persist();listeners.slice().forEach(function(f){try{f()}catch(e){}})}
 function loadState(){
@@ -447,6 +453,9 @@ function loadState(){
   if(!s.company)s.company=defaultCompany(); if(s.plan===undefined)s.plan=null;
   if(!s.stats)s.stats={};if(!s.achs)s.achs={};
   if(!s.contexto)s.contexto={pais:"PT",gama:"Advanced"};if(!s.profile)s.profile={nome:""};if(!s.team)s.team=[];
+  if(s.onboarded===undefined)s.onboarded=false;if(!s.daily)s.daily={d:"",reps:0,cards:0,proofs:0,lessons:0};if(s.settings.freeMode===undefined)s.settings.freeMode=false;
+  var _tm={circuitos:"aprender",dicionario:"aprender",teoria:"aprender",protocolo:"aprender",cartas:"praticar",testes:"praticar",provas:"progresso"};
+  if(_tm[s.ui.tab])s.ui.tab=_tm[s.ui.tab];if(!s.ui.tab)s.ui.tab="hoje";
   return s;
 }
 function p2(n){return n<10?"0"+n:""+n}
@@ -620,7 +629,7 @@ async function loadLessonExp(){
     var msg=[{role:"system",content:personaSys()},
       {role:"user",content:"AULA PASSO A PASSO — item "+(Lesson.i+1)+" de "+Lesson.items.length+" da missão '"+Lesson.title+"'.\n\nCONTEÚDO:\n"+String(text).slice(0,2400)+"\n\nExplique em linguagem muito simples (máx. 90 palavras), aplicando à EMPRESA EM FOCO (dada no contexto), com exemplos simples. Se for um PASSO prático, diga exatamente o que o aluno vai ver/fazer no PHC e por quê."}];
     var out=await openAI(msg,380);
-    mut(function(s){aiCacheSet(ck,out);s.stats.lessons=(s.stats.lessons||0)+1});
+    mut(function(s){aiCacheSet(ck,out);s.stats.lessons=(s.stats.lessons||0)+1;bumpDaily("lessons")});
     Lesson.exp=out;Lesson.loading=false;MascotBus.set("mood","idle");lessonNotify();
     if(S.settings.tts)speak(out,afterSpeak);
   }catch(e){
@@ -739,6 +748,9 @@ function SettingsDrawer(){
         <Slider min={0.6} max={1.6} step={0.1} value={S.settings.rate} onChange={function(v){mut(function(s){s.settings.rate=v})}}/>
         <Button size="small" onClick={function(){speak("Relatividade é quando você lê um manual do PHC por uma hora, e parece um século. Ha, ha, ha!")}}>🎤 Testar voz</Button>
       </Space>
+      <Divider orientation="left" plain>🧭 Modo de estudo</Divider>
+      <Space>Missões em sequência guiada <Switch checked={!S.settings.freeMode} onChange={function(v){mut(function(s){s.settings.freeMode=!v});MSG.success(v?"Modo guiado ativo: cada missão libera a seguinte.":"Modo livre: todas as missões destrancadas.")}}/></Space>
+      <p className="mut" style={{fontSize:12,margin:"6px 0 12px"}}>Guiado (recomendado): o foco é uma missão de cada vez e a trilha libera progressivamente. Livre: tudo destrancado (útil para consulta e formadores).</p>
       <Divider orientation="left" plain>💾 Progresso</Divider>
       <Space wrap>
         <Button onClick={exportar}>💾 Exportar JSON</Button>
@@ -746,7 +758,7 @@ function SettingsDrawer(){
         <Button danger onClick={function(){Modal.confirm({title:"Apagar TODO o progresso?",content:"Missões, cartas, testes e provas serão perdidos neste navegador.",okText:"Apagar tudo",okButtonProps:{danger:true},onOk:function(){S=defaultState();persist();REV.n++;listeners.slice().forEach(function(f){f()});MSG.success("Recomeço do zero. Bom treino!")}})}}>♻ Reiniciar progresso</Button>
       </Space>
       <input type="file" id="impFile2" accept=".json" style={{display:"none"}} onChange={importar}/>
-      <p className="mut" style={{fontSize:11,marginTop:16}}>PHC Trainer Pro v3.3 · PWA instalável (ícone ⊕ na barra do navegador) · funciona offline após a 1ª visita.</p>
+      <p className="mut" style={{fontSize:11,marginTop:16}}>PHC Trainer Pro v4.0 · PWA instalável (ícone ⊕ na barra do navegador) · funciona offline após a 1ª visita.</p>
     </Drawer>
   );
 }
@@ -756,15 +768,15 @@ function say(text,mood,ms){MascotBus.set("bubble",text);MascotBus.set("mood",moo
   if(say._t)clearTimeout(say._t);
   say._t=setTimeout(function(){if(!TTS.on){MascotBus.set("bubble","");MascotBus.set("mood","idle")}},ms||9000)}
 var CHEERS=["Prática registada. Constância gera competência.","+1 repetição — mais perto do domínio.","Muito bem! Evidência guardada.","Progresso sólido. Continue.","Conhecimento aplicado vale dobrado."];
-function rep(id){mut(function(s){var st=labSt(id);st.c++;st.hist.push(todayISO());st.due=addDays(todayISO(),LADDER[Math.min(st.c-1,LADDER.length-1)]);touchStreak()});
+function rep(id){mut(function(s){var st=labSt(id);st.c++;st.hist.push(todayISO());st.due=addDays(todayISO(),LADDER[Math.min(st.c-1,LADDER.length-1)]);touchStreak();bumpDaily("reps")});
   MascotBus.set("mood","cheer");say(CHEERS[Math.floor(Math.random()*CHEERS.length)],"cheer",6000);renderTick()}
 function markMem(id){mut(function(s){labSt(id).mem=true;touchStreak()});MascotBus.set("mood","cheer");say("🧠 DE COR E SALTEADO! O Professor está orgulhoso, meu jovem gênio!",6000);renderTick()}
 function resetLab(id){Modal.confirm({title:"Reiniciar a missão "+id+"?",content:"Todo o progresso e repetições desta missão serão apagados.",okText:"Reiniciar",okButtonProps:{danger:true},onOk:function(){mut(function(s){delete s.labs[id]});renderTick()}})}
 function tgStep(id,i){mut(function(s){var st=labSt(id);st.steps[i]=!st.steps[i]})}
-function tgProof(id,i){mut(function(s){var st=labSt(id);st.proofs[i]=!st.proofs[i];touchStreak()})}
+function tgProof(id,i){mut(function(s){var st=labSt(id);st.proofs[i]=!st.proofs[i];touchStreak();bumpDaily("proofs")})}
 var _tick=0;function renderTick(){REV.n++;_tick++;try{checkAchievements()}catch(e){}listeners.slice().forEach(function(f){try{f()}catch(e){}})}
 function gTab(t){mut(function(s){s.ui.tab=t});stopSpeak();
-  var H={empresa:"Defina a sua empresa de treino — todo o curso usa este contexto.",circuitos:"🔄 Os grandes fluxos do PHC passo a passo: veja o mapa antes de caminhar.",dicionario:"94 termos técnicos e fiscais com explicação clara — pergunte ao Professor se travar.",hoje:"Bem-vindo! Comece pelas cartas e missões do dia.",missoes:"Regra 0: 📖 Conceito antes dos passos. Use 🎓 Aula guiada se precisar.",cartas:"Repetição espaçada: revise hoje para não esquecer amanhã.",testes:"Aprovação com 80% — sem consultar, como num exame de certificação.",provas:"Sem evidência, não aconteceu. 📸",progresso:"O seu percurso: níveis, testes e evidências.",teoria:"O guia completo em 15 capítulos. Peça 🎓 aula de qualquer um.",protocolo:"Leia as regras do treino antes de começar."};
+  var H={hoje:"Uma coisa de cada vez: a sua missão atual está aqui. 🎯",missoes:"Trilha guiada — cada missão libera a seguinte. 🔒",aprender:"Circuitos, dicionário, guia completo e protocolo.",praticar:"Cartas e testes: a memória de longo prazo agradece.",progresso:"XP, níveis, evidências, conquistas e equipa.",empresa:"Empresa de treino + contexto de país e gama."};
   if(H[t])say(H[t],"idle",7000)}
 var COLL={keys:["0"]};
 function openLab(id){var _lb=labById(id);if(_lb){var _k=String(_lb.lv);if(COLL.keys.indexOf(_k)<0)COLL.keys=COLL.keys.concat([_k])}mut(function(s){s.ui.lastLab=id;s.ui.tab="missoes"});
@@ -825,6 +837,7 @@ function LabPanel(props){
             {askOpen[i]?<div className="ansText"><b>R:</b> {emp(a.a)}</div>:<div className="mut" style={{fontSize:11}}>toque para revelar</div>}
           </Card>)})}
         <Space style={{marginTop:12}} wrap>
+          <Button type="primary" ghost onClick={function(){openFocus(l.id)}}>▶ Passo a passo</Button>
           <Button type="primary" onClick={function(){rep(l.id)}}>✅ Registar repetição (volta em {LADDER[Math.min(s.c,LADDER.length-1)]}d)</Button>
           {s.c>=3&&!s.mem?<Button type="primary" style={{background:"#13c2c2",borderColor:"#13c2c2"}} onClick={function(){markMem(l.id)}}>🧠 Sei de cor e salteado</Button>:null}
           {s.mem?<Tag color="cyan" style={{fontSize:13,padding:"4px 10px"}}>🧠 missão dominada!</Tag>:null}
@@ -924,7 +937,7 @@ function rateCard(q){
   var gi=CARD_SESS.list[CARD_SESS.idx];
   mut(function(s){var c=cardSt(gi);var t=todayISO();
     if(q===0){c.due=addDays(t,1)}else if(q===1){c.due=addDays(t,2)}else{c.c++;c.due=addDays(t,LADDER[Math.min(c.c-1,LADDER.length-1)])}
-    touchStreak()});
+    touchStreak();bumpDaily("cards")});
   CARD_SESS.idx++;CARD_SESS.rev=false;
   if(CARD_SESS.idx>=CARD_SESS.list.length){MascotBus.set("mood","cheer");say("Baralho do dia dominado! 🃏🚀","cheer",5000)}
   renderTick();
@@ -1179,7 +1192,7 @@ function dl(name,content,type){var b=new Blob([content],{type:type+";charset=utf
 function exportar(){dl("phc-trainer-progresso-"+todayISO()+".json",JSON.stringify(S,null,1),"application/json");MSG.success("Progresso exportado.")}
 function importar(ev){var f=ev.target.files[0];if(!f)return;var r=new FileReader();
   r.onload=function(){try{var o=JSON.parse(r.result);if(!o||!o.labs)throw 0;
-    o.settings=Object.assign(defaultSettings(),o.settings||{});if(!o.ai)o.ai={};if(!o.ui)o.ui={lastLab:null,tab:"hoje"};if(!o.company)o.company=defaultCompany();if(o.plan===undefined)o.plan=null;if(!o.stats)o.stats={};if(!o.achs)o.achs={};if(!o.contexto)o.contexto={pais:"PT",gama:"Advanced"};if(!o.profile)o.profile={nome:""};if(!o.team)o.team=[];
+    o.settings=Object.assign(defaultSettings(),o.settings||{});if(!o.ai)o.ai={};if(!o.ui)o.ui={lastLab:null,tab:"hoje"};if(!o.company)o.company=defaultCompany();if(o.plan===undefined)o.plan=null;if(!o.stats)o.stats={};if(!o.achs)o.achs={};if(!o.contexto)o.contexto={pais:"PT",gama:"Advanced"};if(!o.profile)o.profile={nome:""};if(!o.team)o.team=[];if(o.onboarded===undefined)o.onboarded=false;if(!o.daily)o.daily={d:"",reps:0,cards:0,proofs:0,lessons:0};if(o.settings.freeMode===undefined)o.settings.freeMode=false;var _tm2={circuitos:"aprender",dicionario:"aprender",teoria:"aprender",protocolo:"aprender",cartas:"praticar",testes:"praticar",provas:"progresso"};if(o.ui&&_tm2[o.ui.tab])o.ui.tab=_tm2[o.ui.tab];
     S=o;persist();REV.n++;listeners.slice().forEach(function(x){x()});MSG.success("Progresso importado!")}catch(e){MSG.error("Ficheiro inválido.")}};
   r.readAsText(f);ev.target.value=""}
 /* ============ v3.0 · Empresa, Curso IA, Circuitos, Dicionário ============ */
@@ -1668,7 +1681,7 @@ function TeamPanel(){
 /* ============ App principal ============ */
 var MSG=null;
 function MsgBridge(){var api=AntApp.useApp();useEffect(function(){MSG=api.message},[]);return null}
-var TAB_HINTS={empresa:"Defina a sua empresa de treino — todo o curso usa este contexto.",circuitos:"🔄 Os grandes fluxos do PHC passo a passo: veja o mapa antes de caminhar.",dicionario:"94 termos técnicos e fiscais com explicação clara — pergunte ao Professor se travar.",hoje:"Bem-vindo! Comece pelas cartas e missões do dia.",missoes:"Regra 0: 📖 Conceito antes dos passos. Use 🎓 Aula guiada se precisar.",cartas:"Repetição espaçada: revise hoje para não esquecer amanhã.",testes:"Aprovação com 80% — sem consultar, como num exame de certificação.",provas:"Sem evidência, não aconteceu. 📸",progresso:"O seu percurso: níveis, testes e evidências.",teoria:"O guia completo em 15 capítulos. Peça 🎓 aula de qualquer um.",protocolo:"Leia as regras do treino antes de começar."};
+var TAB_HINTS={hoje:"Uma coisa de cada vez: a sua missão atual está aqui. 🎯",missoes:"Trilha guiada — cada missão libera a seguinte. 🔒",aprender:"Circuitos, dicionário, guia completo e protocolo.",praticar:"Cartas e testes: a memória de longo prazo agradece.",progresso:"XP, níveis, evidências, conquistas e equipa.",empresa:"Empresa de treino + contexto de país e gama."};
 function AppMain(){
   var _f=useStore();
   var audioRef=useRef(null);
@@ -1684,17 +1697,12 @@ function AppMain(){
     try{var vs=speechSynthesis;vs&&vs.getVoices&&vs.getVoices()}catch(e){}
   },[]);
   var tabs=[
-    {key:"hoje",label:"📌 Hoje",children:<HojeTab/>},
-    {key:"empresa",label:"🏢 Empresa",children:<EmpresaTab/>},
-    {key:"missoes",label:"🎯 Missões",children:<MissoesTab/>},
-    {key:"circuitos",label:"🔄 Circuitos",children:<CircuitosTab/>},
-    {key:"dicionario",label:"📖 Dicionário",children:<DicionarioTab/>},
-    {key:"cartas",label:"🗂 Cartas",children:<CartasTab/>},
-    {key:"testes",label:"📝 Testes",children:<TestesTab/>},
-    {key:"provas",label:"📸 Provas",children:<ProvasTab/>},
-    {key:"progresso",label:"📊 Progresso",children:<ProgressoTab/>},
-    {key:"teoria",label:"📚 Teoria",children:<TeoriaTab/>},
-    {key:"protocolo",label:"📜 Protocolo",children:<ProtocoloTab/>}
+    {key:"hoje",label:"🎯 Jornada",children:<JornadaTab/>},
+    {key:"missoes",label:"🗺️ Missões",children:<MissoesPathTab/>},
+    {key:"aprender",label:"📚 Aprender",children:<AprenderTab/>},
+    {key:"praticar",label:"🧠 Praticar",children:<PraticarTab/>},
+    {key:"progresso",label:"📊 Progresso",children:<ProgressoHub/>},
+    {key:"empresa",label:"🏢 Empresa",children:<EmpresaTab/>}
   ];
   return (
     <Layout className="appLayout">
@@ -1717,7 +1725,7 @@ function AppMain(){
         <Tabs activeKey={S.ui.tab} onChange={gTab} items={tabs} type="card" size="middle"/>
       </Content>
       <Footer className="appFooter">
-        PHC Trainer Pro v3.3 · material educativo não oficial — Cegid PHC® é marca dos respetivos proprietários; projeto sem afiliação · teoria: docs/guia-expert-phc-gestao-evolution.md ·{" "}
+        PHC Trainer Pro v4.0 · material educativo não oficial — Cegid PHC® é marca dos respetivos proprietários; projeto sem afiliação · teoria: docs/guia-expert-phc-gestao-evolution.md ·{" "}
         <a href="https://github.com/bfrpaulondev/phc-trainer-pro" target="_blank" rel="noopener">GitHub</a> · progresso guardado neste navegador (exporte backups 💾)
       </Footer>
       <Mascot tip={TAB_HINTS[S.ui.tab]||""} onClick={openChat}/>
@@ -1725,6 +1733,8 @@ function AppMain(){
       <ChatDrawer/>
       <SettingsDrawer/>
       <OnboardModal/>
+      <FocusModal/>
+      <OnboardTour/>
     </Layout>
   );
 }
@@ -1740,6 +1750,273 @@ class ErrorBoundary extends React.Component{
     </div>)}
   return this.props.children}
 }
+/* ============ v4.0 · Jornada guiada, Modo Foco, liberação progressiva ============ */
+function journeyPath(){
+  var base=(S.plan&&S.plan.ordem&&S.plan.ordem.length)?S.plan.ordem.slice():[];
+  var seen={},out=[];
+  base.forEach(function(id){if(!seen[id]&&labById(id)){seen[id]=1;out.push(id)}});
+  DATA.labs.forEach(function(l){if(!seen[l.id]){seen[l.id]=1;out.push(l.id)}});
+  return out;
+}
+function levelOpen(lv){
+  if(S.settings.freeMode)return true;
+  if(lv<=0)return true;
+  var prev=DATA.labs.filter(function(l){return l.lv===lv-1});
+  if(!prev.length)return true;
+  var done=prev.filter(function(l){return S.labs[l.id]&&S.labs[l.id].c>0}).length;
+  return done>=Math.ceil(prev.length*0.5);
+}
+function missionUnlocked(id){
+  if(S.settings.freeMode)return true;
+  var st=S.labs[id];if(st&&st.c>0)return true;
+  var lab=labById(id);if(!lab)return false;
+  if(!levelOpen(lab.lv))return false;
+  var path=journeyPath().filter(function(x){var l=labById(x);return l&&l.lv===lab.lv});
+  var i=path.indexOf(id);
+  if(i<=0)return true;
+  var ps=S.labs[path[i-1]];
+  return !!(ps&&ps.c>0);
+}
+function bumpDaily(kind){
+  var t=todayISO();
+  if(!S.daily||S.daily.d!==t)S.daily={d:t,reps:0,cards:0,proofs:0,lessons:0};
+  S.daily[kind]=(S.daily[kind]||0)+1;
+}
+function dailyToday(){
+  var t=todayISO();
+  return (S.daily&&S.daily.d===t)?S.daily:{reps:0,cards:0,proofs:0,lessons:0};
+}
+function xpTotal(){
+  return totalReps()*10+labsMastered()*100+quizzesPassed()*50+(S.stats.lessons||0)*5+(S.stats.chats||0)*2+S.evid.length*2+cardsMastered()*3;
+}
+/* ---------- Modo Foco (missão passo a passo) ---------- */
+var FOC={open:false,id:null,phase:"steps",i:0,askI:0,showAns:false,exp:{},loading:false,err:null};
+function openFocus(id){
+  var l=labById(id);if(!l)return;
+  mut(function(s){s.ui.lastLab=id});
+  FOC={open:true,id:id,phase:"steps",i:0,askI:0,showAns:false,exp:{},loading:false,err:null};
+  var st=S.labs[id];
+  if(st&&st.steps){var k=0;while(k<l.steps.length&&st.steps[k])k++;FOC.i=Math.min(k,l.steps.length-1)}
+  stopSpeak();renderTick();
+}
+function closeFocus(){FOC.open=false;stopSpeak();renderTick()}
+async function focExplain(){
+  var l=labById(FOC.id);
+  var txt="PASSO "+(FOC.i+1)+" da missão "+l.id+" ("+emp(l.t)+"): "+emp(l.steps[FOC.i]);
+  FOC.loading=true;FOC.err=null;renderTick();MascotBus.set("mood","think");
+  try{var out=await explainText(txt,"missão "+l.id+" — passo "+(FOC.i+1));FOC.exp[FOC.i]=out;bumpDaily("lessons");if(S.settings.tts)speak(out)}
+  catch(e){FOC.err=String(e.message||e)}
+  FOC.loading=false;MascotBus.set("mood","idle");renderTick();
+}
+function focStepDone(){
+  var l=labById(FOC.id);
+  mut(function(s){labSt(FOC.id).steps[FOC.i]=true});
+  stopSpeak();
+  if(FOC.i<l.steps.length-1){FOC.i++;FOC.err=null;renderTick()}
+  else{FOC.phase="proofs";renderTick()}
+}
+function FocusModal(){
+  var _f=useStore();
+  if(!FOC.open)return null;
+  var l=labById(FOC.id);if(!l)return null;
+  var st=S.labs[FOC.id]||{steps:{},proofs:{},c:0,mem:false};
+  var body=null;
+  if(FOC.phase==="steps"){
+    var total=l.steps.length;
+    body=(<div>
+      <Progress percent={Math.round(FOC.i/total*100)} size="small" strokeColor="#f5a623" format={function(){return (FOC.i+1)+"/"+total}}/>
+      <Card className="focusCard" style={{marginTop:12}}>
+        <div className="mut" style={{fontSize:12}}>PASSO {FOC.i+1} DE {total} · execute no PHC agora</div>
+        <div className="focusStep">{emp(l.steps[FOC.i])}</div>
+      </Card>
+      {FOC.exp[FOC.i]?<Card size="small" className="theoryCard" style={{marginTop:10}} title="🧠 Professor Einstein"><div className="expText">{FOC.exp[FOC.i]}</div></Card>:null}
+      {FOC.err?<Alert style={{marginTop:10}} type="warning" showIcon message={FOC.err}/>:null}
+      <Space style={{marginTop:14}} wrap>
+        <Button size="large" onClick={function(){speak(emp(l.steps[FOC.i]))}}>🔊 Ouvir</Button>
+        <Button size="large" loading={FOC.loading} onClick={focExplain}>🧠 Explicar</Button>
+        {FOC.i>0?<Button size="large" onClick={function(){FOC.i--;FOC.err=null;renderTick()}}>◀ Voltar</Button>:null}
+        <Button size="large" type="primary" onClick={focStepDone}>{FOC.i===total-1?"✅ Concluir passos":"✅ Feito, próximo ▶"}</Button>
+      </Space>
+    </div>);
+  }else if(FOC.phase==="proofs"){
+    body=(<div>
+      <Alert type="info" showIcon message="📸 Evidências da missão" description={"Sem evidência, não há aprendizado. Guarde em C:\\PHC-Treino\\evidencias\\"+l.id+"\\ e marque abaixo. Registe também na aba Progresso → Provas."}/>
+      <div style={{marginTop:12}}>
+        {l.proofs.map(function(p,i){return <div key={i} style={{marginBottom:8}}><Checkbox checked={!!st.proofs[i]} onChange={function(){tgProof(l.id,i)}}><Tag color="blue">{p.k}</Tag>{emp(p.d)}</Checkbox></div>})}
+      </div>
+      <Button size="large" type="primary" style={{marginTop:10}} onClick={function(){FOC.phase="asks";FOC.askI=0;FOC.showAns=false;renderTick()}}>Ir para as perguntas ▶</Button>
+    </div>);
+  }else if(FOC.phase==="asks"){
+    var a=l.ask[FOC.askI];
+    body=(<div>
+      <div className="mut" style={{fontSize:12}}>PERGUNTA {FOC.askI+1} DE {l.ask.length} · responda EM VOZ ALTA antes de revelar</div>
+      <Card className="focusCard" style={{marginTop:10}}><div className="focusStep">{emp(a.q)}</div></Card>
+      {FOC.showAns?<Card size="small" className="theoryCard" style={{marginTop:10}}><div className="expText">{emp(a.a)}</div></Card>:null}
+      <Space style={{marginTop:14}} wrap>
+        {!FOC.showAns?<Button size="large" onClick={function(){FOC.showAns=true;renderTick()}}>👁 Ver resposta</Button>:null}
+        {FOC.showAns?<Button size="large" onClick={function(){if(S.settings.tts)speak(emp(a.a))}}>🔊 Ouvir</Button>:null}
+        <Button size="large" type="primary" onClick={function(){
+          if(FOC.askI<l.ask.length-1){FOC.askI++;FOC.showAns=false;renderTick()}
+          else{FOC.phase="done";renderTick()}}}>{FOC.askI===l.ask.length-1?"✅ Finalizar":"Próxima ▶"}</Button>
+      </Space>
+    </div>);
+  }else{
+    body=(<div style={{textAlign:"center",padding:"14px 0"}}>
+      <div style={{fontSize:44}}>🎉</div>
+      <h3>Missão {l.id} executada!</h3>
+      <p className="mut">Passos: {Object.keys(st.steps).filter(function(k){return st.steps[k]}).length}/{l.steps.length} · Evidências: {Object.keys(st.proofs).filter(function(k){return st.proofs[k]}).length}/{l.proofs.length}</p>
+      <p>Registe a repetição: a missão volta em {LADDER[Math.min(st.c,LADDER.length-1)]} dia(s) para você refazer <b>sem ler os passos</b>.</p>
+      <Space wrap style={{justifyContent:"center"}}>
+        <Button size="large" type="primary" onClick={function(){rep(FOC.id);closeFocus()}}>✅ Registar repetição</Button>
+        {st.c>=2&&!st.mem?<Button size="large" style={{background:"#13c2c2",borderColor:"#13c2c2",color:"#fff"}} onClick={function(){markMem(FOC.id);closeFocus()}}>🧠 Sei de cor</Button>:null}
+        <Button size="large" onClick={function(){closeFocus();openLab(l.id)}}>Ver ficha completa</Button>
+      </Space>
+    </div>);
+  }
+  return (<Modal open={FOC.open} onCancel={closeFocus} footer={null} width={Math.min(760,window.innerWidth-16)}
+    title={<Space><b style={{color:"#f5a623"}}>{l.id}</b><span>{emp(l.t)}</span><Tag>Modo Foco</Tag></Space>}>
+    {body}
+  </Modal>);
+}
+/* ---------- Missões: trilha com bloqueios ---------- */
+function LockedRow(props){
+  var l=props.lab;
+  var path=journeyPath().filter(function(x){var b=labById(x);return b&&b.lv===l.lv});
+  var i=path.indexOf(l.id);
+  var prevId=i>0?path[i-1]:null;
+  return (<Card size="small" className="lockedRow" style={{marginBottom:10}}>
+    <Space wrap>🔒 <b>{l.id}</b><span className="mut">{emp(l.t)}</span>
+      <Tag>{prevId?"conclua "+prevId+" para liberar":"conclua o nível anterior"}</Tag></Space>
+  </Card>);
+}
+function MissoesPathTab(){
+  var _f=useStore();
+  var items=[];
+  for(var lv=0;lv<BELTS.length;lv++){(function(lv){
+    var b=BELTS[lv];
+    var labs=DATA.labs.filter(function(l){return l.lv===lv});
+    var open=levelOpen(lv)||S.settings.freeMode;
+    var dom=labs.filter(function(l){return S.labs[l.id]&&S.labs[l.id].mem}).length;
+    var ini=labs.filter(function(l){return S.labs[l.id]&&S.labs[l.id].c>0}).length;
+    items.push({key:String(lv),collapsible:open?undefined:"disabled",
+      label:<Space wrap>{open?<span className="beltDot" style={{background:b.cor}}/>:<span>🔒</span>}<b>Nível {lv} · {b.name}</b>
+        <span className="mut">· {b.desc}</span>
+        <Tag color={dom===labs.length?"green":"default"}>{ini}/{labs.length} feitas</Tag>
+        {beltUnlocked(lv)?<Tag color="gold">🔓 concluído</Tag>:null}</Space>,
+      children:open?<div>
+        {!S.settings.freeMode?<p className="mut" style={{marginBottom:8}}>Modo guiado: cada missão libera a seguinte. (Modo livre em ⚙️ Definições.)</p>:null}
+        {labs.map(function(l){return missionUnlocked(l.id)?<LabPanel key={l.id} lab={l}/>:<LockedRow key={l.id} lab={l}/>})}
+      </div>:<p className="mut">Conclua pelo menos metade do nível anterior para abrir.</p>});
+  })(lv)}
+  return (<div>
+    <Collapse items={items} activeKey={COLL.keys} onChange={function(k){COLL.keys=k;renderTick()}}/>
+  </div>);
+}
+/* ---------- Jornada (novo início) ---------- */
+function JornadaTab(){
+  var _f=useStore();
+  var t=todayISO();
+  var day=dailyToday();
+  var actions=(day.reps||0)+(day.cards||0)+(day.proofs||0)+(day.lessons||0);
+  var goal=5;
+  var dueL=DATA.labs.filter(function(l){var s=S.labs[l.id];return s&&!s.mem&&s.due&&s.due<=t});
+  var dueC=dueCardsN();
+  var path=journeyPath();
+  var current=null;
+  for(var i=0;i<path.length;i++){var id=path[i];
+    if(missionUnlocked(id)){var st0=S.labs[id];
+      if(!st0||st0.c<1){current=labById(id);break}}}
+  if(!current&&dueL.length)current=dueL[0];
+  var nextLocked=null;
+  for(var k=0;k<path.length;k++){if(!missionUnlocked(path[k])){nextLocked=labById(path[k]);break}}
+  var curLv=current?current.lv:(currentBelt());
+  var lvLabs=DATA.labs.filter(function(l){return l.lv===curLv});
+  var lvDone=lvLabs.filter(function(l){return S.labs[l.id]&&S.labs[l.id].c>0}).length;
+  return (<div>
+    <div className="ringRow">
+      <Card size="small" className="ringCard"><Progress type="circle" size={86} percent={Math.min(100,Math.round(actions/goal*100))} strokeColor="#f5a623"/>
+        <div className="mut" style={{marginTop:6,fontSize:12}}>{actions}/{goal} ações hoje</div></Card>
+      <Card size="small" className="ringCard"><Statistic title="XP" value={xpTotal()} valueStyle={{color:"#f5a623",fontSize:24}}/>
+        <div className="mut" style={{fontSize:12}}>experiência acumulada</div></Card>
+      <Card size="small" className="ringCard"><Statistic title="Sequência" value={S.streak.n+" 🔥"} valueStyle={{color:"#ff7a45",fontSize:24}}/>
+        <div className="mut" style={{fontSize:12}}>dias seguidos</div></Card>
+      <Card size="small" className="ringCard"><Statistic title={"Nível "+curLv} value={BELTS[curLv]?BELTS[curLv].name:"—"} valueStyle={{fontSize:16,color:BELTS[curLv]?BELTS[curLv].cor:"#fff"}}/>
+        <Progress percent={lvLabs.length?Math.round(lvDone/lvLabs.length*100):0} size="small" strokeColor="#13c2c2"/>
+      </Card>
+    </div>
+    {current?<Card className="heroCard" style={{marginTop:12}} title={<Space wrap><Tag color="orange">▶ A SUA MISSÃO ATUAL</Tag><b>{current.id} — {emp(current.t)}</b></Space>}>
+      <p className="mut">{emp(current.goal)}</p>
+      <Space wrap>
+        <Button size="large" type="primary" onClick={function(){openFocus(current.id)}}>▶ Iniciar passo a passo</Button>
+        <Button onClick={function(){openLab(current.id)}}>📖 Conceito e ficha</Button>
+        <Button onClick={function(){mut(function(s){s.ui.lastLab=current.id});labLesson(current)}}>🎓 Aula guiada</Button>
+      </Space>
+    </Card>:<Card style={{marginTop:12}}><Alert type="success" showIcon message="Nenhuma missão nova pendente" description={dueL.length?"Faça as revisões vencidas abaixo.":"Tudo em dia! Avance para o próximo nível ou revise cartas."}/></Card>}
+    {dueL.length?<Card size="small" style={{marginTop:12}} title={"⏰ Revisões de hoje ("+dueL.length+")"}>
+      {dueL.slice(0,5).map(function(l){return <div key={l.id} style={{marginBottom:6}}>
+        <Space wrap><b>{l.id}</b><span>{emp(l.t)}</span><Tag>{S.labs[l.id].c} reps</Tag>
+        <Button size="small" type="primary" ghost onClick={function(){openFocus(l.id)}}>Praticar</Button></Space></div>})}
+      {dueL.length>5?<span className="mut">+{dueL.length-5} na aba Missões…</span>:null}
+    </Card>:null}
+    <Card size="small" style={{marginTop:12}} title="🗂 Cartas do dia">
+      <Space wrap>
+        <Tag color={dueC?"orange":"default"}>{dueC} vencidas</Tag><Tag>{newCardsN()} novas</Tag>
+        <Button type="primary" ghost onClick={function(){PRAC.tab="cartas";gTab("praticar");startCards(dueC?"due":"new")}}>{dueC?"Revisar agora":"Estudar novas"}</Button>
+      </Space>
+    </Card>
+    {!S.plan?<Card size="small" style={{marginTop:12}} title="🎓 Ainda sem curso personalizado">
+      <p className="mut">2 minutos: escolha o segmento da sua empresa de treino e (opcional) deixe a IA montar a ordem ideal das missões para o seu perfil.</p>
+      <Button type="primary" onClick={function(){openWizard(0)}}>Personalizar o meu curso</Button>
+    </Card>:null}
+    {nextLocked?<p className="mut" style={{marginTop:14,fontSize:12}}>🔒 A seguir na trilha: <b>{nextLocked.id} — {emp(nextLocked.t)}</b> · conclua a missão atual para liberar. Nada de pressa: uma coisa de cada vez.</p>:null}
+  </div>);
+}
+/* ---------- Agrupadores de abas ---------- */
+var APRE={tab:"circuitos"};
+function AprenderTab(){
+  var _f=useStore();
+  return <Tabs type="card" activeKey={APRE.tab} onChange={function(k){APRE.tab=k;renderTick()}} items={[
+    {key:"circuitos",label:"🔄 Circuitos",children:<CircuitosTab/>},
+    {key:"dicionario",label:"📖 Dicionário",children:<DicionarioTab/>},
+    {key:"teoria",label:"📚 Guia completo",children:<TeoriaTab/>},
+    {key:"protocolo",label:"📜 Protocolo",children:<ProtocoloTab/>}]}/>;
+}
+var PRAC={tab:"cartas"};
+function PraticarTab(){
+  var _f=useStore();
+  return <Tabs type="card" activeKey={PRAC.tab} onChange={function(k){PRAC.tab=k;renderTick()}} items={[
+    {key:"cartas",label:"🗂 Cartas",children:<CartasTab/>},
+    {key:"testes",label:"📝 Testes",children:<TestesTab/>}]}/>;
+}
+var PROG={tab:"visao"};
+function ProgressoHub(){
+  var _f=useStore();
+  return <Tabs type="card" activeKey={PROG.tab} onChange={function(k){PROG.tab=k;renderTick()}} items={[
+    {key:"visao",label:"📈 Visão geral",children:<ProgressoTab/>},
+    {key:"provas",label:"📸 Provas",children:<ProvasTab/>}]}/>;
+}
+/* ---------- Tour de boas-vindas ---------- */
+function OnboardTour(){
+  var _f=useStore();
+  if(S.onboarded)return null;
+  var slides=[
+    {t:"🎓 Bem-vindo ao PHC Trainer Pro",d:"Formação profissional prática no módulo Gestão do Cegid PHC Evolution. Um passo de cada vez — o app mostra apenas o que importa agora."},
+    {t:"🧭 Como funciona",d:"1) Leia o CONCEITO da missão. 2) Execute PASSO A PASSO no PHC (Modo Foco). 3) Guarde as EVIDÊNCIAS. 4) O sistema agenda REPETIÇÕES até ficar automático. Cada missão libera a seguinte."},
+    {t:"🏢 A sua empresa de treino",d:"Escolha um segmento real (hotel, eletrónica, distribuição, obras…) — missões, exemplos e o Professor Einstein passam a usar a SUA empresa. A IA também monta um curso personalizado."},
+    {t:"📸 Sem evidência, não há aprendizado",d:"Prints, consultas SQL e ficheiros formam o seu portfólio profissional. Vamos começar?"}];
+  return (<Modal open footer={null} width={600} title="Como funciona o seu treino"
+    onCancel={function(){mut(function(s){s.onboarded=true})}}>
+    <Carousel dots autoplay={false}>
+      {slides.map(function(sl,i){return <div key={i}><Card size="small" style={{minHeight:150,margin:"4px 2px"}}>
+        <h3 style={{marginBottom:8}}>{sl.t}</h3><p className="mut" style={{fontSize:14}}>{sl.d}</p></Card></div>})}
+    </Carousel>
+    <div style={{textAlign:"center",marginTop:16}}>
+      <Button type="primary" size="large" onClick={function(){mut(function(s){s.onboarded=true});openWizard(0)}}>🏢 Escolher empresa e começar</Button>
+      <div style={{marginTop:8}}><Button size="large" onClick={function(){mut(function(s){s.onboarded=true});openLab("L00")}}>Ir direto para a primeira missão (L00)</Button></div>
+    </div>
+  </Modal>);
+}
+
 /* ============ arranque ============ */
 S=loadState();
 try{

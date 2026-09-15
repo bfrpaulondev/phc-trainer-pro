@@ -17,8 +17,10 @@ Plataforma de **formação prática** para o módulo Gestão do Cegid PHC Evolut
 1. **📜 Protocolo** — leia as regras do treino (regra 0: **conceito antes da prática**).
 2. **🏢 Empresa** — escolha o seu segmento de treino (12 opções realistas portuguesas: hotelaria, eletrónica, distribuição, construção, clínica…) ou faça a **entrevista de 3 passos** e deixe a IA gerar o seu **curso personalizado**. Todas as missões, aulas e exemplos passam a usar a SUA empresa.
 3. Prepare o ambiente com as missões **L00–L05** (pastas, SQL Server, instalação do PHC, backups, acessos, Dicionário de Dados).
-4. Siga a aba **📌 Hoje** diariamente: 📖 conceito → cartas → repetições vencidas → 1 missão nova → evidências → explicação em voz alta.
-5. Em cada missão: leia o **📖 Conceito** (carrossel) → se quiser, **🎓 Aula guiada** (o Professor explica parágrafo a parágrafo, com voz) → execute os passos no PHC.
+4. Siga a aba **🎯 Jornada** diariamente: ela mostra apenas o essencial — a **missão atual** (botão ▶ Iniciar passo a passo = Modo Foco: um passo por vez com voz e IA), as **revisões vencidas**, as **cartas do dia** e a **meta de 5 ações**.
+   - As missões são **liberadas uma a uma** (modo guiado). Quer tudo destrancado (consulta/formação de equipa)? ⚙️ Definições → desative a sequência guiada.
+   - Navegação simplificada: 📚 Aprender junta Circuitos + Dicionário + Guia + Protocolo; 🧠 Praticar junta Cartas + Testes; 📊 Progresso junta Visão + Provas + Conquistas + Equipa.
+5. Em cada missão: leia o **📖 Conceito** (carrossel) → **▶ Passo a passo** (Modo Foco) ou ficha completa → se quiser, **🎓 Aula guiada** (parágrafo a parágrafo, com voz) → evidências.
 6. Ao terminar: **✅ Registar repetição** — a missão volta em 1, 2, 4, 7, 14, 30 e 60 dias. A partir da 3ª vez, **cronometre** (meta 🏁). Dominou? **🧠 Sei de cor**.
 7. O nível avança com **todas** as missões 🧠 + teste ≥ 80%.
 8. **Especializações:** packs **Contabilidade (L57–L66)**, **Pessoal/Vencimentos (L67–L74)**, **POS & Retalho (L75–L82)** e **Suporte/Pós-venda (L83–L89)** — mesma empresa de treino, como num cliente real. As 24 🏅 conquistas registam os marcos (aba Progresso).
