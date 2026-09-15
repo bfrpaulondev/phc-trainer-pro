@@ -12,7 +12,7 @@ Material educativo **não oficial**, baseado em fontes públicas da Cegid PHC (H
 
 | Recurso | Descrição |
 |---|---|
-| 🎯 **57 missões práticas (L00–L56)** | Passos exatos para executar num PHC instalado: do SQL/instalação/administração até faturação, stocks, tesouraria, fiscalidade, análises, desenvolvimento (Xbase/C#) e um projeto final de implementação |
+| 🎯 **75 missões práticas (L00–L74)** | Passos exatos num PHC instalado: infraestrutura, ficheiros, vendas, compras/stocks, financeiro, fiscal, análises, desenvolvimento (Xbase/C#), projeto final + **packs de especialização: Contabilidade (L57–L66) e Pessoal/Vencimentos (L67–L74)** — tudo com a mesma empresa de treino |
 | 🏢 **Empresa de treino personalizável** | 12 segmentos portugueses realistas (hotelaria, eletrónica, restauração, distribuição, construção, clínica, consultoria IT, indústria, oficina, agricultura, e-commerce, transportes) — cada um com empresa fictícia completa: nome, **NIF com dígito de controlo válido**, CAE, morada, artigos com preços e necessidades reais do negócio. Os textos das missões e da IA **adaptam-se automaticamente** à empresa escolhida |
 | 🎓 **Curso personalizado por IA** | Entrevista de 3 passos (segmento → empresa → objetivos/interesses/tempo) gera destaques e ordem das missões; alternativa offline: plano padrão calibrado por segmento |
 | 📖 **Conceito antes da prática** | Cada missão abre com teoria em **carrossel interativo**: o que é, conceitos-chave (1 cartão por conceito) e erros comuns |
@@ -22,8 +22,9 @@ Material educativo **não oficial**, baseado em fontes públicas da Cegid PHC (H
 | 🔄 **Circuitos interativos** | 10 grandes fluxos em carrossel (56 passos): vendas, compras, séries de documentos, transporte/AT, SAF-T, conta corrente, tesouraria, integração contabilística, personalização e fecho do mês — com narração e explicação da IA |
 | 📖 **Dicionário (94 termos)** | ATCUD, SAF-T, e-Fatura, CIUS-PT, PCMP, CEVMC, aging, reverse charge… com busca, filtros por tema, detalhe prático, voz e aprofundamento do Professor |
 | 🗂 **126 flashcards (SRS)** | Repetição espaçada 1→2→4→7→14→30→60 dias; também em `assets/flashcards-phc.csv` (Anki) |
-| 📝 **9 testes de nível** | 54 perguntas com explicação; aprovação ≥ 80% |
+| 📝 **11 testes de nível** | 66 perguntas com explicação; aprovação ≥ 80% (inclui Contabilidade e Pessoal) |
 | 📸 **Portfólio de evidências** | "Sem evidência, não aconteceu": registo de provas por missão, exportável em CSV |
+| 🏅 **22 conquistas** | Marcos profissionais desbloqueáveis (constância, exames, portefólio, especializações em Contabilidade e RH) com data de obtenção |
 | 📚 **Teoria completa embutida** | Guia do expert (15 capítulos) no app, com Aula Guiada por capítulo |
 | 📱 **PWA** | Instalável e **offline** após a 1ª visita (service worker) |
 | 💾 **Sem backend** | Progresso em `localStorage` + Exportar/Importar JSON |
@@ -79,10 +80,11 @@ phc-trainer-pro/
 
 ## 🛣 Roadmap
 
-- [ ] Packs de missões: **Contabilidade** e **Pessoal/Vencimentos** (a empresa de treino é a mesma — continuidade como num cliente real)
+- [x] Packs de missões: **Contabilidade** (L57–L66) e **Pessoal/Vencimentos** (L67–L74) ✔ v3.2
+- [x] **Conquistas** profissionais (22 marcos) ✔ v3.2
+- [ ] Pack POS/Retalho e Suporte (missões dedicadas)
 - [ ] Variantes por país (PT/ES/PE/AO/MZ) e por gama (Corporate/Advanced/Enterprise)
 - [ ] Indicadores de progresso por turma/equipa (export partilhado)
-- [ ] Mais vozes gravadas e conquistas por marco de estudo
 
 ## 📄 Licença
 

@@ -21,6 +21,7 @@ Plataforma de **formação prática** para o módulo Gestão do Cegid PHC Evolut
 5. Em cada missão: leia o **📖 Conceito** (carrossel) → se quiser, **🎓 Aula guiada** (o Professor explica parágrafo a parágrafo, com voz) → execute os passos no PHC.
 6. Ao terminar: **✅ Registar repetição** — a missão volta em 1, 2, 4, 7, 14, 30 e 60 dias. A partir da 3ª vez, **cronometre** (meta 🏁). Dominou? **🧠 Sei de cor**.
 7. O nível avança com **todas** as missões 🧠 + teste ≥ 80%.
+8. **Especializações:** depois do núcleo (ou em paralelo, se o seu trabalho exigir), faça os packs **Contabilidade (L57–L66)** e **Pessoal/Vencimentos (L67–L74)** — usam a mesma empresa de treino, como num cliente real. As 22 🏅 conquistas registam os seus marcos (aba Progresso).
 
 ## 🤖 Tutor IA e voz
 
