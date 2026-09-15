@@ -31,6 +31,7 @@ Plataforma de **formação prática** para o módulo Gestão do Cegid PHC Evolut
 
 - **Professor Einstein** (mascote no canto inferior direito): pisca, fala (TTS pt-BR) e dá dicas por aba. **Clique** para abrir o chat de IA.
 - **⚙️ Definições**: cole a sua chave OpenRouter (fica só no seu navegador) ou abra uma vez o seu link pessoal `…/#aik=SUA_CHAVE`; escolha modelo, voz on/off, velocidade, **modo econômico** (sem IA: leitura do texto original), limpar cache, exportar/importar/apagar progresso.
+- **🔊 Voz do Professor (⚙️ Definições):** 3 provedores — **Navegador** (grátis; use o **Microsoft Edge** e escolha a voz ⭐ "Microsoft Francisca Online (Natural)" para qualidade neural), **ElevenLabs** (melhor pt-BR; conta grátis em elevenlabs.io; chave nas Definições ou via link `…/#elk=SUA_CHAVE`; áudio fica em cache local) e **Groq Orpheus** (experimental — só fala inglês). Se a voz cloud falhar, o app usa automaticamente a voz do navegador.
 - As explicações ficam em **cache**: cada parágrafo só consome créditos uma vez. Defina limite de créditos no painel do OpenRouter.
 
 ## 📸 Evidências
