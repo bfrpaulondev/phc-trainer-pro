@@ -33,7 +33,26 @@ Material educativo **não oficial**, baseado em fontes públicas da Cegid PHC (H
 | 📱 **PWA** | Instalável e **offline** após a 1ª visita (service worker) |
 | 💾 **Sem backend** | Progresso em `localStorage` + Exportar/Importar JSON |
 
-## 🤖 Tutor IA (OpenRouter)
+## 🤖 Tutor IA — Auto-Router multi-fornecedor (v5.0)
+
+- **Nunca mais fique sem créditos:** as chamadas de IA passam por uma cadeia de fornecedores (⚡ Groq → 🇧🇷 Gemini → 🌪 Mistral → 🧠 Cerebras → 🟢 NVIDIA NIM → 🔀 OpenRouter). Falhou (402/429/403/rede)? O router **põe o fornecedor em pausa (cooldown) e tenta o seguinte automaticamente** — com o mesmo prompt/persona, mantendo a linha de raciocínio.
+- **Ordem configurável** (↑↓) em ⚙️ Definições + botão "Testar todos os fornecedores" (estado/latência de cada um).
+- **Voz é sempre Gemini TTS** (feminina pt-BR, com cache); os restantes fornecedores servem texto/chat/aulas.
+- **Gerador de Código PHC** (📚 Aprender → 🧰 Gerador): descreva o problema → recebe "onde configurar + código Xbase/C#/SQL pronto a colar + como testar + cuidados", com as **funções da Enciclopédia injetadas no prompt** (nada de funções inventadas) e preferência por modelos de código (Codestral/NVIDIA).
+- Chaves: coladas em ⚙️ Definições (ficam só no navegador) ou por link pessoal `…/#aik=…&gmk=…&grk=…&mst=…&cbs=…&nvi=…` — **nenhuma chave vai para o repositório**.
+
+### Fornecedores testados (set/2026)
+
+| Fornecedor | Modelo | Estado no teste |
+|---|---|---|
+| ⚡ Groq | openai/gpt-oss-120b | ✔ 0.6s, CORS aberto |
+| 🇧🇷 Gemini | gemini-flash-lite-latest (texto) + TTS | ✔ 0.8s, CORS ok |
+| 🌪 Mistral | mistral-small-latest / codestral-latest | ⚠ rate limit agressivo no free (router contorna) |
+| 🧠 Cerebras | gpt-oss-120b | ⚠ 402 (exige billing) |
+| 🟢 NVIDIA NIM | llama-3.1-nemotron-70b | ⚠ 403 (chave sem permissão de API) |
+| 🔀 OpenRouter | configurável | depende de créditos |
+
+## 🤖 Detalhes do tutor
 
 - Aulas guiadas e chat usam a API do [OpenRouter](https://openrouter.ai) (modelo padrão `openai/gpt-4o-mini`). Explicações ficam em **cache no navegador** — cada parágrafo só consome créditos uma vez.
 - **Modo econômico** (⚙️ Definições): desliga a IA; a aula passa a ler o texto original em voz alta.

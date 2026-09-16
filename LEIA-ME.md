@@ -38,6 +38,14 @@ Plataforma de **formação prática** para o módulo Gestão do Cegid PHC Evolut
 
 A aba **📕 Enciclopédia** traz o conhecimento da Enciclopédia PHC oficial destilado: 154 funções internas, 77 funções Xbase, dicas, erros comuns, artigos técnicos e o índice do manual completo (3.076 tópicos). Use a **pesquisa global** (cruza todas as secções), o 🔊 para ouvir e o 🧠 para o Professor explicar qualquer entrada com exemplos da sua empresa. As missões mostram **chips 📕** que saltam direto para o tema na Enciclopédia. (Descrições resumidas/reescritas com atribuição à Cegid/PHC — o original continua no CHM/Help Center oficial.)
 
+## 🤖 Auto-Router de IA (v5.0) — nunca fique sem créditos
+
+As chamadas de IA passam por 6 fornecedores em ordem (⚙️ Definições → Tutor IA): **Groq → Gemini → Mistral → Cerebras → NVIDIA → OpenRouter**. Se um falhar (sem créditos/limite/rede), o app **troca sozinho** para o seguinte mantendo a mesma persona e contexto. Botão **"Testar todos"** mostra o estado de cada um. A **voz é sempre Gemini** (feminina pt-BR). Abra o seu link pessoal com todas as chaves uma vez por navegador (fragmentos `#aik=…&gmk=…&grk=…&mst=…&cbs=…&nvi=…`).
+
+## 🧰 Gerador de Código PHC (novo)
+
+Em **📚 Aprender → 🧰 Gerador de código**: escolha o artefato (evento Xbase, regra, valor por defeito, análise SQL, script web C#…), descreva o problema e receba **onde configurar + código pronto + como testar + cuidados**, com as funções reais da Enciclopédia injetadas no prompt. Teste sempre em BD clonada e veja a Análise Interna após colar.
+
 ## 📸 Evidências
 
 Convenção de ficheiros: `C:\PHC-Treino\evidencias\L<nn>\AAAA-MM-DD-<descricao>.png` — e registe cada prova na aba **📸 Provas** (exportável em CSV). Sem evidência, não aconteceu.

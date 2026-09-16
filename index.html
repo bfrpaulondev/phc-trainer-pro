@@ -132,6 +132,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,Arial,sans-serif}
 .focusCard{background:#101c30!important;border:1px solid #2a4a7a!important}
 .focusStep{font-size:17px;line-height:1.55;margin-top:6px;color:#eef2fb}
 .lockedRow{opacity:.5;border-style:dashed!important}
+.codeBlk{background:#0b1220;border:1px solid #2a3754;border-radius:8px;padding:12px;overflow:auto;font-family:Consolas,Menlo,monospace;font-size:12.5px;white-space:pre-wrap;color:#c8f7c5;margin:8px 0}
 @media print{.appHeader,.mascotWrap,.appFooter,.ant-tabs-nav{display:none!important}}
 </style>
 </head>
@@ -430,8 +431,8 @@ var S=null, listeners=[], REV={n:0};
 function subscribe(cb){listeners.push(cb);return function(){var i=listeners.indexOf(cb);if(i>=0)listeners.splice(i,1)}}
 function getSnap(){return REV.n}
 function useStore(){useSyncExternalStore(subscribe,getSnap);return S}
-function defaultSettings(){return{aiKey:DEFAULT_AI_KEY,aiModel:"openai/gpt-4o-mini",tts:true,rate:1,economy:false,welcomePlayed:false,freeMode:false,ttsProvider:"browser",browserVoice:null,elKey:"",elVoice:"ErXwobaYiN019PkySvjV",grKey:"",grVoice:"troy",ttsFallback:true,gmKey:"",gmVoice:"Sulafat",gmModel:"gemini-3.1-flash-tts-preview"}}
-function defaultState(){return{v:2,rev:0,labs:{},cards:{},quiz:{},evid:[],streak:{last:null,n:0},settings:defaultSettings(),ai:{},ui:{lastLab:null,tab:"hoje"},company:defaultCompany(),plan:null,stats:{lessons:0,chats:0,dict:0,circ:0,explics:0},achs:{},contexto:{pais:"PT",gama:"Advanced"},profile:{nome:""},team:[],onboarded:false,daily:{d:"",reps:0,cards:0,proofs:0,lessons:0}}}
+function defaultSettings(){return{aiKey:DEFAULT_AI_KEY,aiModel:"openai/gpt-4o-mini",tts:true,rate:1,economy:false,welcomePlayed:false,freeMode:false,ttsProvider:"browser",browserVoice:null,elKey:"",elVoice:"ErXwobaYiN019PkySvjV",grKey:"",grVoice:"troy",ttsFallback:true,gmKey:"",gmVoice:"Sulafat",gmModel:"gemini-3.1-flash-tts-preview",msKey:"",cbKey:"",nvKey:"",aiProvOrder:["groq","gemini","mistral","cerebras","nvidia","openrouter"]}}
+function defaultState(){return{v:2,rev:0,labs:{},cards:{},quiz:{},evid:[],streak:{last:null,n:0},settings:defaultSettings(),ai:{},ui:{lastLab:null,tab:"hoje"},company:defaultCompany(),plan:null,stats:{lessons:0,chats:0,dict:0,circ:0,explics:0},achs:{},contexto:{pais:"PT",gama:"Advanced"},profile:{nome:""},team:[],onboarded:false,daily:{d:"",reps:0,cards:0,proofs:0,lessons:0},aiHealth:{},aiLast:null}}
 function persist(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(S))}catch(e){}}
 function mut(fn){fn(S);REV.n++;persist();listeners.slice().forEach(function(f){try{f()}catch(e){}})}
 function loadState(){
@@ -454,6 +455,7 @@ function loadState(){
   if(!s.company)s.company=defaultCompany(); if(s.plan===undefined)s.plan=null;
   if(!s.stats)s.stats={};if(!s.achs)s.achs={};
   if(!s.contexto)s.contexto={pais:"PT",gama:"Advanced"};if(!s.profile)s.profile={nome:""};if(!s.team)s.team=[];
+  if(!s.aiHealth)s.aiHealth={};if(!s.aiLast)s.aiLast=null;
   if(s.onboarded===undefined)s.onboarded=false;if(!s.daily)s.daily={d:"",reps:0,cards:0,proofs:0,lessons:0};if(s.settings.freeMode===undefined)s.settings.freeMode=false;
   var _tm={circuitos:"aprender",dicionario:"aprender",teoria:"aprender",protocolo:"aprender",cartas:"praticar",testes:"praticar",provas:"progresso"};
   if(_tm[s.ui.tab])s.ui.tab=_tm[s.ui.tab];if(!s.ui.tab)s.ui.tab="hoje";
@@ -484,22 +486,6 @@ var MascotBus={mood:"idle",bubble:"",ls:[],
 
 /* ============ IA · OpenRouter ============ */
 var PERSONA="Você é o Professor Einstein: um Albert Einstein em ilustração 2D — sereno, sábio e levemente bem-humorado — tutor de IA da plataforma profissional de formação PHC Trainer Pro, focada no módulo Gestão do ERP Cegid PHC Evolution/PHC CS Desktop. Missão: ensinar com clareza máxima. Explique todo conteúdo como para um leigo completo: frases curtas, analogias simples do quotidiano (comércio, escritório, logística, vida doméstica — NUNCA jogos), zero jargão sem explicação, aplicando SEMPRE à EMPRESA EM FOCO definida no perfil do aluno (empresa portuguesa realista, com NIF, CAE e necessidades reais). Regras: (1) Seja tecnicamente correto sobre o PHC — baseie-se no contexto fornecido; na dúvida, mande consultar o Help Center oficial e os manuais in-app. (2) Português do BRASIL, tom profissional e encorajador; humor leve, sem palhaçadas. (3) O aluno é um técnico em formação para expert: valorize precisão, boas práticas e conformidade legal/fiscal (AT). (4) Nunca invente funcionalidades, menus ou tabelas do PHC. (5) Termine explicações com '💡 Dica prática:' + uma frase aplicável.";
-async function openAI(messages,maxTokens){
-  var key=(S.settings.aiKey||"").trim();
-  if(!key)throw new Error("Sem chave OpenRouter — abra ⚙️ Definições e cole a sua chave (sk-or-v1-...).");
-  var r=await fetch("https://openrouter.ai/api/v1/chat/completions",{method:"POST",
-    headers:{"Authorization":"Bearer "+key,"Content-Type":"application/json","HTTP-Referer":location.origin+location.pathname,"X-Title":"PHC Trainer Pro"},
-    body:JSON.stringify({model:S.settings.aiModel||"openai/gpt-4o-mini",messages:messages,max_tokens:maxTokens||500,temperature:0.7})});
-  if(!r.ok){var t="";try{t=(await r.text()).slice(0,160)}catch(e){}
-    if(r.status===401||r.status===403)throw new Error("Chave OpenRouter inválida/revogada (HTTP "+r.status+").");
-    if(r.status===402)throw new Error("Sem créditos no OpenRouter (HTTP 402).");
-    if(r.status===429)throw new Error("Limite de requisições atingido (HTTP 429) — espere uns segundos.");
-    throw new Error("OpenRouter HTTP "+r.status+" "+t)}
-  var j=await r.json();
-  var c=j&&j.choices&&j.choices[0]&&j.choices[0].message&&j.choices[0].message.content;
-  if(!c)throw new Error("Resposta vazia do modelo.");
-  return String(c).trim();
-}
 function aiCacheGet(k){var e=S.ai[k];return e?e.t:null}
 function aiCacheSet(k,t){S.ai[k]={t:t,ts:Date.now()};var ks=Object.keys(S.ai);if(ks.length>600){ks.sort(function(a,b){return S.ai[a].ts-S.ai[b].ts}).slice(0,100).forEach(function(x){delete S.ai[x]})}}
 async function explainText(text,ctxTitle){
@@ -689,7 +675,7 @@ function ChatDrawer(){
         <Input value={txt} placeholder="Pergunte ao Professor..." onChange={function(e){setTxt(e.target.value)}} onPressEnter={function(){chatSend(txt);setTxt("")}}/>
         <Button type="primary" onClick={function(){chatSend(txt);setTxt("")}}>Enviar</Button>
       </Space.Compact>
-      <p className="mut" style={{fontSize:11,marginTop:8}}>Modelo: {S.settings.aiModel} · respostas usam créditos OpenRouter · ⚙️ Definições para trocar chave/modelo.</p>
+      <p className="mut" style={{fontSize:11,marginTop:8}}>Fornecedor ativo: <b>{LAST_PROVIDER||"—"}</b> · auto-router entre 6 APIs (falhou → troca sozinho, mesma persona) · ⚙️ Definições para chaves/ordem.</p>
     </Drawer>
   );
 }
@@ -699,22 +685,19 @@ function SettingsDrawer(){
   var _f=useStore();
   return (
     <Drawer open={SetOpen.v} onClose={function(){SetOpen.v=false;lessonNotify()}} width={Math.min(480,window.innerWidth-16)} title="⚙️ Definições">
-      <Alert type="warning" showIcon style={{marginBottom:14}} message="Chave de IA: configure a sua (fica só neste navegador)"
-        description="Nenhuma chave vem no código (repositório público + GitHub bloqueia segredos — ainda bem!). Cole a SUA chave OpenRouter abaixo: fica guardada apenas no localStorage deste navegador. Alternativa: abra uma vez o seu link pessoal terminado em #aik=SUA_CHAVE. Recomendado: defina um limite de créditos no painel do OpenRouter."/>
-      <Divider orientation="left" plain>🤖 Tutor IA (OpenRouter)</Divider>
-      <p className="mut" style={{fontSize:12}}>Chave API (guardada apenas neste navegador):</p>
-      <Input.Password value={S.settings.aiKey} placeholder="sk-or-v1-..." onChange={function(e){mut(function(s){s.settings.aiKey=e.target.value})}}/>
-      <p className="mut" style={{fontSize:12,marginTop:10}}>Modelo:</p>
+      <Divider orientation="left" plain>🤖 Tutor IA — Auto-Router (6 fornecedores)</Divider>
+      <AiProviders/>
+      <p className="mut" style={{fontSize:12,marginTop:10}}>Modelo do OpenRouter (quando for o fornecedor ativo):</p>
       <Select style={{width:"100%"}} value={S.settings.aiModel} onChange={function(v){mut(function(s){s.settings.aiModel=v})}}
         options={[
-          {value:"openai/gpt-4o-mini",label:"GPT-4o-mini (padrão · barato e bom)"},
-          {value:"openai/gpt-4o",label:"GPT-4o (melhor qualidade · mais caro)"},
-          {value:"anthropic/claude-3.5-haiku",label:"Claude 3.5 Haiku (rápido)"},
-          {value:"deepseek/deepseek-chat",label:"DeepSeek Chat (econômico)"},
-          {value:"meta-llama/llama-3.3-70b-instruct",label:"Llama 3.3 70B (opção aberta)"}
+          {value:"openai/gpt-4o-mini",label:"GPT-4o-mini"},
+          {value:"openai/gpt-4o",label:"GPT-4o"},
+          {value:"anthropic/claude-3.5-haiku",label:"Claude 3.5 Haiku"},
+          {value:"deepseek/deepseek-chat",label:"DeepSeek Chat"},
+          {value:"meta-llama/llama-3.3-70b-instruct",label:"Llama 3.3 70B"}
         ]}/>
       <Space style={{marginTop:12}} wrap>
-        <Button onClick={async function(){MascotBus.set("mood","think");try{var t=await testAI();MascotBus.set("mood","cheer");MSG.success(t.slice(0,120));if(S.settings.tts)speak(t)}catch(e){MascotBus.set("mood","idle");MSG.error(String(e.message||e))}}}>🧪 Testar ligação IA</Button>
+        <Button onClick={async function(){MascotBus.set("mood","think");try{var t=await testAI();MascotBus.set("mood","cheer");MSG.success("via "+LAST_PROVIDER+" — "+t.slice(0,90));if(S.settings.tts)speak(t)}catch(e){MascotBus.set("mood","idle");MSG.error(String(e.message||e))}}}>🧪 Testar ligação IA</Button>
         <Button danger onClick={function(){Modal.confirm({title:"Apagar cache de explicações da IA?",onOk:function(){mut(function(s){s.ai={}});MSG.success("Cache limpo.")}})}}>🗑 Limpar cache IA ({Object.keys(S.ai).length})</Button>
       </Space>
       <Divider orientation="left" plain>🔊 Voz do Professor</Divider>
@@ -729,7 +712,7 @@ function SettingsDrawer(){
         <Button danger onClick={function(){Modal.confirm({title:"Apagar TODO o progresso?",content:"Missões, cartas, testes e provas serão perdidos neste navegador.",okText:"Apagar tudo",okButtonProps:{danger:true},onOk:function(){S=defaultState();persist();REV.n++;listeners.slice().forEach(function(f){f()});MSG.success("Recomeço do zero. Bom treino!")}})}}>♻ Reiniciar progresso</Button>
       </Space>
       <input type="file" id="impFile2" accept=".json" style={{display:"none"}} onChange={importar}/>
-      <p className="mut" style={{fontSize:11,marginTop:16}}>PHC Trainer Pro v4.3 · PWA instalável (ícone ⊕ na barra do navegador) · funciona offline após a 1ª visita.</p>
+      <p className="mut" style={{fontSize:11,marginTop:16}}>PHC Trainer Pro v5.0 · PWA instalável (ícone ⊕ na barra do navegador) · funciona offline após a 1ª visita.</p>
     </Drawer>
   );
 }
@@ -1164,7 +1147,7 @@ function dl(name,content,type){var b=new Blob([content],{type:type+";charset=utf
 function exportar(){dl("phc-trainer-progresso-"+todayISO()+".json",JSON.stringify(S,null,1),"application/json");MSG.success("Progresso exportado.")}
 function importar(ev){var f=ev.target.files[0];if(!f)return;var r=new FileReader();
   r.onload=function(){try{var o=JSON.parse(r.result);if(!o||!o.labs)throw 0;
-    o.settings=Object.assign(defaultSettings(),o.settings||{});if(!o.ai)o.ai={};if(!o.ui)o.ui={lastLab:null,tab:"hoje"};if(!o.company)o.company=defaultCompany();if(o.plan===undefined)o.plan=null;if(!o.stats)o.stats={};if(!o.achs)o.achs={};if(!o.contexto)o.contexto={pais:"PT",gama:"Advanced"};if(!o.profile)o.profile={nome:""};if(!o.team)o.team=[];if(o.onboarded===undefined)o.onboarded=false;if(!o.daily)o.daily={d:"",reps:0,cards:0,proofs:0,lessons:0};if(o.settings.freeMode===undefined)o.settings.freeMode=false;var _tm2={circuitos:"aprender",dicionario:"aprender",teoria:"aprender",protocolo:"aprender",cartas:"praticar",testes:"praticar",provas:"progresso"};if(o.ui&&_tm2[o.ui.tab])o.ui.tab=_tm2[o.ui.tab];
+    o.settings=Object.assign(defaultSettings(),o.settings||{});if(!o.ai)o.ai={};if(!o.ui)o.ui={lastLab:null,tab:"hoje"};if(!o.company)o.company=defaultCompany();if(o.plan===undefined)o.plan=null;if(!o.stats)o.stats={};if(!o.achs)o.achs={};if(!o.contexto)o.contexto={pais:"PT",gama:"Advanced"};if(!o.profile)o.profile={nome:""};if(!o.team)o.team=[];if(!o.aiHealth)o.aiHealth={};if(!o.aiLast)o.aiLast=null;if(o.onboarded===undefined)o.onboarded=false;if(!o.daily)o.daily={d:"",reps:0,cards:0,proofs:0,lessons:0};if(o.settings.freeMode===undefined)o.settings.freeMode=false;var _tm2={circuitos:"aprender",dicionario:"aprender",teoria:"aprender",protocolo:"aprender",cartas:"praticar",testes:"praticar",provas:"progresso"};if(o.ui&&_tm2[o.ui.tab])o.ui.tab=_tm2[o.ui.tab];
     S=o;persist();REV.n++;listeners.slice().forEach(function(x){x()});MSG.success("Progresso importado!")}catch(e){MSG.error("Ficheiro inválido.")}};
   r.readAsText(f);ev.target.value=""}
 /* ============ v3.0 · Empresa, Curso IA, Circuitos, Dicionário ============ */
@@ -2038,7 +2021,7 @@ function AppMain(){
         <Tabs activeKey={S.ui.tab} onChange={gTab} items={tabs} type="card" size="middle"/>
       </Content>
       <Footer className="appFooter">
-        PHC Trainer Pro v4.3 · material educativo não oficial — Cegid PHC® é marca dos respetivos proprietários; projeto sem afiliação · inclui índice destilado da Enciclopédia PHC® (descrições resumidas, com atribuição) · teoria: docs/guia-expert-phc-gestao-evolution.md ·{" "}
+        PHC Trainer Pro v5.0 · material educativo não oficial — Cegid PHC® é marca dos respetivos proprietários; projeto sem afiliação · inclui índice destilado da Enciclopédia PHC® (descrições resumidas, com atribuição) · teoria: docs/guia-expert-phc-gestao-evolution.md ·{" "}
         <a href="https://github.com/bfrpaulondev/phc-trainer-pro" target="_blank" rel="noopener">GitHub</a> · progresso guardado neste navegador (exporte backups 💾)
       </Footer>
       <Mascot tip={TAB_HINTS[S.ui.tab]||""} onClick={openChat}/>
@@ -2291,6 +2274,7 @@ function AprenderTab(){
   return <Tabs type="card" activeKey={APRE.tab} onChange={function(k){APRE.tab=k;renderTick()}} items={[
     {key:"circuitos",label:"🔄 Circuitos",children:<CircuitosTab/>},
     {key:"dicionario",label:"📖 Dicionário",children:<DicionarioTab/>},
+    {key:"gerador",label:"🧰 Gerador de código",children:<GeradorTab/>},
     {key:"teoria",label:"📚 Guia completo",children:<TeoriaTab/>},
     {key:"protocolo",label:"📜 Protocolo",children:<ProtocoloTab/>}]}/>;
 }
@@ -2330,22 +2314,218 @@ function OnboardTour(){
   </Modal>);
 }
 
+/* ============ v5.0 · Auto-Router de IA + Gerador de Código PHC ============ */
+var AI_PROVIDERS=[
+{id:"groq",nome:"Groq (gpt-oss-120b)",type:"openai",url:"https://api.groq.com/openai/v1/chat/completions",model:"openai/gpt-oss-120b",codeModel:null,keyf:function(){return S.settings.grKey}},
+{id:"gemini",nome:"Gemini (flash-lite)",type:"gemini",model:"gemini-flash-lite-latest",keyf:function(){return S.settings.gmKey}},
+{id:"mistral",nome:"Mistral (small/codestral)",type:"openai",url:"https://api.mistral.ai/v1/chat/completions",model:"mistral-small-latest",codeModel:"codestral-latest",keyf:function(){return S.settings.msKey}},
+{id:"cerebras",nome:"Cerebras (gpt-oss-120b)",type:"openai",url:"https://api.cerebras.ai/v1/chat/completions",model:"gpt-oss-120b",codeModel:null,keyf:function(){return S.settings.cbKey}},
+{id:"nvidia",nome:"NVIDIA NIM (nemotron-70b)",type:"openai",url:"https://integrate.api.nvidia.com/v1/chat/completions",model:"nvidia/llama-3.1-nemotron-70b-instruct",codeModel:"nvidia/llama-3.1-nemotron-70b-instruct",keyf:function(){return S.settings.nvKey}},
+{id:"openrouter",nome:"OpenRouter (multi)",type:"openai",url:"https://openrouter.ai/api/v1/chat/completions",model:null,codeModel:null,keyf:function(){return S.settings.aiKey}}
+];
+var LAST_PROVIDER="";
+function provById(id){for(var i=0;i<AI_PROVIDERS.length;i++)if(AI_PROVIDERS[i].id===id)return AI_PROVIDERS[i];return null}
+function provHealthy(id){var h=S.aiHealth&&S.aiHealth[id];return !(h&&h.until&&h.until>Date.now())}
+function markFail(id,status){
+  if(!S.aiHealth)S.aiHealth={};
+  var cd=(status===402||status===401||status===403)?6*3600*1000:(status===429?10*60*1000:90*1000);
+  S.aiHealth[id]={until:Date.now()+cd,st:status};persist();
+}
+function markOk(id){if(S.aiHealth&&S.aiHealth[id]){delete S.aiHealth[id];persist()}if(S.aiLast!==id){S.aiLast=id;persist()}}
+function providerOrder(opts){
+  var base=(S.settings.aiProvOrder&&S.settings.aiProvOrder.length)?S.settings.aiProvOrder.slice():["groq","gemini","mistral","cerebras","nvidia","openrouter"];
+  if(opts&&opts.code){base.sort(function(a,b){var ca=(a==="mistral"||a==="nvidia")?0:1;var cb=(b==="mistral"||b==="nvidia")?0:1;return ca-cb})}
+  if(S.aiLast&&base.indexOf(S.aiLast)>=0){base=base.filter(function(x){return x!==S.aiLast});base.unshift(S.aiLast)}
+  return base;
+}
+async function callProvider(id,messages,maxTokens,opts){
+  var P=provById(id);if(!P){var e0=new Error("fornecedor desconhecido");e0.status=0;throw e0}
+  var key=((P.keyf&&P.keyf())||"").trim();
+  if(!key){var e1=new Error(P.nome+": sem chave");e1.status=0;throw e1}
+  opts=opts||{};
+  var model=P.model;
+  if(id==="openrouter")model=S.settings.aiModel||"openai/gpt-4o-mini";
+  if(opts.code&&P.codeModel)model=P.codeModel;
+  var r;
+  if(P.type==="gemini"){
+    var sys=[],turns=[];
+    messages.forEach(function(m){if(m.role==="system")sys.push(m.content);else turns.push({role:m.role==="assistant"?"model":"user",parts:[{text:String(m.content)}]})});
+    var gb={contents:turns,generationConfig:{maxOutputTokens:Math.max(1024,(maxTokens||700)*2),temperature:0.7}};
+    if(sys.length)gb.systemInstruction={parts:[{text:sys.join("\n")}]};
+    r=await fetch("https://generativelanguage.googleapis.com/v1beta/models/"+model+":generateContent",
+      {method:"POST",headers:{"x-goog-api-key":key,"Content-Type":"application/json"},body:JSON.stringify(gb)});
+  }else{
+    var hd={"Authorization":"Bearer "+key,"Content-Type":"application/json"};
+    if(id==="openrouter"){hd["HTTP-Referer"]=location.origin+location.pathname;hd["X-Title"]="PHC Trainer Pro"}
+    var mt=(id==="groq")?Math.max(2048,(maxTokens||700)*2):(maxTokens||700);
+    r=await fetch(P.url,{method:"POST",headers:hd,body:JSON.stringify({model:model,messages:messages,max_tokens:mt,temperature:0.7})});
+  }
+  if(!r.ok){
+    var t="";try{t=(await r.text()).slice(0,150)}catch(e){}
+    var er=new Error(P.nome+" HTTP "+r.status+" "+t);er.status=r.status;throw er;
+  }
+  var j=await r.json();
+  if(P.type==="gemini"){
+    var c=j&&j.candidates&&j.candidates[0];
+    var parts=c&&c.content&&c.content.parts;
+    if(!parts||!parts.length){var e2=new Error(P.nome+": sem texto");e2.status=0;throw e2}
+    return parts.map(function(pp){return pp.text||""}).join("").trim();
+  }
+  var ch=j&&j.choices&&j.choices[0]&&j.choices[0].message&&j.choices[0].message.content;
+  if(!ch){var e3=new Error(P.nome+": resposta vazia");e3.status=0;throw e3}
+  return String(ch).trim();
+}
+async function openAI(messages,maxTokens,opts){
+  var order=providerOrder(opts);
+  var tried=[],lastErr=null;
+  for(var i=0;i<order.length;i++){
+    var id=order[i];var P=provById(id);
+    var key=P&&P.keyf?(P.keyf()||"").trim():"";
+    if(!key){tried.push(id+"(sem chave)");continue}
+    if(!provHealthy(id)){tried.push(id+"(em pausa)");continue}
+    try{
+      var out=await callProvider(id,messages,maxTokens,opts);
+      if(!out){var ee=new Error("vazio");ee.status=0;throw ee}
+      markOk(id);LAST_PROVIDER=id;
+      return out;
+    }catch(e){
+      var st=(e&&e.status)||0;
+      markFail(id,st||599);
+      lastErr=e;tried.push(id+"("+(st||"rede")+")");
+    }
+  }
+  throw new Error("Todos os fornecedores falharam ["+(tried.join(", ")||"nenhum configurado")+"]. Adicione/verifique chaves em ⚙️ Definições. Último erro: "+((lastErr&&(lastErr.message||lastErr))||"?"));
+}
+/* ---------- UI fornecedores ---------- */
+var AIP_TEST={};
+async function testAllProviders(){
+  AIP_TEST={};renderTick();
+  for(var i=0;i<AI_PROVIDERS.length;i++){
+    var P=AI_PROVIDERS[i];var k=((P.keyf&&P.keyf())||"").trim();
+    if(!k){AIP_TEST[P.id]={ok:false,err:"sem chave"};continue}
+    var t0=Date.now();
+    try{await callProvider(P.id,[{role:"user",content:"Responda apenas: OK"}],60,{});AIP_TEST[P.id]={ok:true,ms:Date.now()-t0}}
+    catch(e){AIP_TEST[P.id]={ok:false,err:String((e&&e.message)||e).slice(0,58)}}
+    renderTick();
+  }
+  if(MSG)MSG.info("Teste concluído — veja os estados na lista.");
+}
+function AiProviders(){
+  var _f=useStore();
+  var defs=[["grKey","⚡ Groq — rápido e grátis (chat)"],["gmKey","🇧🇷 Gemini — texto + VOZ (TTS feminino pt-BR)"],["msKey","🌪 Mistral — small + codestral (código)"],["cbKey","🧠 Cerebras — ultra-rápido"],["nvKey","🟢 NVIDIA NIM — nemotron"],["aiKey","🔀 OpenRouter — multi-modelo (pago)"]];
+  var order=(S.settings.aiProvOrder&&S.settings.aiProvOrder.length)?S.settings.aiProvOrder:["groq","gemini","mistral","cerebras","nvidia","openrouter"];
+  function move(i,d){var o=order.slice();var j=i+d;if(j<0||j>=o.length)return;var t=o[i];o[i]=o[j];o[j]=t;mut(function(s){s.settings.aiProvOrder=o})}
+  return (<div>
+    <Alert type="info" showIcon style={{marginBottom:10}} message="Auto-router: nunca mais fique sem créditos"
+      description="As chamadas passam pelos fornecedores pela ordem abaixo. Deu 402/429/403/rede? O router põe o fornecedor em pausa (cooldown) e tenta o seguinte — com o MESMO prompt/persona, mantendo a linha de raciocínio. A VOZ é sempre Gemini TTS. Chaves só neste navegador; atalho: link com #aik=…&gmk=…&grk=…&mst=…&cbs=…&nvi=…"/>
+    {defs.map(function(d){return <div key={d[0]} style={{marginBottom:6}}>
+      <span className="mut" style={{fontSize:12}}>{d[1]}</span>
+      <Input.Password size="small" value={S.settings[d[0]]||""} placeholder="colar chave…" onChange={function(e){var v=e.target.value;mut(function(s){s.settings[d[0]]=v})}}/>
+    </div>})}
+    <p className="mut" style={{fontSize:12,marginTop:8}}>Ordem do auto-router (↑↓):</p>
+    {order.map(function(id,i){
+      var P=provById(id);var h=S.aiHealth&&S.aiHealth[id];var t=AIP_TEST[id];
+      var stTxt=t?(t.ok?("✔ "+t.ms+"ms"):("✖ "+(t.err||""))):(h?("⏸ pausa ("+(h.st||"erro")+")"):"");
+      return <div key={id} style={{display:"flex",gap:6,alignItems:"center",marginBottom:3}}>
+        <Tag color={i===0?"gold":"default"}>{i+1}</Tag>
+        <span style={{flex:1,fontSize:13}}>{P?P.nome:id}</span>
+        <span className="mut" style={{fontSize:11}}>{stTxt}</span>
+        <Button size="small" onClick={function(){move(i,-1)}} disabled={i===0}>↑</Button>
+        <Button size="small" onClick={function(){move(i,1)}} disabled={i===order.length-1}>↓</Button>
+      </div>})}
+    <Button size="small" style={{marginTop:8}} onClick={testAllProviders}>🧪 Testar todos os fornecedores</Button>
+  </div>);
+}
+/* ---------- Gerador de código PHC ---------- */
+var GEN={tipo:"Evento de utilizador (Xbase)",ecra:"",desc:"",out:null,loading:false,err:null,prov:"",hist:[]};
+var GEN_TIPOS=["Evento de utilizador (Xbase)","Regra de utilizador (Xbase)","Função de utilizador (Xbase)","Valor por defeito","Tecla de utilizador","Alerta / notificação","Consulta SQL / Análise de utilizador","Snapshot","Ecrã personalizado (IDU) — esboço","Evento / Regra PHC CS Web (C#)","Script web por URL (C#)","Outro"];
+var GEN_GUIA={
+"Evento de utilizador (Xbase)":"Eventos disponíveis: Init, Ativar, Desativar, Refrescar, Clique, Duplo Clique, Clique Direito, Ao Entrar, Ao Sair, Após Atualizar, Após não Atualizado, Antes/Depois mudar Linha-Coluna, MouseEnter/Leave/Move/Wheel, Tecla Pressionada. ObjRecebido.Janela (ecrã), ObjRecebido.Objecto (Value, Parent, MeusDados: AddParametro/GuardaParametro/ExisteParametro). Return .F. cancela a ação de raiz. Expressões não usam Return; programas usam. Erros gravados na Análise Interna.",
+"Regra de utilizador (Xbase)":"Validação na introdução/gravação: condição que bloqueia ou avisa com mensagem clara. Existe Assistente de Regras para casos simples; código para lógica complexa.",
+"Função de utilizador (Xbase)":"Função reutilizável (LPARAMETERS/RETURN, sintaxe VFP) chamável por regras/eventos. Gama EXECUTIVE/Enterprise.",
+"Valor por defeito":"Expressão por campo/tabela avaliada em registos novos (data atual, utilizador, cálculos).",
+"Tecla de utilizador":"Atalho de teclado personalizado com descrição no rodapé; pode chamar ecrãs/funções.",
+"Alerta / notificação":"Alertas de utilizador com funções internas (ex.: CriaAvs(stamp, userAv,...)); canais: aviso interno, PHC Notify, e-mail SMTP, SMS.",
+"Consulta SQL / Análise de utilizador":"SELECT com WITH (NOLOCK), joins entre tabelas PHC (descobrir no Dicionário de Dados: cl, cl2, ft, bo, re...), filtros, totais. NUNCA alterar dados por SQL sem controlar stamp/concorrência.",
+"Snapshot":"Consulta T-SQL contextual com variáveis (ex.: #stamp#) exibida em painel do ecrã.",
+"Ecrã personalizado (IDU) — esboço":"Descrever objetos (campos de ficheiro/ligação, grelhas, botões), eventos a programar, menu de utilizador e acessos.",
+"Evento / Regra PHC CS Web (C#)":"Framework web em C# (Editor de Código): eventos, regras; diagnóstico no Log de Código.",
+"Script web por URL (C#)":"Programa executado por URL (endpoint) — devolver JSON/HTML; proteger/validar acessos.",
+"Outro":"Descrever o artefato."};
+var CODE_ROLE="Atua como PROGRAMADOR SÉNIOR da Framework PHC CS Desktop (Xbase/Visual FoxPro) e PHC CS Web (C#). REGRAS OBRIGATÓRIAS: (1) Usa APENAS construções documentadas — eventos/ObjRecebido/Return .F., regras, valores por defeito, e funções internas da Enciclopédia PHC fornecidas no contexto; NUNCA inventes funções, propriedades ou tabelas. (2) Indica gama/parâmetro necessários (ex.: eventos exigem Advanced/Enterprise; funções de utilizador: EXECUTIVE). (3) Código comentado em português, pronto a colar. (4) FORMATO da resposta: '📋 ONDE CONFIGURAR' (caminho de menu exato) · bloco de código entre ``` · '🧪 COMO TESTAR' (3 passos em BD clonada) · '⚠ CUIDADOS' (upgrade, Análise Interna, stamp/concorrência). (5) Se faltar informação crítica, faz no máximo 2 perguntas objetivas ANTES do código.";
+async function genSend(){
+  if(!GEN.desc.trim()){MSG.warning("Descreva o problema/requisito.");return}
+  GEN.loading=true;GEN.err=null;GEN.out=null;renderTick();MascotBus.set("mood","think");
+  try{
+    var guia=GEN_GUIA[GEN.tipo]||"";
+    var enc=encContext(GEN.desc+" "+GEN.tipo+" "+GEN.ecra);
+    var usr="ARTEFATO PEDIDO: "+GEN.tipo+"\nECRÃ/TABELA ALVO: "+(GEN.ecra||"(não indicado)")+"\nGUIA TÉCNICO DO ARTEFATO: "+guia+"\nPROBLEMA/REQUISITO DO TÉCNICO: "+GEN.desc+(enc?("\n\n"+enc):"")+"\n\nGera a solução completa no formato definido.";
+    var out=await openAI([{role:"system",content:personaSys()+"\n\n"+CODE_ROLE},{role:"user",content:usr}],1800,{code:true});
+    GEN.out=out;GEN.prov=LAST_PROVIDER;
+    GEN.hist.unshift({tipo:GEN.tipo,desc:GEN.desc.slice(0,80),out:out,prov:GEN.prov,d:todayISO()});
+    if(GEN.hist.length>12)GEN.hist.pop();
+    if(S.settings.tts)speak("Código gerado pelo fornecedor "+GEN.prov+". Está no ecrã para copiar e testar na base de dados clonada.");
+  }catch(e){GEN.err=String((e&&e.message)||e)}
+  GEN.loading=false;MascotBus.set("mood","idle");renderTick();
+}
+function renderGenOut(t){
+  var parts=String(t).split("```");
+  return parts.map(function(pt,i){
+    if(i%2===1){var code=pt.replace(/^[a-zA-Z0-9_+-]*\n/,"");
+      return <div key={i} style={{position:"relative"}}><pre className="codeBlk">{code}</pre>
+        <Button size="small" style={{position:"absolute",top:6,right:6}} onClick={function(){try{navigator.clipboard.writeText(code);MSG.success("Código copiado!")}catch(e){MSG.info("Selecione e copie manualmente.")}}}>📋 copiar</Button></div>}
+    return <div key={i} style={{whiteSpace:"pre-wrap",margin:"6px 0"}}>{pt}</div>});
+}
+function GeradorTab(){
+  var _f=useStore();
+  return (<div>
+    <Card size="small" title="🧰 Gerador de código PHC — descreva o problema, receba a solução">
+      <Alert type="info" showIcon style={{marginBottom:10}} message="Baseado na Enciclopédia PHC + Framework"
+        description="Explique o que precisa (evento, regra, valor por defeito, análise SQL, script web…) e o gerador devolve: onde configurar, código pronto a colar, como testar e cuidados. As referências da Enciclopédia são injetadas automaticamente no prompt. Use o modelo de código (Codestral/NVIDIA) quando disponível — o auto-router trata disso."/>
+      <span className="mut" style={{fontSize:12}}>Tipo de artefato:</span>
+      <Select style={{width:"100%"}} value={GEN.tipo} onChange={function(v){GEN.tipo=v;renderTick()}} options={GEN_TIPOS.map(function(x){return {value:x,label:x}})}/>
+      <span className="mut" style={{fontSize:12,marginTop:8,display:"block"}}>Ecrã/tabela alvo (ex.: Clientes, Documentos de Faturação, ft):</span>
+      <Input value={GEN.ecra} placeholder="opcional" onChange={function(e){GEN.ecra=e.target.value;renderTick()}}/>
+      <span className="mut" style={{fontSize:12,marginTop:8,display:"block"}}>Descreva o problema/requisito (quanto mais detalhe, melhor):</span>
+      <TextArea rows={4} value={GEN.desc} onChange={function(e){GEN.desc=e.target.value;renderTick()}}
+        placeholder={"Ex.: Na gravação de uma fatura, se o cliente tiver o campo TreinoLimiteCredito preenchido e o total do documento ultrapassar esse limite, bloquear a gravação com mensagem clara e criar um aviso ao gestor de conta…"}/>
+      <Space style={{marginTop:12}} wrap>
+        <Button type="primary" size="large" loading={GEN.loading} onClick={genSend}>⚡ Gerar solução</Button>
+        {GEN.out?<Button onClick={function(){try{navigator.clipboard.writeText(GEN.out);MSG.success("Resposta completa copiada.")}catch(e){}}}>📋 Copiar tudo</Button>:null}
+        {GEN.out?<Button onClick={genSend}>🔄 Regenerar</Button>:null}
+      </Space>
+      {GEN.out?<span className="mut" style={{marginLeft:8,fontSize:12}}>via {GEN.prov}</span>:null}
+    </Card>
+    {GEN.err?<Alert style={{marginTop:10}} type="error" showIcon message="Falha na geração" description={GEN.err}/>:null}
+    {GEN.out?<Card size="small" className="theoryCard" style={{marginTop:12}} title="✅ Solução gerada">
+      {renderGenOut(GEN.out)}
+    </Card>:null}
+    {GEN.hist.length>1?<Card size="small" style={{marginTop:12}} title="Histórico da sessão">
+      {GEN.hist.map(function(h,i){return <div key={i} style={{marginBottom:6}}>
+        <a onClick={function(){GEN.out=h.out;GEN.prov=h.prov;GEN.tipo=h.tipo;GEN.desc=h.desc;renderTick();window.scrollTo({top:0,behavior:"smooth"})}} style={{cursor:"pointer"}}>
+          <Tag>{h.d}</Tag><Tag color="blue">{h.tipo}</Tag>{h.desc}… <span className="mut">({h.prov})</span></a>
+      </div>})}
+    </Card>:null}
+  </div>);
+}
+
 /* ============ arranque ============ */
 S=loadState();
 try{
-  var _hh=location.hash||"";var _anyKey=false;
-  var _hm=_hh.match(/aik=([A-Za-z0-9_\-\.]+)/);
-  if(_hm&&_hm[1]){S.settings.aiKey=_hm[1];_anyKey=true}
-  var _em=_hh.match(/elk=([A-Za-z0-9_\-\.]+)/);
-  if(_em&&_em[1]){S.settings.elKey=_em[1];S.settings.ttsProvider="elevenlabs";_anyKey=true}
-  var _gm=_hh.match(/grk=([A-Za-z0-9_\-\.]+)/);
-  if(_gm&&_gm[1]){S.settings.grKey=_gm[1];S.settings.ttsProvider="groq";_anyKey=true}
-  var _gg=_hh.match(/gmk=([A-Za-z0-9_\-\.]+)/);
-  if(_gg&&_gg[1]){S.settings.gmKey=_gg[1];S.settings.ttsProvider="gemini";if(!S.settings.gmVoice)S.settings.gmVoice="Sulafat";_anyKey=true}
+  var _hh=(location.hash||"").replace(/^#/,"");var _anyKey=false;
+  var _MAP={aik:"aiKey",gmk:"gmKey",grk:"grKey",mst:"msKey",cbs:"cbKey",nvi:"nvKey",elk:"elKey"};
+  _hh.split("&").forEach(function(kv){
+    var m=kv.match(/^([a-z]+)=([A-Za-z0-9_\-\.]+)$/);
+    if(m&&_MAP[m[1]]){
+      S.settings[_MAP[m[1]]]=m[2];_anyKey=true;
+      if(m[1]==="gmk"){S.settings.ttsProvider="gemini";if(!S.settings.gmVoice)S.settings.gmVoice="Sulafat"}
+      if(m[1]==="elk"){S.settings.ttsProvider="elevenlabs"}
+    }
+  });
   if(_anyKey){
     persist();
     history.replaceState(null,"",location.pathname+location.search);
-    setTimeout(function(){if(MSG)MSG.success("🔑 Chave(s) guardada(s) NESTE navegador. O link foi limpo — pode fechar.")},1600);
+    setTimeout(function(){if(MSG)MSG.success("🔑 Chaves guardadas NESTE navegador — auto-router ativo. O link foi limpo, pode fechar.")},1700);
   }
 }catch(e){}
 checkAchievements();
