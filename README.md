@@ -64,6 +64,16 @@ Gerar SQL para PHC sem conhecer o esquema é receita para campos inventados. A v
 2. **"O meu esquema" (por instalação)** — como cada empresa tem campos personalizados, o Gerador inclui um **script de descoberta** (information_schema, no dialecto T-SQL, SQL 2014+) para correr no Simulador de SQL do PHC/SSMS; o resultado cola-se na app (fica no navegador) e é injetado em todos os prompts como **autoridade máxima**. Sem esquema colado, a IA marca pressupostos com `-- [confirmar no Dicionário de Dados]` e sugere a descoberta — nunca inventa.
 3. **Regras SQL obrigatórias** — as 12 regras do responsável técnico (minúsculas, blocos `##` com comentários em inglês, T-SQL, sem CTEs/window functions desnecessárias, sem refatorar, nunca inventar nomes, compatível SQL Server 2014+, update/delete com where + select de validação, query completa vs alteração cirúrgica) são injetadas em **todo** prompt que envolva SQL (Gerador e chat).
 
+## 🔎 Descoberta guiada + confiança real (v5.3.0)
+
+O Gerador passou a trabalhar em **modo rigoroso** — como um técnico cuidadoso trabalharia:
+
+1. **Descreve só o problema** ("quero ver os últimos 10 registos na ft e as tabelas relacionadas"). A app deteta automaticamente as tabelas mencionadas.
+2. **A IA avalia o que sabe vs. o que não sabe**: responde com uma **fila pendente de validação** e uma **confiança real (0–100 %)**, declarada num bloco de metadados obrigatório (`===META===`) e descontada por cada tabela/campo/relação não confirmada. Abaixo de 99 % não há código final "à sorte".
+3. **Script de descoberta sob medida** para as tabelas do pedido: a tabela interna **`dic`** (dicionário de dados do PHC — primeiro a estrutura, depois o conteúdo), colunas via `information_schema`, campos de utilizador **`u_*`**, FKs declaradas, **1 linha de amostra por tabela**, **stored procedures, views e jobs do SQL Agent**. É só correr no Simulador de SQL/SSMS e colar o resultado na app.
+4. **Ciclo de resultados**: cada colagem reavalia a fila de pendentes e atualiza a confiança; quando atinge **≥99 %**, a IA entrega o código final completo (📋 onde configurar · código · 🧪 como testar · ⚠ cuidados). Cada colagem fica **acumulada em "📐 O meu esquema"** — a app aprende a BD real e os pedidos seguintes já arrancam com confiança mais alta.
+5. **GLM prioritário para código**: os artefatos de código usam preferencialmente `z-ai/glm-5.3` via proxy Cloudflare (o melhor nos testes), depois Codestral M2 e só então o router de velocidade.
+
 ## 🌐 Proxy Cloudflare (opcional — ativa a NVIDIA no navegador)
 
 A API da NVIDIA NIM não envia CORS, logo o navegador não a chama diretamente. O repositório inclui um **Worker mínimo e auditável** ([`worker/phc-ai-proxy.js`](worker/phc-ai-proxy.js)) que:

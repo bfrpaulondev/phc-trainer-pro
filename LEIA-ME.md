@@ -50,9 +50,9 @@ Quer usar a **NVIDIA (glm-5.3)** diretamente no navegador? A API deles não tem 
 
 Em **📚 Aprender → 🧰 Gerador de código**: escolha o artefato (evento Xbase, regra, valor por defeito, análise SQL, script web C#…), descreva o problema e receba **onde configurar + código pronto + como testar + cuidados**, com as funções reais da Enciclopédia injetadas no prompt. Teste sempre em BD clonada e veja a Análise Interna após colar.
 
-## 📐 SQL sempre correto (v5.2.0)
+## 🔎 Descoberta guiada + confiança real (novo na v5.3.0)
 
-No **🧰 Gerador → 📐 Esquema da base de dados**: (1) clique em **🔎 Gerar script de descoberta** e copie; (2) corra no PHC (Supervisor → Simulador de SQL) ou SSMS; (3) **cole os resultados** na caixa. A partir daí, todo o SQL gerado usa o esquema REAL da sua BD (incluindo campos de utilizador `u_*`). Sem colar, a IA usa apenas o esquema documentado (57 tabelas colhidas da Enciclopédia) e marca pressupostos com `-- [confirmar no Dicionário de Dados]`. As **12 regras de SQL do seu responsável técnico** (minúsculas, ## comentários em inglês, T-SQL 2014+, sem inventar nomes, etc.) são aplicadas automaticamente em todo o SQL.
+No **🧰 Gerador**, descreva apenas o pedido (ex.: "quero ver os últimos 10 registos na ft e as tabelas relacionadas"). A IA mostra uma **fila pendente de validação** e a **confiança real (0–100 %)**, e a app gera um **script de descoberta sob medida** (inclui a tabela interna **dic**, colunas, campos `u_*`, FKs, linhas de amostra, stored procedures, views e jobs). Corra-o no Simulador de SQL/SSMS e **cole os resultados**: a IA reavalia a fila até atingir **≥99 % de confiança** e só então entrega o código final. Cada colagem fica acumulada em "📐 O meu esquema" — a app aprende a sua BD. As **12 regras de SQL do seu responsável técnico** continuam aplicadas a todo o SQL, e a geração de código usa **GLM-5.3 com prioridade** (via proxy).
 
 ## 📸 Evidências
 
