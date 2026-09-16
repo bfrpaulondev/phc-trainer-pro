@@ -50,6 +50,10 @@ Quer usar a **NVIDIA (glm-5.3)** diretamente no navegador? A API deles não tem 
 
 Em **📚 Aprender → 🧰 Gerador de código**: escolha o artefato (evento Xbase, regra, valor por defeito, análise SQL, script web C#…), descreva o problema e receba **onde configurar + código pronto + como testar + cuidados**, com as funções reais da Enciclopédia injetadas no prompt. Teste sempre em BD clonada e veja a Análise Interna após colar.
 
+## 📐 SQL sempre correto (v5.2.0)
+
+No **🧰 Gerador → 📐 Esquema da base de dados**: (1) clique em **🔎 Gerar script de descoberta** e copie; (2) corra no PHC (Supervisor → Simulador de SQL) ou SSMS; (3) **cole os resultados** na caixa. A partir daí, todo o SQL gerado usa o esquema REAL da sua BD (incluindo campos de utilizador `u_*`). Sem colar, a IA usa apenas o esquema documentado (57 tabelas colhidas da Enciclopédia) e marca pressupostos com `-- [confirmar no Dicionário de Dados]`. As **12 regras de SQL do seu responsável técnico** (minúsculas, ## comentários em inglês, T-SQL 2014+, sem inventar nomes, etc.) são aplicadas automaticamente em todo o SQL.
+
 ## 📸 Evidências
 
 Convenção de ficheiros: `C:\PHC-Treino\evidencias\L<nn>\AAAA-MM-DD-<descricao>.png` — e registe cada prova na aba **📸 Provas** (exportável em CSV). Sem evidência, não aconteceu.

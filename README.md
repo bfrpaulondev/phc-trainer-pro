@@ -56,6 +56,14 @@ Material educativo **não oficial**, baseado em fontes públicas da Cegid PHC (H
 
 O app verifica `version.json` a cada 30 min e no arranque: se houver versão nova, mostra o banner **"🔄 Atualizar agora"** (desregistra o service worker, limpa caches e recarrega). Chega de ficar preso em versão antiga do PWA.
 
+## 📐 SQL correto por construção (v5.2.0)
+
+Gerar SQL para PHC sem conhecer o esquema é receita para campos inventados. A v5.2.0 resolve em três camadas:
+
+1. **Esquema PHC documentado (KB embutida)** — colhido dos exemplos SQL das 4.004 páginas da Enciclopédia oficial: **57 tabelas** com campos reais (`ft.fdata/ndoc/nmdoc`, `cl.nome/ncont/esaldo`, `st.epcpond` (PCMP), `bi.bostamp`…), relações por stamp e a convenção `u_*` dos campos de utilizador. Tudo com proveniência; nada inventado.
+2. **"O meu esquema" (por instalação)** — como cada empresa tem campos personalizados, o Gerador inclui um **script de descoberta** (information_schema, no dialecto T-SQL, SQL 2014+) para correr no Simulador de SQL do PHC/SSMS; o resultado cola-se na app (fica no navegador) e é injetado em todos os prompts como **autoridade máxima**. Sem esquema colado, a IA marca pressupostos com `-- [confirmar no Dicionário de Dados]` e sugere a descoberta — nunca inventa.
+3. **Regras SQL obrigatórias** — as 12 regras do responsável técnico (minúsculas, blocos `##` com comentários em inglês, T-SQL, sem CTEs/window functions desnecessárias, sem refatorar, nunca inventar nomes, compatível SQL Server 2014+, update/delete com where + select de validação, query completa vs alteração cirúrgica) são injetadas em **todo** prompt que envolva SQL (Gerador e chat).
+
 ## 🌐 Proxy Cloudflare (opcional — ativa a NVIDIA no navegador)
 
 A API da NVIDIA NIM não envia CORS, logo o navegador não a chama diretamente. O repositório inclui um **Worker mínimo e auditável** ([`worker/phc-ai-proxy.js`](worker/phc-ai-proxy.js)) que:
