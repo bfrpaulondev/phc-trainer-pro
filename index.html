@@ -431,7 +431,7 @@ var S=null, listeners=[], REV={n:0};
 function subscribe(cb){listeners.push(cb);return function(){var i=listeners.indexOf(cb);if(i>=0)listeners.splice(i,1)}}
 function getSnap(){return REV.n}
 function useStore(){useSyncExternalStore(subscribe,getSnap);return S}
-function defaultSettings(){return{aiKey:DEFAULT_AI_KEY,aiModel:"openai/gpt-4o-mini",tts:true,rate:1,economy:false,welcomePlayed:false,freeMode:false,ttsProvider:"browser",browserVoice:null,elKey:"",elVoice:"ErXwobaYiN019PkySvjV",grKey:"",grVoice:"troy",ttsFallback:true,gmKey:"",gmVoice:"Sulafat",gmModel:"gemini-3.1-flash-tts-preview",msKey:"",cbKey:"",nvKey:"",aiProvOrder:["groq","gemini","mistral","cerebras","nvidia","openrouter"]}}
+function defaultSettings(){return{aiKey:DEFAULT_AI_KEY,aiModel:"openai/gpt-4o-mini",tts:true,rate:1,economy:false,welcomePlayed:false,freeMode:false,ttsProvider:"browser",browserVoice:null,elKey:"",elVoice:"ErXwobaYiN019PkySvjV",grKey:"",grVoice:"troy",ttsFallback:true,gmKey:"",gmVoice:"Sulafat",gmModel:"gemini-3.1-flash-tts-preview",msKey:"",cbKey:"",nvKey:"",aiProvOrder:["groq","gemini","mistral","cerebras","openrouter","nvidia"]}}
 function defaultState(){return{v:2,rev:0,labs:{},cards:{},quiz:{},evid:[],streak:{last:null,n:0},settings:defaultSettings(),ai:{},ui:{lastLab:null,tab:"hoje"},company:defaultCompany(),plan:null,stats:{lessons:0,chats:0,dict:0,circ:0,explics:0},achs:{},contexto:{pais:"PT",gama:"Advanced"},profile:{nome:""},team:[],onboarded:false,daily:{d:"",reps:0,cards:0,proofs:0,lessons:0},aiHealth:{},aiLast:null}}
 function persist(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(S))}catch(e){}}
 function mut(fn){fn(S);REV.n++;persist();listeners.slice().forEach(function(f){try{f()}catch(e){}})}
@@ -456,6 +456,7 @@ function loadState(){
   if(!s.stats)s.stats={};if(!s.achs)s.achs={};
   if(!s.contexto)s.contexto={pais:"PT",gama:"Advanced"};if(!s.profile)s.profile={nome:""};if(!s.team)s.team=[];
   if(!s.aiHealth)s.aiHealth={};if(!s.aiLast)s.aiLast=null;
+  if(JSON.stringify(s.settings.aiProvOrder)===JSON.stringify(["groq","gemini","mistral","cerebras","nvidia","openrouter"]))s.settings.aiProvOrder=["groq","gemini","mistral","cerebras","openrouter","nvidia"];
   if(s.onboarded===undefined)s.onboarded=false;if(!s.daily)s.daily={d:"",reps:0,cards:0,proofs:0,lessons:0};if(s.settings.freeMode===undefined)s.settings.freeMode=false;
   var _tm={circuitos:"aprender",dicionario:"aprender",teoria:"aprender",protocolo:"aprender",cartas:"praticar",testes:"praticar",provas:"progresso"};
   if(_tm[s.ui.tab])s.ui.tab=_tm[s.ui.tab];if(!s.ui.tab)s.ui.tab="hoje";
@@ -712,7 +713,7 @@ function SettingsDrawer(){
         <Button danger onClick={function(){Modal.confirm({title:"Apagar TODO o progresso?",content:"Missões, cartas, testes e provas serão perdidos neste navegador.",okText:"Apagar tudo",okButtonProps:{danger:true},onOk:function(){S=defaultState();persist();REV.n++;listeners.slice().forEach(function(f){f()});MSG.success("Recomeço do zero. Bom treino!")}})}}>♻ Reiniciar progresso</Button>
       </Space>
       <input type="file" id="impFile2" accept=".json" style={{display:"none"}} onChange={importar}/>
-      <p className="mut" style={{fontSize:11,marginTop:16}}>PHC Trainer Pro v5.0.1 · PWA instalável (ícone ⊕ na barra do navegador) · funciona offline após a 1ª visita.</p>
+      <p className="mut" style={{fontSize:11,marginTop:16}}>PHC Trainer Pro v5.0.2 · PWA instalável (ícone ⊕ na barra do navegador) · funciona offline após a 1ª visita.</p>
     </Drawer>
   );
 }
@@ -2022,7 +2023,7 @@ function AppMain(){
         <Tabs activeKey={S.ui.tab} onChange={gTab} items={tabs} type="card" size="middle"/>
       </Content>
       <Footer className="appFooter">
-        PHC Trainer Pro v5.0.1 · material educativo não oficial — Cegid PHC® é marca dos respetivos proprietários; projeto sem afiliação · inclui índice destilado da Enciclopédia PHC® (descrições resumidas, com atribuição) · teoria: docs/guia-expert-phc-gestao-evolution.md ·{" "}
+        PHC Trainer Pro v5.0.2 · material educativo não oficial — Cegid PHC® é marca dos respetivos proprietários; projeto sem afiliação · inclui índice destilado da Enciclopédia PHC® (descrições resumidas, com atribuição) · teoria: docs/guia-expert-phc-gestao-evolution.md ·{" "}
         <a href="https://github.com/bfrpaulondev/phc-trainer-pro" target="_blank" rel="noopener">GitHub</a> · progresso guardado neste navegador (exporte backups 💾)
       </Footer>
       <Mascot tip={TAB_HINTS[S.ui.tab]||""} onClick={openChat}/>
@@ -2321,7 +2322,7 @@ var AI_PROVIDERS=[
 {id:"gemini",nome:"Gemini (flash-lite)",type:"gemini",model:"gemini-flash-lite-latest",keyf:function(){return S.settings.gmKey}},
 {id:"mistral",nome:"Mistral (small/codestral)",type:"openai",url:"https://api.mistral.ai/v1/chat/completions",model:"mistral-small-latest",codeModel:"codestral-latest",keyf:function(){return S.settings.msKey}},
 {id:"cerebras",nome:"Cerebras (gpt-oss-120b)",type:"openai",url:"https://api.cerebras.ai/v1/chat/completions",model:"gpt-oss-120b",codeModel:null,keyf:function(){return S.settings.cbKey}},
-{id:"nvidia",nome:"NVIDIA NIM (nemotron-70b)",type:"openai",url:"https://integrate.api.nvidia.com/v1/chat/completions",model:"nvidia/llama-3.1-nemotron-70b-instruct",codeModel:"nvidia/llama-3.1-nemotron-70b-instruct",keyf:function(){return S.settings.nvKey}},
+{id:"nvidia",nome:"NVIDIA NIM (glm-5.3)",type:"openai",url:"https://integrate.api.nvidia.com/v1/chat/completions",model:"z-ai/glm-5.3",codeModel:"z-ai/glm-5.3",keyf:function(){return S.settings.nvKey}},
 {id:"openrouter",nome:"OpenRouter (multi)",type:"openai",url:"https://openrouter.ai/api/v1/chat/completions",model:null,codeModel:null,keyf:function(){return S.settings.aiKey}}
 ];
 var LAST_PROVIDER="";
@@ -2334,7 +2335,7 @@ function markFail(id,status){
 }
 function markOk(id){if(S.aiHealth&&S.aiHealth[id]){delete S.aiHealth[id];persist()}if(S.aiLast!==id){S.aiLast=id;persist()}}
 function providerOrder(opts){
-  var base=(S.settings.aiProvOrder&&S.settings.aiProvOrder.length)?S.settings.aiProvOrder.slice():["groq","gemini","mistral","cerebras","nvidia","openrouter"];
+  var base=(S.settings.aiProvOrder&&S.settings.aiProvOrder.length)?S.settings.aiProvOrder.slice():["groq","gemini","mistral","cerebras","openrouter","nvidia"];
   if(opts&&opts.code){base.sort(function(a,b){var ca=(a==="mistral"||a==="nvidia")?0:1;var cb=(b==="mistral"||b==="nvidia")?0:1;return ca-cb})}
   if(S.aiLast&&base.indexOf(S.aiLast)>=0){base=base.filter(function(x){return x!==S.aiLast});base.unshift(S.aiLast)}
   return base;
@@ -2420,8 +2421,8 @@ async function testAllProviders(){
 }
 function AiProviders(){
   var _f=useStore();
-  var defs=[["grKey","⚡ Groq — rápido e grátis (chat)"],["gmKey","🇧🇷 Gemini — texto + VOZ (TTS feminino pt-BR)"],["msKey","🌪 Mistral — small + codestral (código)"],["cbKey","🧠 Cerebras — ultra-rápido"],["nvKey","🟢 NVIDIA NIM — nemotron"],["aiKey","🔀 OpenRouter — multi-modelo (pago)"]];
-  var order=(S.settings.aiProvOrder&&S.settings.aiProvOrder.length)?S.settings.aiProvOrder:["groq","gemini","mistral","cerebras","nvidia","openrouter"];
+  var defs=[["grKey","⚡ Groq — rápido e grátis (chat)"],["gmKey","🇧🇷 Gemini — texto + VOZ (TTS feminino pt-BR)"],["msKey","🌪 Mistral — small + codestral (código)"],["cbKey","🧠 Cerebras — ultra-rápido"],["nvKey","🟢 NVIDIA NIM — glm-5.3 (⚠ a API não envia CORS: só funciona fora do navegador; deixei por último — o router salta-a automaticamente)"],["aiKey","🔀 OpenRouter — multi-modelo (pago)"]];
+  var order=(S.settings.aiProvOrder&&S.settings.aiProvOrder.length)?S.settings.aiProvOrder:["groq","gemini","mistral","cerebras","openrouter","nvidia"];
   function move(i,d){var o=order.slice();var j=i+d;if(j<0||j>=o.length)return;var t=o[i];o[i]=o[j];o[j]=t;mut(function(s){s.settings.aiProvOrder=o})}
   return (<div>
     <Alert type="info" showIcon style={{marginBottom:10}} message="Auto-router: nunca mais fique sem créditos"
@@ -2518,7 +2519,7 @@ function GeradorTab(){
 }
 
 /* ============ v5.0.1 · Auto-update ============ */
-var APP_VERSION="5.0.1";
+var APP_VERSION="5.0.2";
 var UPD={avail:null};
 async function checkUpdate(){
   try{

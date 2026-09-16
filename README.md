@@ -47,9 +47,9 @@ Material educativo **não oficial**, baseado em fontes públicas da Cegid PHC (H
 |---|---|---|
 | ⚡ Groq | openai/gpt-oss-120b | ✔ 0.6s, CORS aberto |
 | 🇧🇷 Gemini | gemini-flash-lite-latest (texto) + TTS | ✔ 0.8s, CORS ok |
-| 🌪 Mistral | mistral-small-latest / codestral-latest | ⚠ rate limit agressivo no free (router contorna) |
-| 🧠 Cerebras | gpt-oss-120b | ⚠ 402 (exige billing) |
-| 🟢 NVIDIA NIM | llama-3.1-nemotron-70b | ⚠ 403 (chave sem permissão de API) |
+| 🌪 Mistral | mistral-small-latest / codestral-latest | ✔ CORS aberto · ⚠ rate limit ~1 req/s no free (router: retry 1.6s + cooldown 3 min) |
+| 🧠 Cerebras | gpt-oss-120b | ✔ CORS aberto · ⚠ 402 (conta exige billing ativado) |
+| 🟢 NVIDIA NIM | z-ai/glm-5.3 | ✔ chave válida (7.9s server-side) — mas a API **não envia CORS no preflight**: inutilizável direto do navegador; fica no fim da fila (o router salta-a) ou use via proxy próprio |
 | 🔀 OpenRouter | configurável | depende de créditos |
 
 ## 🔄 Auto-update (v5.0.1)
