@@ -56,6 +56,16 @@ Material educativo **não oficial**, baseado em fontes públicas da Cegid PHC (H
 
 O app verifica `version.json` a cada 30 min e no arranque: se houver versão nova, mostra o banner **"🔄 Atualizar agora"** (desregistra o service worker, limpa caches e recarrega). Chega de ficar preso em versão antiga do PWA.
 
+## 🌐 Proxy Cloudflare (opcional — ativa a NVIDIA no navegador)
+
+A API da NVIDIA NIM não envia CORS, logo o navegador não a chama diretamente. O repositório inclui um **Worker mínimo e auditável** ([`worker/phc-ai-proxy.js`](worker/phc-ai-proxy.js)) que:
+- guarda as chaves em **Secrets do Worker** (nunca no código/app),
+- injeta **CORS** com allowlist de origens (por padrão só este site),
+- aplica rate limit (~40 req/min/IP),
+- expõe `/ping` para o botão "Testar" do app.
+
+**Deploy em 5 min (grátis):** dash.cloudflare.com → Workers & Pages → Create Worker → colar `worker/phc-ai-proxy.js` → Deploy → Settings → Variables and Secrets → Secret `NVIDIA_KEY`. Depois cole o URL do Worker em ⚙️ Definições → 🌐 Proxy (ou abra `…/#pxy=URL_DO_WORKER`). Com o proxy ativo, a **NVIDIA (glm-5.3) sobe para 3.º** na fila do auto-router. Guia completo: [`worker/README.md`](worker/README.md).
+
 ## 🤖 Detalhes do tutor
 
 - Aulas guiadas e chat usam a API do [OpenRouter](https://openrouter.ai) (modelo padrão `openai/gpt-4o-mini`). Explicações ficam em **cache no navegador** — cada parágrafo só consome créditos uma vez.

@@ -1,4 +1,4 @@
 {
- "v": "5.0.2",
- "notes": "NVIDIA glm-5.3 + ordem CORS-correta"
+ "v": "5.1.0",
+ "notes": "Proxy Cloudflare: NVIDIA glm-5.3 no navegador"
 }

@@ -42,6 +42,10 @@ A aba **📕 Enciclopédia** traz o conhecimento da Enciclopédia PHC oficial de
 
 As chamadas de IA passam por 6 fornecedores em ordem (⚙️ Definições → Tutor IA): **Groq → Gemini → Mistral → Cerebras → NVIDIA → OpenRouter**. Se um falhar (sem créditos/limite/rede), o app **troca sozinho** para o seguinte mantendo a mesma persona e contexto. Botão **"Testar todos"** mostra o estado de cada um. A **voz é sempre Gemini** (feminina pt-BR). Abra o seu link pessoal com todas as chaves uma vez por navegador (fragmentos `#aik=…&gmk=…&grk=…&mst=…&cbs=…&nvi=…`).
 
+## 🌐 Proxy Cloudflare (opcional)
+
+Quer usar a **NVIDIA (glm-5.3)** diretamente no navegador? A API deles não tem CORS — o repositório traz um Worker grátis de 5 minutos (`worker/README.md`): deploy na Cloudflare, segredo `NVIDIA_KEY`, cole o URL do Worker em ⚙️ Definições → 🌐 Proxy → Testar. A NVIDIA sobe para 3.º no auto-router e as chaves ficam seguras no Worker.
+
 ## 🧰 Gerador de Código PHC (novo)
 
 Em **📚 Aprender → 🧰 Gerador de código**: escolha o artefato (evento Xbase, regra, valor por defeito, análise SQL, script web C#…), descreva o problema e receba **onde configurar + código pronto + como testar + cuidados**, com as funções reais da Enciclopédia injetadas no prompt. Teste sempre em BD clonada e veja a Análise Interna após colar.
