@@ -1,5 +1,5 @@
 /* PHC Trainer Pro — service worker (offline-first) */
-var CACHE = 'phc-trainer-v12';
+var CACHE = 'phc-trainer-v13';
 var CDN = [
   'https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.production.min.js',
   'https://cdn.jsdelivr.net/npm/react-dom@18.3.1/umd/react-dom.production.min.js',
@@ -35,6 +35,7 @@ self.addEventListener('fetch', function (e) {
   if (req.method !== 'GET') return;
   var url = new URL(req.url);
   if (url.host === 'openrouter.ai') return; /* IA: sempre rede, nunca cache */
+  if (url.pathname.indexOf('version.json') >= 0) { e.respondWith(fetch(req)); return; }
   if (req.mode === 'navigate') {
     e.respondWith(
       fetch(req).catch(function () { return caches.match('./index.html'); })

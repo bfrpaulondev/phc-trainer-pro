@@ -712,7 +712,7 @@ function SettingsDrawer(){
         <Button danger onClick={function(){Modal.confirm({title:"Apagar TODO o progresso?",content:"Missões, cartas, testes e provas serão perdidos neste navegador.",okText:"Apagar tudo",okButtonProps:{danger:true},onOk:function(){S=defaultState();persist();REV.n++;listeners.slice().forEach(function(f){f()});MSG.success("Recomeço do zero. Bom treino!")}})}}>♻ Reiniciar progresso</Button>
       </Space>
       <input type="file" id="impFile2" accept=".json" style={{display:"none"}} onChange={importar}/>
-      <p className="mut" style={{fontSize:11,marginTop:16}}>PHC Trainer Pro v5.0 · PWA instalável (ícone ⊕ na barra do navegador) · funciona offline após a 1ª visita.</p>
+      <p className="mut" style={{fontSize:11,marginTop:16}}>PHC Trainer Pro v5.0.1 · PWA instalável (ícone ⊕ na barra do navegador) · funciona offline após a 1ª visita.</p>
     </Drawer>
   );
 }
@@ -1980,7 +1980,7 @@ var TAB_HINTS={enciclopedia:"📕 Funções internas, Xbase, dicas, erros comuns
 function AppMain(){
   var _f=useStore();
   var audioRef=useRef(null);
-  useEffect(function(){
+  useEffect(function(){checkUpdate();setInterval(checkUpdate,1800000);
     if(!S.settings.welcomePlayed){
       var play=function(){try{
         var a=new Audio("assets/audio/bemvindo.mp3");a.volume=0.9;
@@ -2018,10 +2018,11 @@ function AppMain(){
         </Space>
       </Header>
       <Content className="appContent">
+        <UpdateBanner/>
         <Tabs activeKey={S.ui.tab} onChange={gTab} items={tabs} type="card" size="middle"/>
       </Content>
       <Footer className="appFooter">
-        PHC Trainer Pro v5.0 · material educativo não oficial — Cegid PHC® é marca dos respetivos proprietários; projeto sem afiliação · inclui índice destilado da Enciclopédia PHC® (descrições resumidas, com atribuição) · teoria: docs/guia-expert-phc-gestao-evolution.md ·{" "}
+        PHC Trainer Pro v5.0.1 · material educativo não oficial — Cegid PHC® é marca dos respetivos proprietários; projeto sem afiliação · inclui índice destilado da Enciclopédia PHC® (descrições resumidas, com atribuição) · teoria: docs/guia-expert-phc-gestao-evolution.md ·{" "}
         <a href="https://github.com/bfrpaulondev/phc-trainer-pro" target="_blank" rel="noopener">GitHub</a> · progresso guardado neste navegador (exporte backups 💾)
       </Footer>
       <Mascot tip={TAB_HINTS[S.ui.tab]||""} onClick={openChat}/>
@@ -2328,7 +2329,7 @@ function provById(id){for(var i=0;i<AI_PROVIDERS.length;i++)if(AI_PROVIDERS[i].i
 function provHealthy(id){var h=S.aiHealth&&S.aiHealth[id];return !(h&&h.until&&h.until>Date.now())}
 function markFail(id,status){
   if(!S.aiHealth)S.aiHealth={};
-  var cd=(status===402||status===401||status===403)?6*3600*1000:(status===429?10*60*1000:90*1000);
+  var cd=(status===402||status===401||status===403)?3*3600*1000:(status===429?3*60*1000:90*1000);
   S.aiHealth[id]={until:Date.now()+cd,st:status};persist();
 }
 function markOk(id){if(S.aiHealth&&S.aiHealth[id]){delete S.aiHealth[id];persist()}if(S.aiLast!==id){S.aiLast=id;persist()}}
@@ -2390,6 +2391,13 @@ async function openAI(messages,maxTokens,opts){
       return out;
     }catch(e){
       var st=(e&&e.status)||0;
+      if(st===429){
+        await new Promise(function(rs){setTimeout(rs,1600)});
+        try{
+          var out2=await callProvider(id,messages,maxTokens,opts);
+          markOk(id);LAST_PROVIDER=id;return out2;
+        }catch(e2){st=(e2&&e2.status)||0;e=e2}
+      }
       markFail(id,st||599);
       lastErr=e;tried.push(id+"("+(st||"rede")+")");
     }
@@ -2509,6 +2517,31 @@ function GeradorTab(){
   </div>);
 }
 
+/* ============ v5.0.1 · Auto-update ============ */
+var APP_VERSION="5.0.1";
+var UPD={avail:null};
+async function checkUpdate(){
+  try{
+    var r=await fetch("version.json?ts="+Date.now(),{cache:"no-store"});
+    if(!r.ok)return;
+    var j=await r.json();
+    if(j&&j.v&&j.v!==APP_VERSION&&j.v!==UPD.avail){UPD.avail=j.v;REV.n++;listeners.slice().forEach(function(f){try{f()}catch(e){}})}
+  }catch(e){}
+}
+async function doUpdate(){
+  try{
+    if(navigator.serviceWorker){var regs=await navigator.serviceWorker.getRegistrations();for(var i=0;i<regs.length;i++){try{await regs[i].unregister()}catch(e){}}}
+    if(window.caches){var ks=await caches.keys();for(var j=0;j<ks.length;j++){try{await caches.delete(ks[j])}catch(e){}}}
+  }catch(e){}
+  location.reload();
+}
+function UpdateBanner(){
+  var _f=useStore();
+  if(!UPD.avail)return null;
+  return <Alert type="warning" banner showIcon style={{marginBottom:10}}
+    message={"🆕 Nova versão disponível (v"+UPD.avail+") — você está na v"+APP_VERSION+". Atualize para não usar funcionalidades antigas."}
+    action={<Button size="small" type="primary" onClick={doUpdate}>🔄 Atualizar agora</Button>}/>;
+}
 /* ============ arranque ============ */
 S=loadState();
 try{

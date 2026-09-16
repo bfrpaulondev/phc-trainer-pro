@@ -52,6 +52,10 @@ Material educativo **não oficial**, baseado em fontes públicas da Cegid PHC (H
 | 🟢 NVIDIA NIM | llama-3.1-nemotron-70b | ⚠ 403 (chave sem permissão de API) |
 | 🔀 OpenRouter | configurável | depende de créditos |
 
+## 🔄 Auto-update (v5.0.1)
+
+O app verifica `version.json` a cada 30 min e no arranque: se houver versão nova, mostra o banner **"🔄 Atualizar agora"** (desregistra o service worker, limpa caches e recarrega). Chega de ficar preso em versão antiga do PWA.
+
 ## 🤖 Detalhes do tutor
 
 - Aulas guiadas e chat usam a API do [OpenRouter](https://openrouter.ai) (modelo padrão `openai/gpt-4o-mini`). Explicações ficam em **cache no navegador** — cada parágrafo só consome créditos uma vez.
