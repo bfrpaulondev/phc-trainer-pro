@@ -426,12 +426,13 @@ const {TextArea} = Input;
 var LADDER=[1,2,4,7,14,30,60];
 var REP_TARGET=5, CARD_TARGET=5;
 var DEFAULT_AI_KEY="";
+var DEFAULT_PROXY="https://phc-ai-proxy.brunoacidados.workers.dev";
 var STORAGE_KEY="phcTrainerPro.v3", OLD_KEYS=[atob("cGhjRG9qb1NlbnNlaS52Mg=="),atob("cGhjRG9qby52MQ==")]; /* chaves legadas (codificadas) p/ migração de progresso */
 var S=null, listeners=[], REV={n:0};
 function subscribe(cb){listeners.push(cb);return function(){var i=listeners.indexOf(cb);if(i>=0)listeners.splice(i,1)}}
 function getSnap(){return REV.n}
 function useStore(){useSyncExternalStore(subscribe,getSnap);return S}
-function defaultSettings(){return{aiKey:DEFAULT_AI_KEY,aiModel:"openai/gpt-4o-mini",tts:true,rate:1,economy:false,welcomePlayed:false,freeMode:false,ttsProvider:"browser",browserVoice:null,elKey:"",elVoice:"ErXwobaYiN019PkySvjV",grKey:"",grVoice:"troy",ttsFallback:true,gmKey:"",gmVoice:"Sulafat",gmModel:"gemini-3.1-flash-tts-preview",msKey:"",cbKey:"",nvKey:"",aiProvOrder:[],proxyUrl:""}}
+function defaultSettings(){return{aiKey:DEFAULT_AI_KEY,aiModel:"openai/gpt-4o-mini",tts:true,rate:1,economy:false,welcomePlayed:false,freeMode:false,ttsProvider:"browser",browserVoice:null,elKey:"",elVoice:"ErXwobaYiN019PkySvjV",grKey:"",grVoice:"troy",ttsFallback:true,gmKey:"",gmVoice:"Sulafat",gmModel:"gemini-3.1-flash-tts-preview",msKey:"",cbKey:"",nvKey:"",aiProvOrder:[],proxyUrl:DEFAULT_PROXY}}
 function defaultState(){return{v:2,rev:0,labs:{},cards:{},quiz:{},evid:[],streak:{last:null,n:0},settings:defaultSettings(),ai:{},ui:{lastLab:null,tab:"hoje"},company:defaultCompany(),plan:null,stats:{lessons:0,chats:0,dict:0,circ:0,explics:0},achs:{},contexto:{pais:"PT",gama:"Advanced"},profile:{nome:""},team:[],onboarded:false,daily:{d:"",reps:0,cards:0,proofs:0,lessons:0},aiHealth:{},aiLast:null}}
 function persist(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(S))}catch(e){}}
 function mut(fn){fn(S);REV.n++;persist();listeners.slice().forEach(function(f){try{f()}catch(e){}})}
@@ -451,6 +452,7 @@ function loadState(){
     }
   }
   s.settings=Object.assign(defaultSettings(),s.settings||{});
+  if(!s.settings.proxyUrl)s.settings.proxyUrl=DEFAULT_PROXY;
   if(!s.ai)s.ai={}; if(!s.ui)s.ui={lastLab:null,tab:"hoje"};
   if(!s.company)s.company=defaultCompany(); if(s.plan===undefined)s.plan=null;
   if(!s.stats)s.stats={};if(!s.achs)s.achs={};
@@ -713,7 +715,7 @@ function SettingsDrawer(){
         <Button danger onClick={function(){Modal.confirm({title:"Apagar TODO o progresso?",content:"Missões, cartas, testes e provas serão perdidos neste navegador.",okText:"Apagar tudo",okButtonProps:{danger:true},onOk:function(){S=defaultState();persist();REV.n++;listeners.slice().forEach(function(f){f()});MSG.success("Recomeço do zero. Bom treino!")}})}}>♻ Reiniciar progresso</Button>
       </Space>
       <input type="file" id="impFile2" accept=".json" style={{display:"none"}} onChange={importar}/>
-      <p className="mut" style={{fontSize:11,marginTop:16}}>PHC Trainer Pro v5.1.0 · PWA instalável (ícone ⊕ na barra do navegador) · funciona offline após a 1ª visita.</p>
+      <p className="mut" style={{fontSize:11,marginTop:16}}>PHC Trainer Pro v5.1.1 · PWA instalável (ícone ⊕ na barra do navegador) · funciona offline após a 1ª visita.</p>
     </Drawer>
   );
 }
@@ -1148,7 +1150,8 @@ function dl(name,content,type){var b=new Blob([content],{type:type+";charset=utf
 function exportar(){dl("phc-trainer-progresso-"+todayISO()+".json",JSON.stringify(S,null,1),"application/json");MSG.success("Progresso exportado.")}
 function importar(ev){var f=ev.target.files[0];if(!f)return;var r=new FileReader();
   r.onload=function(){try{var o=JSON.parse(r.result);if(!o||!o.labs)throw 0;
-    o.settings=Object.assign(defaultSettings(),o.settings||{});if(!o.ai)o.ai={};if(!o.ui)o.ui={lastLab:null,tab:"hoje"};if(!o.company)o.company=defaultCompany();if(o.plan===undefined)o.plan=null;if(!o.stats)o.stats={};if(!o.achs)o.achs={};if(!o.contexto)o.contexto={pais:"PT",gama:"Advanced"};if(!o.profile)o.profile={nome:""};if(!o.team)o.team=[];if(!o.aiHealth)o.aiHealth={};if(!o.aiLast)o.aiLast=null;if(o.onboarded===undefined)o.onboarded=false;if(!o.daily)o.daily={d:"",reps:0,cards:0,proofs:0,lessons:0};if(o.settings.freeMode===undefined)o.settings.freeMode=false;var _tm2={circuitos:"aprender",dicionario:"aprender",teoria:"aprender",protocolo:"aprender",cartas:"praticar",testes:"praticar",provas:"progresso"};if(o.ui&&_tm2[o.ui.tab])o.ui.tab=_tm2[o.ui.tab];
+    o.settings=Object.assign(defaultSettings(),o.settings||{});
+      if(!o.settings.proxyUrl)o.settings.proxyUrl=DEFAULT_PROXY;if(!o.ai)o.ai={};if(!o.ui)o.ui={lastLab:null,tab:"hoje"};if(!o.company)o.company=defaultCompany();if(o.plan===undefined)o.plan=null;if(!o.stats)o.stats={};if(!o.achs)o.achs={};if(!o.contexto)o.contexto={pais:"PT",gama:"Advanced"};if(!o.profile)o.profile={nome:""};if(!o.team)o.team=[];if(!o.aiHealth)o.aiHealth={};if(!o.aiLast)o.aiLast=null;if(o.onboarded===undefined)o.onboarded=false;if(!o.daily)o.daily={d:"",reps:0,cards:0,proofs:0,lessons:0};if(o.settings.freeMode===undefined)o.settings.freeMode=false;var _tm2={circuitos:"aprender",dicionario:"aprender",teoria:"aprender",protocolo:"aprender",cartas:"praticar",testes:"praticar",provas:"progresso"};if(o.ui&&_tm2[o.ui.tab])o.ui.tab=_tm2[o.ui.tab];
     S=o;persist();REV.n++;listeners.slice().forEach(function(x){x()});MSG.success("Progresso importado!")}catch(e){MSG.error("Ficheiro inválido.")}};
   r.readAsText(f);ev.target.value=""}
 /* ============ v3.0 · Empresa, Curso IA, Circuitos, Dicionário ============ */
@@ -2023,7 +2026,7 @@ function AppMain(){
         <Tabs activeKey={S.ui.tab} onChange={gTab} items={tabs} type="card" size="middle"/>
       </Content>
       <Footer className="appFooter">
-        PHC Trainer Pro v5.1.0 · material educativo não oficial — Cegid PHC® é marca dos respetivos proprietários; projeto sem afiliação · inclui índice destilado da Enciclopédia PHC® (descrições resumidas, com atribuição) · teoria: docs/guia-expert-phc-gestao-evolution.md ·{" "}
+        PHC Trainer Pro v5.1.1 · material educativo não oficial — Cegid PHC® é marca dos respetivos proprietários; projeto sem afiliação · inclui índice destilado da Enciclopédia PHC® (descrições resumidas, com atribuição) · teoria: docs/guia-expert-phc-gestao-evolution.md ·{" "}
         <a href="https://github.com/bfrpaulondev/phc-trainer-pro" target="_blank" rel="noopener">GitHub</a> · progresso guardado neste navegador (exporte backups 💾)
       </Footer>
       <Mascot tip={TAB_HINTS[S.ui.tab]||""} onClick={openChat}/>
@@ -2435,9 +2438,9 @@ function AiProviders(){
       <span className="mut" style={{fontSize:12}}>{d[1]}</span>
       <Input.Password size="small" value={S.settings[d[0]]||""} placeholder="colar chave…" onChange={function(e){var v=e.target.value;mut(function(s){s.settings[d[0]]=v})}}/>
     </div>})}
-    <p className="mut" style={{fontSize:12,marginTop:10}}>🌐 Proxy Cloudflare Worker — ativa a NVIDIA/glm-5.3 no navegador (deploy grátis em 5 min: worker/README.md do repositório):</p>
+    <p className="mut" style={{fontSize:12,marginTop:10}}>🌐 Proxy Cloudflare Worker — ativa a NVIDIA/glm-5.3 no navegador. Já vem preenchido com o proxy do projeto; pode substituir pelo seu (deploy grátis em 5 min: worker/README.md):</p>
     <Space.Compact style={{width:"100%"}}>
-      <Input value={S.settings.proxyUrl||""} placeholder="https://phc-ai-proxy.SEU-SUBDOMINIO.workers.dev" onChange={function(e){var v=e.target.value;mut(function(s){s.settings.proxyUrl=v})}}/>
+      <Input value={S.settings.proxyUrl||""} placeholder="URL do proxy (o do projeto já vem preenchido)" onChange={function(e){var v=e.target.value;mut(function(s){s.settings.proxyUrl=v})}}/>
       <Button onClick={testProxy}>Testar</Button>
     </Space.Compact>
     {hasProxy()?<p className="mut" style={{fontSize:11,marginTop:4}}>✔ Proxy ativo — a NVIDIA sobe para 3.º na fila automática (a chave vive no Worker; o campo nvKey local passa a ser opcional).</p>:null}
@@ -2529,7 +2532,7 @@ function GeradorTab(){
 }
 
 /* ============ v5.0.1 · Auto-update ============ */
-var APP_VERSION="5.1.0";
+var APP_VERSION="5.1.1";
 var UPD={avail:null};
 async function checkUpdate(){
   try{

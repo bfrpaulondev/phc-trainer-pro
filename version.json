@@ -1,4 +1,4 @@
 {
- "v": "5.1.0",
- "notes": "Proxy Cloudflare: NVIDIA glm-5.3 no navegador"
+ "v": "5.1.1",
+ "notes": "Proxy do projeto como padr\u00e3o (NVIDIA zero-config)"
 }

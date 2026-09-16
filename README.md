@@ -64,7 +64,7 @@ A API da NVIDIA NIM não envia CORS, logo o navegador não a chama diretamente. 
 - aplica rate limit (~40 req/min/IP),
 - expõe `/ping` para o botão "Testar" do app.
 
-**Deploy em 5 min (grátis):** dash.cloudflare.com → Workers & Pages → Create Worker → colar `worker/phc-ai-proxy.js` → Deploy → Settings → Variables and Secrets → Secret `NVIDIA_KEY`. Depois cole o URL do Worker em ⚙️ Definições → 🌐 Proxy (ou abra `…/#pxy=URL_DO_WORKER`). Com o proxy ativo, a **NVIDIA (glm-5.3) sobe para 3.º** na fila do auto-router. Guia completo: [`worker/README.md`](worker/README.md).
+**O app já traz um proxy público do projeto pré-configurado** (`https://phc-ai-proxy.brunoacidados.workers.dev`, allowlist: apenas este site) — a NVIDIA funciona sem qualquer configuração. Prefere o seu próprio? **Deploy em 5 min (grátis):** dash.cloudflare.com → Workers & Pages → Create Worker → colar `worker/phc-ai-proxy.js` → Deploy → Settings → Variables and Secrets → Secret `NVIDIA_KEY`. Depois cole o URL do Worker em ⚙️ Definições → 🌐 Proxy (ou abra `…/#pxy=URL_DO_WORKER`). Com o proxy ativo, a **NVIDIA (glm-5.3) sobe para 3.º** na fila do auto-router. Guia completo: [`worker/README.md`](worker/README.md).
 
 ## 🤖 Detalhes do tutor
 

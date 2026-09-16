@@ -1,5 +1,7 @@
 # 🌐 phc-ai-proxy — Cloudflare Worker (5 minutos, grátis)
 
+> **Instância pública do projeto:** `https://phc-ai-proxy.brunoacidados.workers.dev` (já pré-configurada no app; allowlist = site do projeto). Instruções abaixo para criar a SUA instância.
+
 Proxy mínimo que **guarda as chaves de API no servidor** e adiciona **CORS** para APIs que o navegador não consegue chamar diretamente (ex.: **NVIDIA NIM**). Criado para o [PHC Trainer Pro](https://bfrpaulondev.github.io/phc-trainer-pro/).
 
 ## Porquê?
