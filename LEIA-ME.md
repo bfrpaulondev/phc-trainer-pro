@@ -34,6 +34,10 @@ Plataforma de **formação prática** para o módulo Gestão do Cegid PHC Evolut
 - **🔊 Voz (⚙️ Definições → Voz do Professor):** provedor recomendado **🇧🇷 Gemini TTS** — voz feminina brasileira natural (Sulafat ⭐, Kore, Leda…). Crie uma chave grátis em aistudio.google.com → API Keys e cole nas Definições, ou abra uma vez o link `…/#gmk=SUA_CHAVE` (fica só no seu navegador; áudio em cache local). Alternativas: Navegador (use Edge + voz ⭐ Natural), ElevenLabs (chave própria) e Groq (experimental, só inglês). Se a voz cloud falhar, cai automaticamente na voz do navegador.
 - As explicações ficam em **cache**: cada parágrafo só consome créditos uma vez. Defina limite de créditos no painel do OpenRouter.
 
+## 📕 Enciclopédia (novo na v4.3)
+
+A aba **📕 Enciclopédia** traz o conhecimento da Enciclopédia PHC oficial destilado: 154 funções internas, 77 funções Xbase, dicas, erros comuns, artigos técnicos e o índice do manual completo (3.076 tópicos). Use a **pesquisa global** (cruza todas as secções), o 🔊 para ouvir e o 🧠 para o Professor explicar qualquer entrada com exemplos da sua empresa. As missões mostram **chips 📕** que saltam direto para o tema na Enciclopédia. (Descrições resumidas/reescritas com atribuição à Cegid/PHC — o original continua no CHM/Help Center oficial.)
+
 ## 📸 Evidências
 
 Convenção de ficheiros: `C:\PHC-Treino\evidencias\L<nn>\AAAA-MM-DD-<descricao>.png` — e registe cada prova na aba **📸 Provas** (exportável em CSV). Sem evidência, não aconteceu.

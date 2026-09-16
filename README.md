@@ -21,8 +21,9 @@ Material educativo **não oficial**, baseado em fontes públicas da Cegid PHC (H
 | 🧠 **Tutor IA (chat)** | Perguntas livres sobre PHC Gestão com contexto automático da missão em curso (OpenRouter) |
 | 🎭 **Mascote interativo** | Professor Einstein 2D (SVG animado): pisca, fala (TTS), "pensa" durante chamadas de IA e dá dicas contextuais por aba |
 | 🔄 **Circuitos interativos** | 10 grandes fluxos em carrossel (56 passos): vendas, compras, séries de documentos, transporte/AT, SAF-T, conta corrente, tesouraria, integração contabilística, personalização e fecho do mês — com narração e explicação da IA |
+| 📕 **Enciclopédia PHC destilada** | Nova aba com o conhecimento da Enciclopédia PHC oficial (3.966 tópicos): **154 funções internas**, **77 funções Xbase/VFP**, 87 dicas + 18 erros comuns, 220 tópicos de programação, 320 artigos técnicos e o **índice completo do manual (3.076 tópicos / 65 secções)** — com pesquisa global, leitura em voz alta e "🧠 Perguntar ao Professor" por entrada. O tutor de IA **cita a Enciclopédia** nas aulas/chat (mini-RAG por palavras-chave) e as missões têm chips 📕 de referência cruzada |
 | 📖 **Dicionário (94 termos)** | ATCUD, SAF-T, e-Fatura, CIUS-PT, PCMP, CEVMC, aging, reverse charge… com busca, filtros por tema, detalhe prático, voz e aprofundamento do Professor |
-| 🗂 **126 flashcards (SRS)** | Repetição espaçada 1→2→4→7→14→30→60 dias; também em `assets/flashcards-phc.csv` (Anki) |
+| 🗂 **139 flashcards (SRS)** | Repetição espaçada 1→2→4→7→14→30→60 dias; também em `assets/flashcards-phc.csv` (Anki) |
 | 📝 **13 testes de nível** | 78 perguntas com explicação; aprovação ≥ 80% |
 | 🌍 **Contexto país + gama** | Seletor PT/ES/AO/MZ/CV/PE com ficha de obrigações fiscais e particularidades do software (SII/TicketBAI, AGT/SAF-T AO, retenções PE…); gama Corporate/Advanced/Enterprise com **avisos de requisitos em cada missão** |
 | 👥 **Progresso de equipa** | Cada técnico exporta a sua ficha (JSON); o formador importa e compara a equipa numa tabela (com export CSV) — para parceiros que formam vários técnicos |
@@ -97,3 +98,8 @@ phc-trainer-pro/
 ## 📄 Licença
 
 [MIT](LICENSE) — use, adapte e partilhe. Sem evidência, não há aprendizado.
+
+
+## 📕 Sobre a Enciclopédia PHC (atribuição)
+
+A aba Enciclopédia contém um **índice destilado** da Enciclopédia PHC oficial (CHM, 3.966 tópicos): nomes de funções/tópicos (factuais) e **descrições resumidas e reescritas** (1 frase por entrada), organizadas para estudo. O material original pertence à **Cegid/PHC Software** — todos os direitos reservados. Para o texto integral, use o CHM oficial ou o Help Center in-app do software. Nenhum conteúdo original completo é redistribuído neste projeto.
