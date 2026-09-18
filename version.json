@@ -1,4 +1,4 @@
 {
- "v": "5.3.0",
- "notes": "Gerador com descoberta guiada: fila de pendentes + confiança real (META) + script sob medida (dic/information_schema/FK/storeds/jobs) + ciclo de resultados até ≥99% + GLM-5.3 prioritário para código."
+  "v": "5.3.0",
+  "notes": "Gerador com descoberta guiada: fila de pendentes + confiança real (META) + script sob medida (dic/information_schema/FK/storeds/jobs) + ciclo de resultados até ≥99% + GLM-5.3 prioritário para código."
 }

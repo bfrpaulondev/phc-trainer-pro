@@ -6,11 +6,11 @@ Plataforma de **formação prática** para o módulo Gestão do Cegid PHC Evolut
 
 ## Ficheiros
 
-| Ficheiro | O que é |
-|---|---|
-| **index.html** | A aplicação completa (missões, tutor IA, mascote, dicionário, circuitos, cartas, testes, evidências, progresso) |
-| **assets/flashcards-phc.csv** | O mesmo baralho de 126 cartas para o Anki (separador `;`) |
-| **docs/guia-expert-phc-gestao-evolution.md** | A teoria completa (15 capítulos) — também embutida na aba 📚 Teoria |
+| Ficheiro                                     | O que é                                                                                                         |
+| -------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| **index.html**                               | A aplicação completa (missões, tutor IA, mascote, dicionário, circuitos, cartas, testes, evidências, progresso) |
+| **assets/flashcards-phc.csv**                | O mesmo baralho de 126 cartas para o Anki (separador `;`)                                                       |
+| **docs/guia-expert-phc-gestao-evolution.md** | A teoria completa (15 capítulos) — também embutida na aba 📚 Teoria                                             |
 
 ## Comece agora (nesta ordem)
 

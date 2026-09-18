@@ -5,6 +5,7 @@
 Proxy mínimo que **guarda as chaves de API no servidor** e adiciona **CORS** para APIs que o navegador não consegue chamar diretamente (ex.: **NVIDIA NIM**). Criado para o [PHC Trainer Pro](https://bfrpaulondev.github.io/phc-trainer-pro/).
 
 ## Porquê?
+
 A API da NVIDIA (`integrate.api.nvidia.com`) funciona perfeitamente via servidor/curl, mas **não devolve headers CORS** — o navegador bloqueia a chamada direta. Este Worker recebe o pedido do app, injeta a chave (que vive num **Secret** do Worker, nunca no código) e devolve a resposta com CORS.
 
 ## Deploy (Dashboard, sem linha de comandos)

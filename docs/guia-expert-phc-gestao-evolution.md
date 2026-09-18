@@ -39,14 +39,14 @@
 
 ### 1.2 A família de produtos Cegid PHC
 
-| Produto | O que é | Público |
-|---|---|---|
-| **Cegid PHC Evolution** | ERP desktop + web (sucessor do PHC CS). Objeto deste guia. | PME e mid-market |
-| **Cegid PHC GO** | Gestão 100% cloud nativa (SaaS), planos Corporate/Advanced/Enterprise | Micro e pequenas empresas |
-| **Cegid Pulse** | Ecossistema de agentes de IA integrado no ERP (assistente "Cris", assistentes de negócio, Smart Tools) | Transversal (Evolution a partir do plano Plus) |
-| **Cegid Docs** | Gestão documental e arquivo digital legal na cloud, integrado no ERP | Transversal |
-| **EyePeak (Cegid Primavera EyePeak)** | Plataforma de logística/WMS/e-commerce que sincroniza com o ERP PHC | Logística, retalho, B2B |
-| **PHC CS Web** | Plataforma web do CS/Evolution (aplicações Gestão Web, Front Web, POS Web, RH Web…) | Acesso remoto/browser |
+| Produto                               | O que é                                                                                                | Público                                        |
+| ------------------------------------- | ------------------------------------------------------------------------------------------------------ | ---------------------------------------------- |
+| **Cegid PHC Evolution**               | ERP desktop + web (sucessor do PHC CS). Objeto deste guia.                                             | PME e mid-market                               |
+| **Cegid PHC GO**                      | Gestão 100% cloud nativa (SaaS), planos Corporate/Advanced/Enterprise                                  | Micro e pequenas empresas                      |
+| **Cegid Pulse**                       | Ecossistema de agentes de IA integrado no ERP (assistente "Cris", assistentes de negócio, Smart Tools) | Transversal (Evolution a partir do plano Plus) |
+| **Cegid Docs**                        | Gestão documental e arquivo digital legal na cloud, integrado no ERP                                   | Transversal                                    |
+| **EyePeak (Cegid Primavera EyePeak)** | Plataforma de logística/WMS/e-commerce que sincroniza com o ERP PHC                                    | Logística, retalho, B2B                        |
+| **PHC CS Web**                        | Plataforma web do CS/Evolution (aplicações Gestão Web, Front Web, POS Web, RH Web…)                    | Acesso remoto/browser                          |
 
 ### 1.3 Cegid PHC Evolution: planos e gamas
 
@@ -54,13 +54,13 @@ O Evolution combina **duas dimensões** que o técnico tem de distinguir bem:
 
 **a) Planos de subscrição (modelo comercial atual):**
 
-| Plano | Utilizadores incluídos | Base de dados | Acesso Web | Cegid Pulse (IA) | Capacidade de personalização |
-|---|---|---|---|---|---|
-| Standard | 1 | 10 GB | – | – | Baixa |
-| Plus | 2 | 10 GB | ✓ | ✓ | Baixa |
-| Advanced | 3 | Ilimitada | ✓ | ✓ | Média |
-| Premium | 3 | Ilimitada | ✓ | ✓ | Média |
-| Ultimate | 5 | Ilimitada | ✓ | ✓ | Alta |
+| Plano    | Utilizadores incluídos | Base de dados | Acesso Web | Cegid Pulse (IA) | Capacidade de personalização |
+| -------- | ---------------------- | ------------- | ---------- | ---------------- | ---------------------------- |
+| Standard | 1                      | 10 GB         | –          | –                | Baixa                        |
+| Plus     | 2                      | 10 GB         | ✓          | ✓                | Baixa                        |
+| Advanced | 3                      | Ilimitada     | ✓          | ✓                | Média                        |
+| Premium  | 3                      | Ilimitada     | ✓          | ✓                | Média                        |
+| Ultimate | 5                      | Ilimitada     | ✓          | ✓                | Alta                         |
 
 **b) Gamas funcionais (herança PHC CS, ainda visível na documentação e em funcionalidades):**
 
@@ -74,7 +74,7 @@ O Evolution combina **duas dimensões** que o técnico tem de distinguir bem:
 
 O **PHC Gestão** é o módulo nuclear (comercial + financeiro operacional). O ecossistema de módulos que com ele interage:
 
-- **Gestão** (clientes, fornecedores, stocks, faturação, compras, tesouraria) — *este guia*
+- **Gestão** (clientes, fornecedores, stocks, faturação, compras, tesouraria) — _este guia_
 - **Contabilidade** (+ PHC XL para grandes volumes/centros analíticos)
 - **Imobilizado**
 - **Pessoal / Recursos Humanos** (vencimentos)
@@ -106,27 +106,27 @@ A plataforma tem executáveis e comportamentos específicos por país: **PT (Por
 ### 2.1 Modelo geral
 
 - **Arquitetura client/server**: cliente desktop rico (histórico em **Visual FoxPro**, com linguagem de personalização **Xbase**) + **Microsoft SQL Server** como base de dados.
-- O acesso à BD faz-se por **ODBC** — a instalação cria/configura automaticamente o DSN (o "exe único" instala a aplicação, faz o *attach* da base de dados e cria o ODBC).
+- O acesso à BD faz-se por **ODBC** — a instalação cria/configura automaticamente o DSN (o "exe único" instala a aplicação, faz o _attach_ da base de dados e cria o ODBC).
 - A mesma base de dados serve o **desktop** e o **PHC CS Web** (plataforma web ASP.NET, personalizável em **C#**), que partilha tabelas e framework.
 - **Cada empresa = uma base de dados** (instalações multiempresa usam várias BDs; há ferramentas de consolidação/arquivo).
 - A aplicação é tolerante a quebras de ligação ao SQL Server (existe monitor de ligação por instância de SQL).
 
 ### 2.2 Componentes e conceitos de plataforma
 
-| Componente | Descrição |
-|---|---|
-| **Executável único** | Instalador que coloca aplicação + faz attach da BD + cria ODBC |
-| **Supervisor** | Menu de administração: Framework PHC, tratamento da base de dados (dicionário de dados, desfragmentação), EyePeak Sincronização, monitores |
-| **Menu Sistema** | Parâmetros (gerais e por módulo), configuração da aplicação |
-| **Ecrãs em memória** | Parâmetro de performance: ecrãs principais mantêm-se em memória ao fechar (reabertura instantânea) |
-| **Processamento assíncrono** | Parâmetro "Usa processamento assíncrono" — gravação de documentos em background (o documento fica com flag de "não processado" até concluir) |
-| **File Storage** | (202501+) Armazenamento de anexos em diretoria física, na BD ou em ambos; documentos fiscalmente relevantes ficam sempre na BD |
-| **Base de dados de Arquivo** | Passagem de dados históricos para BD de arquivo (performance) |
-| **Cegid Account** | (202601+) Autenticação híbrida com contas Microsoft/Google, 2FA, ativação por utilizador |
-| **Barra de status estendida / Painel central / Navegador** | Componentes de UI configuráveis por parâmetros (gamas superiores) |
-| **Análise Interna** | Registo de erros de execução de código do utilizador (eventos Xbase) — ferramenta de diagnóstico essencial |
-| **Log de Código** | (Web) informação de execução do código de utilizador (eventos, regras) |
-| **Log de atividade** | (v30+, Enterprise) auditoria de consultas/alterações/apagamentos por utilizador |
+| Componente                                                 | Descrição                                                                                                                                    |
+| ---------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Executável único**                                       | Instalador que coloca aplicação + faz attach da BD + cria ODBC                                                                               |
+| **Supervisor**                                             | Menu de administração: Framework PHC, tratamento da base de dados (dicionário de dados, desfragmentação), EyePeak Sincronização, monitores   |
+| **Menu Sistema**                                           | Parâmetros (gerais e por módulo), configuração da aplicação                                                                                  |
+| **Ecrãs em memória**                                       | Parâmetro de performance: ecrãs principais mantêm-se em memória ao fechar (reabertura instantânea)                                           |
+| **Processamento assíncrono**                               | Parâmetro "Usa processamento assíncrono" — gravação de documentos em background (o documento fica com flag de "não processado" até concluir) |
+| **File Storage**                                           | (202501+) Armazenamento de anexos em diretoria física, na BD ou em ambos; documentos fiscalmente relevantes ficam sempre na BD               |
+| **Base de dados de Arquivo**                               | Passagem de dados históricos para BD de arquivo (performance)                                                                                |
+| **Cegid Account**                                          | (202601+) Autenticação híbrida com contas Microsoft/Google, 2FA, ativação por utilizador                                                     |
+| **Barra de status estendida / Painel central / Navegador** | Componentes de UI configuráveis por parâmetros (gamas superiores)                                                                            |
+| **Análise Interna**                                        | Registo de erros de execução de código do utilizador (eventos Xbase) — ferramenta de diagnóstico essencial                                   |
+| **Log de Código**                                          | (Web) informação de execução do código de utilizador (eventos, regras)                                                                       |
+| **Log de atividade**                                       | (v30+, Enterprise) auditoria de consultas/alterações/apagamentos por utilizador                                                              |
 
 ### 2.3 Requisitos de infraestrutura (referência)
 
@@ -167,7 +167,7 @@ A plataforma tem executáveis e comportamentos específicos por país: **PT (Por
 - **Detach/Attach** de bases de dados (migrações, clones de teste).
 - **Desfragmentar as Tabelas Principais** (utilitário documentado no Help Center) + manutenção de índices do SQL (rebuild/reorganize, estatísticas).
 - **Base de dados de arquivo** para históricos pesados.
-- **Índices de utilizador** (Framework PHC) — incluindo *INCLUDED COLUMNS* — para acelerar consultas personalizadas sem tocar no core.
+- **Índices de utilizador** (Framework PHC) — incluindo _INCLUDED COLUMNS_ — para acelerar consultas personalizadas sem tocar no core.
 - **Monitor de ligação** ao SQL por instância (diagnóstico de quebras de rede).
 - **Explorador de dados** e **Simulador de SQL** (permite executar consultas à BD a partir da aplicação, com variáveis como `#stamp#`).
 
@@ -189,6 +189,7 @@ A plataforma tem executáveis e comportamentos específicos por país: **PT (Por
 ### 4.1 Ficheiros (dados mestres)
 
 **Clientes (tabela CL + CL2 "Outros Dados")**
+
 - Nº de contribuinte com país associado; serviço **Ignios** (Advanced+) preenche automaticamente nome/morada a partir do NIF.
 - **Sede (0) e filiais/estabelecimentos (1–999)** — noção de estabelecimento vs. sede.
 - Campos: abreviatura, morada, localidade, código postal (preenchimento automático configurável), país, província (ES), telefone/fax/e-mail/WWW/telemóvel (com envio de SMS via módulo SMS), contribuinte do representante, **idioma** (descrições de artigos em documentos), **zona** (campo de tabela do utilizador), tipo de cliente, classificação de vendas, segmento, refª interna, centro analítico (XL), condições de pagamento, forma de pagamento, descontos, tabela de preços, vendedor, limites de crédito…
@@ -200,6 +201,7 @@ A plataforma tem executáveis e comportamentos específicos por país: **PT (Por
 **Fornecedores (FI)** — estrutura análoga à de clientes; conta corrente de fornecedores, adiantamentos, aprovação de pagamentos, compras com/sem IVA, autofaturação.
 
 **Stocks e Serviços (artigos)** — manual próprio do módulo **PHC CS Stocks desktop**:
+
 - Ficheiro de referências com designação (multi-idioma), família, marca, unidade e **unidade alternativa com factor de conversão** (e inversão do factor), código de barras/EAN, imagem.
 - **Referências alternativas** (mesmo artigo com várias refs de cliente/fornecedor), designação do artigo por cliente/fornecedor (impressão no idioma definido).
 - **Compostos (Kits)** — produtos compostos por componentes.
@@ -225,6 +227,7 @@ A plataforma tem executáveis e comportamentos específicos por país: **PT (Por
 ### 4.3 Dossiers Internos (DI — tabela BO)
 
 Conceito central do PHC: **documentos parametrizáveis pelo utilizador para uso interno**, que alimentam o circuito comercial:
+
 - **Orçamentos/Propostas**, **Encomendas de Cliente**, **Encomendas a Fornecedor**, **Folhas de Obra**, **Consignações**, e dossiers à medida (o utilizador cria tipos de DI).
 - **Circuito (conversões)**: Orçamento → Encomenda → Guia → Fatura; Encomenda a Fornecedor → "Comprar a Encomenda a Fornecedor" (gera compra); "Faturar a Encomenda de Cliente"; cópias entre DI, Faturação e Compras com opções de cópia configuráveis.
 - **Dossiers especiais** (conteúdo da certificação Advanced): **Dossier de Stock Inicial**, **Dossier de Transferência de Armazém**, **Dossier de Preços (Cliente/Fornecedor)**, **Dossier de Avenças** (faturação recorrente), **Dossier de Composição e de Produção**.
@@ -284,6 +287,7 @@ Conceito central do PHC: **documentos parametrizáveis pelo utilizador para uso 
 ### 4.10 Integração Gestão → Contabilidade
 
 (Tópico obrigatório da certificação; o técnico de Gestão tem de o dominar.)
+
 - **Documentos pré-definidos** (na Contabilidade e na Gestão): regras de contabilização automática por tipo de documento.
 - **Integrações da Gestão na Contabilidade**: configuração de contas (clientes, fornecedores, IVA, contrapartidas), integração de faturação, compras, recibos e pagamentos (com informação do documento original no descritivo — Advanced+).
 - **Apuramento do IVA** a partir dos documentos; **Declaração Periódica de IVA**; **CEVMC** (custo das mercadorias vendidas e consumidas); apuramento de resultados.
@@ -296,22 +300,23 @@ Conceito central do PHC: **documentos parametrizáveis pelo utilizador para uso 
 
 ### 5.1 Onde se configura o quê
 
-| O quê | Onde |
-|---|---|
-| Parâmetros gerais e por módulo | Menu **Sistema → Parâmetros** (gerais, faturação, stocks, tesouraria…). Acesso protegido e configurável **por utilizador** |
-| Séries e tipos de documento | **Configuração de Documentos de Faturação** (séries: tipo 1–5, mapping SAF-T, numeração, o que movimenta, opções AT) |
-| Dossiers internos | Configuração de tipos de DI (nome, séries, o que movimenta, conversões permitidas) |
-| Tabelas base | IVA/taxas, motivos de isenção (M01–M99), condições de pagamento, formas de pagamento, bancos/contas de tesouraria, códigos de C/C, códigos de tesouraria, códigos de movimentos de stock, zonas, países, moedas/câmbios, idiomas, viaturas de expedição, moradas de carga/descarga |
-| Ficheiros | Clientes, fornecedores, artigos (com famílias/marcas), vendedores, tabelas de preços, descontos, armazéns, lotes |
-| Framework (personalização) | Menu **Supervisor → Framework PHC**: campos de utilizador, regras, valores por defeito, teclas de utilizador, funções de utilizador, instruções internas, alertas de utilizador, índices de utilizador, tabelas de utilizador, ecrãs personalizados, páginas/objetos (Enterprise), consultas, snapshots, monitores, filtros |
-| Base de dados | **Supervisor → Tratamento da base de dados**: Dicionário de Dados, desfragmentação, arquivo |
-| Impressão | Editor de mapas/templates, "Impressão Definida pelo Utilizador" (Advanced+), definições de assinatura |
+| O quê                          | Onde                                                                                                                                                                                                                                                                                                                        |
+| ------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Parâmetros gerais e por módulo | Menu **Sistema → Parâmetros** (gerais, faturação, stocks, tesouraria…). Acesso protegido e configurável **por utilizador**                                                                                                                                                                                                  |
+| Séries e tipos de documento    | **Configuração de Documentos de Faturação** (séries: tipo 1–5, mapping SAF-T, numeração, o que movimenta, opções AT)                                                                                                                                                                                                        |
+| Dossiers internos              | Configuração de tipos de DI (nome, séries, o que movimenta, conversões permitidas)                                                                                                                                                                                                                                          |
+| Tabelas base                   | IVA/taxas, motivos de isenção (M01–M99), condições de pagamento, formas de pagamento, bancos/contas de tesouraria, códigos de C/C, códigos de tesouraria, códigos de movimentos de stock, zonas, países, moedas/câmbios, idiomas, viaturas de expedição, moradas de carga/descarga                                          |
+| Ficheiros                      | Clientes, fornecedores, artigos (com famílias/marcas), vendedores, tabelas de preços, descontos, armazéns, lotes                                                                                                                                                                                                            |
+| Framework (personalização)     | Menu **Supervisor → Framework PHC**: campos de utilizador, regras, valores por defeito, teclas de utilizador, funções de utilizador, instruções internas, alertas de utilizador, índices de utilizador, tabelas de utilizador, ecrãs personalizados, páginas/objetos (Enterprise), consultas, snapshots, monitores, filtros |
+| Base de dados                  | **Supervisor → Tratamento da base de dados**: Dicionário de Dados, desfragmentação, arquivo                                                                                                                                                                                                                                 |
+| Impressão                      | Editor de mapas/templates, "Impressão Definida pelo Utilizador" (Advanced+), definições de assinatura                                                                                                                                                                                                                       |
 
 ### 5.2 Parâmetros essenciais que tem de conhecer a frio
 
 Exemplos de parâmetros da plataforma/módulo que aparecem em quase todos os projetos (a lista exata varia por versão/gama — validar no ecrã de Parâmetros e no manual "Parâmetros"):
 
 **Gerais/plataforma:**
+
 - Definição de tipos de acessos (por **Grupos** ou por **Perfis**)
 - Usa ecrãs em memória (performance)
 - Mostrar último registo ao arrancar ecrã (desligar em BDs grandes = ecrãs mais rápidos)
@@ -324,6 +329,7 @@ Exemplos de parâmetros da plataforma/módulo que aparecem em quase todos os pro
 - Barra de status estendida; painéis no menu; teclas do utilizador em rodapé
 
 **Faturação (Parâmetros de Faturação):**
+
 - Percentagem de retenção de IRS
 - Método de envio de faturas emitidas (**Webservice** vs. ficheiro) → influencia motivos de isenção disponíveis (só M01–M99 aceites pelo webservice)
 - Método de envio de **documentos de transporte** (webservice AT vs. **SAF-T (PT) resumido**)
@@ -416,31 +422,31 @@ Exemplos de parâmetros da plataforma/módulo que aparecem em quase todos os pro
 
 ### 7.2 Ferramentas da Framework desktop (inventário completo)
 
-| Ferramenta | Para que serve |
-|---|---|
-| **Campos de Utilizador** | Adicionar colunas a tabelas do software (com tipos, validações) sem alterar o core |
-| **Tabelas de Utilizador** | Criar tabelas novas da aplicação (ex.: a "Zona" do cliente é um campo de tabela do utilizador) |
-| **Índices de Utilizador** | Criar índices SQL sobre tabelas do software (incl. INCLUDED COLUMNS) para performance |
-| **Valores por Defeito** | Preenchimento automático de qualquer campo de qualquer tabela (com expressão) |
-| **Regras de Utilizador** (+ Assistente) | Validações de negócio: obrigar campos, impedir gravação sem stock, validar NIF… com editor e assistente de construção |
-| **Teclas de Utilizador** | Atalhos de teclado personalizados (com descrição em rodapé) |
-| **Funções de Utilizador** | Funções Xbase reutilizáveis criadas pelo utilizador |
-| **Instruções Internas** | Instruções/procedimentos escritos pelo utilizador associados a cada ecrã principal (documentação in-app e automação) |
-| **Eventos de Utilizador** | Código Xbase associado a eventos de objetos/ecrãs (ver 7.3) |
-| **Páginas de Utilizador / Objetos de Ecrã** | Acrescentar páginas (separadores) e objetos (campos, textos, botões, grelhas, campos de ligação, campos em árvore…) aos ecrãs standard |
-| **Ecrãs Personalizados (IDU)** | Criar ecrãs novos de raiz (desenhador de ecrãs; em POS touch com drag-and-drop), com ligações entre IDUs, parâmetros de ecrã e botão personalizável |
-| **Opções de Ecrã / Menus** | Acrescentar botões às toolbars e criar menus para opções novas; Configurações de Menus |
-| **Consultas / Análises de Utilizador** | Consultas SQL do utilizador apresentadas como ecrãs de análise; base das Análises Multidimensionais |
-| **Snapshots** | Consultas T-SQL "fotografadas" com variáveis (ex.: `#stamp#`), agrupáveis e coloridas |
-| **Monitores / Itens de Monitor** | Apresentações de dados sequenciais (colunas configuráveis) para operational dashboards |
-| **Alertas de Utilizador / Notificações** | Alertas automáticos (funções internas como `CriaAvs(stamp, userAv, …)`; novas funções internas 202601: "Enviar documentos de Compras/Vendas para o SII"); aviso interno, PHC Notify, e-mail |
-| **Filtros de Utilizador** | Filtros próprios para as tabelas/grelhas |
-| **Templates (Básicos / de Tabela) / Definição de Assinaturas** | Modelos rápidos de UI e assinaturas digitais em ecrãs (intervenções, faturas, dossiers) |
-| **Multi-língua** | Traduções de descrições (artigos, etc.) |
-| **Importação/Exportação** | Importar Excel para linhas, exportar listagens xlsx/pdf, importação de câmbios via ODBC |
-| **Dicionário de Dados** | Consulta da estrutura de **qualquer tabela** (campos, descrições, tipos, tamanhos) e **relações entre tabelas** (desde a versão 2008) — acessível por Supervisor → Tratamento da base de dados, ou pelo menu de opções de qualquer ecrã (posiciona-se na tabela do ecrã). **A ferramenta nº 1 do programador PHC.** |
-| **Simulador de SQL / Explorador de Dados** | Executar consultas à BD dentro da aplicação; explorar dados |
-| **Análise Interna** | Onde ficam gravados os **erros de execução dos eventos/código do utilizador** (linha do erro; expressões não têm nº de linha) — primeiro sítio a ver quando "o evento não faz nada" |
+| Ferramenta                                                     | Para que serve                                                                                                                                                                                                                                                                                                      |
+| -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Campos de Utilizador**                                       | Adicionar colunas a tabelas do software (com tipos, validações) sem alterar o core                                                                                                                                                                                                                                  |
+| **Tabelas de Utilizador**                                      | Criar tabelas novas da aplicação (ex.: a "Zona" do cliente é um campo de tabela do utilizador)                                                                                                                                                                                                                      |
+| **Índices de Utilizador**                                      | Criar índices SQL sobre tabelas do software (incl. INCLUDED COLUMNS) para performance                                                                                                                                                                                                                               |
+| **Valores por Defeito**                                        | Preenchimento automático de qualquer campo de qualquer tabela (com expressão)                                                                                                                                                                                                                                       |
+| **Regras de Utilizador** (+ Assistente)                        | Validações de negócio: obrigar campos, impedir gravação sem stock, validar NIF… com editor e assistente de construção                                                                                                                                                                                               |
+| **Teclas de Utilizador**                                       | Atalhos de teclado personalizados (com descrição em rodapé)                                                                                                                                                                                                                                                         |
+| **Funções de Utilizador**                                      | Funções Xbase reutilizáveis criadas pelo utilizador                                                                                                                                                                                                                                                                 |
+| **Instruções Internas**                                        | Instruções/procedimentos escritos pelo utilizador associados a cada ecrã principal (documentação in-app e automação)                                                                                                                                                                                                |
+| **Eventos de Utilizador**                                      | Código Xbase associado a eventos de objetos/ecrãs (ver 7.3)                                                                                                                                                                                                                                                         |
+| **Páginas de Utilizador / Objetos de Ecrã**                    | Acrescentar páginas (separadores) e objetos (campos, textos, botões, grelhas, campos de ligação, campos em árvore…) aos ecrãs standard                                                                                                                                                                              |
+| **Ecrãs Personalizados (IDU)**                                 | Criar ecrãs novos de raiz (desenhador de ecrãs; em POS touch com drag-and-drop), com ligações entre IDUs, parâmetros de ecrã e botão personalizável                                                                                                                                                                 |
+| **Opções de Ecrã / Menus**                                     | Acrescentar botões às toolbars e criar menus para opções novas; Configurações de Menus                                                                                                                                                                                                                              |
+| **Consultas / Análises de Utilizador**                         | Consultas SQL do utilizador apresentadas como ecrãs de análise; base das Análises Multidimensionais                                                                                                                                                                                                                 |
+| **Snapshots**                                                  | Consultas T-SQL "fotografadas" com variáveis (ex.: `#stamp#`), agrupáveis e coloridas                                                                                                                                                                                                                               |
+| **Monitores / Itens de Monitor**                               | Apresentações de dados sequenciais (colunas configuráveis) para operational dashboards                                                                                                                                                                                                                              |
+| **Alertas de Utilizador / Notificações**                       | Alertas automáticos (funções internas como `CriaAvs(stamp, userAv, …)`; novas funções internas 202601: "Enviar documentos de Compras/Vendas para o SII"); aviso interno, PHC Notify, e-mail                                                                                                                         |
+| **Filtros de Utilizador**                                      | Filtros próprios para as tabelas/grelhas                                                                                                                                                                                                                                                                            |
+| **Templates (Básicos / de Tabela) / Definição de Assinaturas** | Modelos rápidos de UI e assinaturas digitais em ecrãs (intervenções, faturas, dossiers)                                                                                                                                                                                                                             |
+| **Multi-língua**                                               | Traduções de descrições (artigos, etc.)                                                                                                                                                                                                                                                                             |
+| **Importação/Exportação**                                      | Importar Excel para linhas, exportar listagens xlsx/pdf, importação de câmbios via ODBC                                                                                                                                                                                                                             |
+| **Dicionário de Dados**                                        | Consulta da estrutura de **qualquer tabela** (campos, descrições, tipos, tamanhos) e **relações entre tabelas** (desde a versão 2008) — acessível por Supervisor → Tratamento da base de dados, ou pelo menu de opções de qualquer ecrã (posiciona-se na tabela do ecrã). **A ferramenta nº 1 do programador PHC.** |
+| **Simulador de SQL / Explorador de Dados**                     | Executar consultas à BD dentro da aplicação; explorar dados                                                                                                                                                                                                                                                         |
+| **Análise Interna**                                            | Onde ficam gravados os **erros de execução dos eventos/código do utilizador** (linha do erro; expressões não têm nº de linha) — primeiro sítio a ver quando "o evento não faz nada"                                                                                                                                 |
 
 ### 7.3 Eventos e o objeto `ObjRecebido` (Xbase desktop)
 
@@ -547,21 +553,21 @@ Disponível **em todas as gamas**: Supervisor → Tratamento da base de dados �
 
 ## 9. Integrações e ecossistema
 
-| Integração | O que faz | Como se configura |
-|---|---|---|
-| **EyePeak** | Plataforma logística/WMS/e-commerce (Cegid Primavera). Fluxos documentais ERP↔EyePeak (ex.: encomendas de fornecedor → guias; séries de faturação sincronizadas) | Monitor **EyePeak Sincronização** no menu Supervisor (desktop) / ecrã Eye Peak Sincronização (web) |
-| **PHC CS Web / Front Web** | Aplicações web sobre a mesma BD: Gestão Web (faturação, adiantamentos, recibos…), Front Web (extranet para clientes/fornecedores consultarem documentos/dossiers) | Package PHC CS Web; servidor IIS; utilizadores do desktop têm acesso |
-| **SaphetyDoc / Documentos Eletrónicos** | Faturação eletrónica (EDI, CIUS-PT) por webservice; código EAN da empresa | Módulo Documentos Eletrónicos + artigo oficial de configuração |
-| **Cegid Docs** | Arquivo digital legal na cloud; faturas CIUS-PT anexadas em PDF e pré-lançadas; pesquisa na WebApp (Evolution) | Configuração "Arquivo Digital Legal com Cegid Docs" (artigo oficial + FAQs) |
-| **Open Banking** | Importação de movimentos bancários, reconciliação e previsão de tesouraria (Evolution) | Ativação no plano Evolution; configuração de contas |
-| **SEPA / bancos** | Ficheiros de débitos diretos e pagamentos; transferências de vencimentos; WebBanking | Ecrãs de tesouraria/bancos + artigos oficiais |
-| **Multibanco / Unicre / PayPal** | Referências MB, pagamentos online (web) | Módulos/parâmetros próprios |
-| **SMS / e-mail (SMTP)** | Envio de documentos e avisos (código AT ao motorista, documentos por e-mail com idioma do cliente) | Módulo SMS; parâmetros de envio de e-mail diretos por SMTP |
-| **TPA / POS / PDA** | Terminais de pagamento, postos de retalho, terminais portáteis de stock | Ligações/configuração POS e Stocks |
-| **Excel / ODBC** | Importação (câmbios via ODBC, Excel para linhas), exportação (xlsx/pdf) | Nativo |
-| **Comunidade XML/B2B** | Troca de documentos cliente-fornecedor em XML (eProcurement) — histórico da plataforma | Documentação da Comunidade |
-| **Cegid Pulse (IA)** | Assistentes de negócio (comercial), Smart Tools configuráveis pelos parceiros, `PromptFunction()` | Módulo Cegid Pulse + Cegid Account por utilizador (3 passos: acesso ao módulo, ativar Cegid Account na ficha, login) |
-| **Segurança Social Direta / AT** | Comunicações oficiais (webservice AT, SSD com 2FA desde 05/2026) | Parâmetros + credenciais |
+| Integração                              | O que faz                                                                                                                                                         | Como se configura                                                                                                    |
+| --------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| **EyePeak**                             | Plataforma logística/WMS/e-commerce (Cegid Primavera). Fluxos documentais ERP↔EyePeak (ex.: encomendas de fornecedor → guias; séries de faturação sincronizadas)  | Monitor **EyePeak Sincronização** no menu Supervisor (desktop) / ecrã Eye Peak Sincronização (web)                   |
+| **PHC CS Web / Front Web**              | Aplicações web sobre a mesma BD: Gestão Web (faturação, adiantamentos, recibos…), Front Web (extranet para clientes/fornecedores consultarem documentos/dossiers) | Package PHC CS Web; servidor IIS; utilizadores do desktop têm acesso                                                 |
+| **SaphetyDoc / Documentos Eletrónicos** | Faturação eletrónica (EDI, CIUS-PT) por webservice; código EAN da empresa                                                                                         | Módulo Documentos Eletrónicos + artigo oficial de configuração                                                       |
+| **Cegid Docs**                          | Arquivo digital legal na cloud; faturas CIUS-PT anexadas em PDF e pré-lançadas; pesquisa na WebApp (Evolution)                                                    | Configuração "Arquivo Digital Legal com Cegid Docs" (artigo oficial + FAQs)                                          |
+| **Open Banking**                        | Importação de movimentos bancários, reconciliação e previsão de tesouraria (Evolution)                                                                            | Ativação no plano Evolution; configuração de contas                                                                  |
+| **SEPA / bancos**                       | Ficheiros de débitos diretos e pagamentos; transferências de vencimentos; WebBanking                                                                              | Ecrãs de tesouraria/bancos + artigos oficiais                                                                        |
+| **Multibanco / Unicre / PayPal**        | Referências MB, pagamentos online (web)                                                                                                                           | Módulos/parâmetros próprios                                                                                          |
+| **SMS / e-mail (SMTP)**                 | Envio de documentos e avisos (código AT ao motorista, documentos por e-mail com idioma do cliente)                                                                | Módulo SMS; parâmetros de envio de e-mail diretos por SMTP                                                           |
+| **TPA / POS / PDA**                     | Terminais de pagamento, postos de retalho, terminais portáteis de stock                                                                                           | Ligações/configuração POS e Stocks                                                                                   |
+| **Excel / ODBC**                        | Importação (câmbios via ODBC, Excel para linhas), exportação (xlsx/pdf)                                                                                           | Nativo                                                                                                               |
+| **Comunidade XML/B2B**                  | Troca de documentos cliente-fornecedor em XML (eProcurement) — histórico da plataforma                                                                            | Documentação da Comunidade                                                                                           |
+| **Cegid Pulse (IA)**                    | Assistentes de negócio (comercial), Smart Tools configuráveis pelos parceiros, `PromptFunction()`                                                                 | Módulo Cegid Pulse + Cegid Account por utilizador (3 passos: acesso ao módulo, ativar Cegid Account na ficha, login) |
+| **Segurança Social Direta / AT**        | Comunicações oficiais (webservice AT, SSD com 2FA desde 05/2026)                                                                                                  | Parâmetros + credenciais                                                                                             |
 
 ---
 
@@ -598,20 +604,20 @@ Disponível **em todas as gamas**: Supervisor → Tratamento da base de dados �
 
 ### 11.1 O que existe oficialmente
 
-| Recurso | O que é | Acesso |
-|---|---|---|
-| **Help Center (helpcenter.phccs.net / phc.pt/portal)** | Manuais completos (Gestão, Stocks, Faturação, Framework, Web…), artigos "como fazer", Novidades por versão | **Público** |
-| **Manuais dentro da aplicação** | Botão "Ajuda" em cada ecrã — manuais atualizados com novas funcionalidades | Instalado |
-| **Comunidade PHC (community.phcsoftware.com)** | Área técnica e comercial: notícias, ficheiros, downloads, documentação de parceiro | Login **Nº Cliente + ID Técnico + password** |
-| **PHC On (on.phc.pt)** | Formação online, autoformação em vídeo, truques e dicas, novidades, Calendário PHC de obrigações legais | Acordo PHC On |
-| **Cegid Academy — PEP (Cegid PHC Evolution Program)** | Programa intensivo prático de **140 h**, online pós-laboral (edição com início a 17 de setembro; 1.650 € + IVA, pagamento faseado): configurar/administrar software e ambientes técnicos, BD e SQL (performance e segurança), processos e módulos do ERP (gestão, tesouraria, contabilidade, vencimentos). Certificação oficial Cegid PHC; os primeiros certificados podem integrar projetos do ecossistema | Inscrição via phcsoftware.com/pt/formacao-pep |
-| **Certificações PHC (histórico/atuais)** | Certificação PHC CS Desktop Corporate/Advanced/Enterprise + por módulos; "bolsa de técnicos certificados"; pré-requisito para níveis de parceiro | Via parceiro/Cegid |
-| **Microcredenciação IPT** | Curso académico "Software Cegid PHC CS Advanced" (Instituto Politécnico de Tomar) | portal2.ipt.pt |
-| **PHC Hi, Tech** | Formação de 3 meses (híbrida) para entrada na carreira (ex.: Angola) | phcsoftware.com/ao |
-| **Eventos de programadores** | "Coding PHC" (evento anual de developers das frameworks) e histórico DevSummit | Comunidade/site |
-| **YouTube (@SoftwarePHC) e blog** | Vídeos de produto, webinars, artigos | Público |
-| **Listagens de Novidades (PDF)** | Por versão (v18…v30, 202501, 202601…) — os parceiros publicam (Arentia, Winsig, NSoft…) | Público |
-| **Programa de Parceiros** | Venda/implementação exclusivamente via parceiros certificados (com especializações setoriais); acesso a demos, NFR, formação contínua | phcsoftware.com/pt/parceiros |
+| Recurso                                                | O que é                                                                                                                                                                                                                                                                                                                                                                                                     | Acesso                                        |
+| ------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------- |
+| **Help Center (helpcenter.phccs.net / phc.pt/portal)** | Manuais completos (Gestão, Stocks, Faturação, Framework, Web…), artigos "como fazer", Novidades por versão                                                                                                                                                                                                                                                                                                  | **Público**                                   |
+| **Manuais dentro da aplicação**                        | Botão "Ajuda" em cada ecrã — manuais atualizados com novas funcionalidades                                                                                                                                                                                                                                                                                                                                  | Instalado                                     |
+| **Comunidade PHC (community.phcsoftware.com)**         | Área técnica e comercial: notícias, ficheiros, downloads, documentação de parceiro                                                                                                                                                                                                                                                                                                                          | Login **Nº Cliente + ID Técnico + password**  |
+| **PHC On (on.phc.pt)**                                 | Formação online, autoformação em vídeo, truques e dicas, novidades, Calendário PHC de obrigações legais                                                                                                                                                                                                                                                                                                     | Acordo PHC On                                 |
+| **Cegid Academy — PEP (Cegid PHC Evolution Program)**  | Programa intensivo prático de **140 h**, online pós-laboral (edição com início a 17 de setembro; 1.650 € + IVA, pagamento faseado): configurar/administrar software e ambientes técnicos, BD e SQL (performance e segurança), processos e módulos do ERP (gestão, tesouraria, contabilidade, vencimentos). Certificação oficial Cegid PHC; os primeiros certificados podem integrar projetos do ecossistema | Inscrição via phcsoftware.com/pt/formacao-pep |
+| **Certificações PHC (histórico/atuais)**               | Certificação PHC CS Desktop Corporate/Advanced/Enterprise + por módulos; "bolsa de técnicos certificados"; pré-requisito para níveis de parceiro                                                                                                                                                                                                                                                            | Via parceiro/Cegid                            |
+| **Microcredenciação IPT**                              | Curso académico "Software Cegid PHC CS Advanced" (Instituto Politécnico de Tomar)                                                                                                                                                                                                                                                                                                                           | portal2.ipt.pt                                |
+| **PHC Hi, Tech**                                       | Formação de 3 meses (híbrida) para entrada na carreira (ex.: Angola)                                                                                                                                                                                                                                                                                                                                        | phcsoftware.com/ao                            |
+| **Eventos de programadores**                           | "Coding PHC" (evento anual de developers das frameworks) e histórico DevSummit                                                                                                                                                                                                                                                                                                                              | Comunidade/site                               |
+| **YouTube (@SoftwarePHC) e blog**                      | Vídeos de produto, webinars, artigos                                                                                                                                                                                                                                                                                                                                                                        | Público                                       |
+| **Listagens de Novidades (PDF)**                       | Por versão (v18…v30, 202501, 202601…) — os parceiros publicam (Arentia, Winsig, NSoft…)                                                                                                                                                                                                                                                                                                                     | Público                                       |
+| **Programa de Parceiros**                              | Venda/implementação exclusivamente via parceiros certificados (com especializações setoriais); acesso a demos, NFR, formação contínua                                                                                                                                                                                                                                                                       | phcsoftware.com/pt/parceiros                  |
 
 ### 11.2 O programa oficial da Certificação PHC CS Desktop Advanced (o currículo do expert)
 
@@ -639,16 +645,19 @@ Resumo fiel do conteúdo programático oficial — use-o como índice de estudo:
 ## 12. Plano de estudos até ao nível expert
 
 ### Fase 0 — Preparação (semana 1)
+
 - [ ] Perceber o ecossistema (capítulo 1): Evolution vs. GO vs. CS; planos vs. gamas; módulos.
 - [ ] Ler as **Novidades da versão atual** (202601) e das 2–3 anteriores no Help Center.
 - [ ] Criar contas/marcadores: Help Center, phcsoftware.com, YouTube @SoftwarePHC, blog, Comunidade PHC (se tiver credenciais de parceiro/cliente).
 
 ### Fase 1 — Infraestrutura (semanas 2–3)
+
 - [ ] Montar laboratório: VM Windows Server + SQL Server Express + instalação de demonstração do PHC (pedir a um parceiro ou usar licença NFR/eval da Cegid).
 - [ ] Instalar, criar empresa de demo, fazer detach/attach, backup/restore, criar utilizadores/grupos/acessos.
 - [ ] Atualizar o software; explorar o Supervisor e o Dicionário de Dados.
 
 ### Fase 2 — Domínio funcional do Gestão (semanas 4–7)
+
 - [ ] Ficheiros: criar 20 clientes (com filiais, idiomas, zonas), 10 fornecedores, 50 artigos (famílias, unidades alternativas, compostos/kits, lotes), armazéns, tabelas de preços, descontos, condições/formas de pagamento, IVA.
 - [ ] Vendas: configurar 5 séries (Fatura FT, Fatura Simplificada FS, Fatura-Recibo FR, Nota de Crédito NC, Guia tipo 4) e emitir o circuito completo: Orçamento → Encomenda → Guia (com comunicação de transporte simulada) → Fatura → Recibo → liquidação. Testar adiantamentos, retenção IRS, isenções (M08…), vendas a dinheiro, emissão automática.
 - [ ] Compras: encomenda a fornecedor → receção → fatura de compra → pagamento com aprovação; adiantamentos.
@@ -658,6 +667,7 @@ Resumo fiel do conteúdo programático oficial — use-o como índice de estudo:
 - [ ] Análises: mapas definidos, análises de utilizador (SQL), snapshot, ranking de vendas.
 
 ### Fase 3 — Fiscalidade (semanas 8–9)
+
 - [ ] Exportar e validar **SAF-T (PT)** no validador da AT; inspecionar o XML (tipos de documento, motivos de isenção, MovementOfGoods).
 - [ ] Simular o fluxo **ATCUD/QR**: comunicação de séries, código de validação, layouts, bloqueio de impressão.
 - [ ] Configurar comunicação de documentos de transporte (webservice vs. SAF-T resumido) e SMS ao motorista.
@@ -665,6 +675,7 @@ Resumo fiel do conteúdo programático oficial — use-o como índice de estudo:
 - [ ] Integração com Contabilidade: documentos pré-definidos, contas de integração, apuramento de IVA (lançar um mês completo).
 
 ### Fase 4 — Desenvolvimento (semanas 10–14)
+
 - [ ] Estudar **Xbase/VFP** (sintaxe: comandos, cursores, funções) e **T-SQL**.
 - [ ] Framework desktop, por ordem: valores por defeito → campos de utilizador → regras (assistente e código) → teclas → funções de utilizador → alertas → instruções internas.
 - [ ] Eventos: implementar os padrões do §7.6 (1–4) num clone; depurar com a Análise Interna; usar `ObjRecebido` completo (Janela, Objecto, MeusDados, Return .F.).
@@ -676,6 +687,7 @@ Resumo fiel do conteúdo programático oficial — use-o como índice de estudo:
 - [ ] **Cegid Pulse**: ativar (3 passos), explorar o assistente comercial, desenhar uma Smart Tool com `PromptFunction()`.
 
 ### Fase 5 — Nível consultor/expert (semanas 15+)
+
 - [ ] Fazer o **PEP (Cegid Academy)** ou a certificação PHC equivalente; entrar na bolsa de técnicos certificados.
 - [ ] Implementar um ciclo completo num cliente real (ou demo avançada): diagnóstico → desenho → configuração → migração de dados (importação Excel/ODBC) → formação → arranque → pós-arranque.
 - [ ] Dominar upgrades: fazer upgrade de versão ao laboratório validando todas as personalizações.
@@ -683,6 +695,7 @@ Resumo fiel do conteúdo programático oficial — use-o como índice de estudo:
 - [ ] Acompanhar cada nova versão (202602…) e o Calendário PHC de obrigações.
 
 ### Hábitos do expert
+
 - Ler o **manual in-app** de cada ecrã antes de responder a um ticket (a PHC documenta campo a campo).
 - Usar o **Dicionário de Dados** para tudo o que envolva SQL.
 - Testar sempre em **clone** antes de produção.
@@ -694,6 +707,7 @@ Resumo fiel do conteúdo programático oficial — use-o como índice de estudo:
 ## 13. Checklists de autoavaliação
 
 **Funcional (Gestão)** — sabe fazer sem consultar?
+
 - [ ] Criar/configurar séries e tipos de documento e explicar o mapping SAF-T
 - [ ] Circuito completo venda (orçamento→fatura→recibo→liquidação) e compra
 - [ ] Inventário físico com acertos e valorização PCMP
@@ -702,18 +716,21 @@ Resumo fiel do conteúdo programático oficial — use-o como índice de estudo:
 - [ ] Integração Gestão→Contabilidade (documentos pré-definidos, IVA)
 
 **Configuração**
+
 - [ ] Parâmetros gerais e de faturação (os ~20 mais usados)
 - [ ] Utilizadores/grupos/perfis e acessos por operação
 - [ ] Layouts de impressão com QR/ATCUD
 - [ ] RGPD (aviso legal, esquecimento)
 
 **Fiscal**
+
 - [ ] SAF-T faturação + transporte (webservice e resumido)
 - [ ] ATCUD: comunicação de séries e código de validação
 - [ ] Motivos de isenção M01–M99 e impacto do webservice
 - [ ] Retenções IRS/Imposto Selo; inventário à AT; SDR 2026
 
 **Desenvolvimento**
+
 - [ ] Escrever um evento Xbase com ObjRecebido e Return .F.
 - [ ] Criar campo/tabela/índice/regra de utilizador
 - [ ] Construir um IDU e ligá-lo a um menu
@@ -722,6 +739,7 @@ Resumo fiel do conteúdo programático oficial — use-o como índice de estudo:
 - [ ] Sincronização EyePeak; PromptFunction/Cegid Pulse
 
 **Operação**
+
 - [ ] Instalar do zero (SQL + PHC + ODBC + licenças)
 - [ ] Backup/restore, detach/attach, BD de arquivo
 - [ ] Diagnosticar com Análise Interna / Log de Código / log de atividade
@@ -732,53 +750,54 @@ Resumo fiel do conteúdo programático oficial — use-o como índice de estudo:
 
 ## 14. Glossário PHC
 
-| Termo | Significado |
-|---|---|
-| **Cegid PHC Evolution** | ERP desktop+web sucessor do PHC CS (subscrição) |
-| **PHC CS** | Nome histórico da plataforma (Client/Server) |
-| **Gamas** | Corporate / Advanced / Enterprise (níveis funcionais) |
-| **Planos** | Standard / Plus / Advanced / Premium / Ultimate (subscrição Evolution) |
-| **DI / Dossier Interno** | Documento interno parametrizável (orçamentos, encomendas, folhas de obra…) — tabela BO |
-| **FT** | Documentos de Faturação (tabela) |
-| **CL / CL2** | Clientes / Clientes-Outros Dados (tabelas) |
-| **RE** | Recibos (tabela) |
-| **ref / stamp** | Identificador do registo / campo de versão-concorrência |
-| **Xbase** | Linguagem de personalização desktop (sintaxe VFP) |
-| **ObjRecebido** | Objeto disponível nos eventos (Janela, Objecto, MeusDados) |
-| **IDU / Ecrãs Personalizados** | Ecrãs desenhados pelo utilizador |
-| **Framework PHC** | Conjunto de ferramentas de personalização (desktop e web) |
-| **Supervisor** | Menu de administração (framework, tratamento da BD, monitores) |
-| **PHC On** | Acordo anual de atualizações + portal de formação/Calendário PHC |
-| **Comunidade PHC** | Portal de parceiros/clientes (login Nº Cliente + ID Técnico) |
-| **Help Center** | Manuais e artigos públicos (helpcenter.phccs.net) |
-| **Dicionário de Dados** | Consulta da estrutura/relações de todas as tabelas |
-| **Análise Interna** | Log de erros do código de utilizador (desktop) |
-| **SAF-T (PT)** | Ficheiro de auditoria fiscal normalizado (faturação, transporte, inventário) |
-| **ATCUD** | Código único do documento (validação de série + sequencial) |
-| **e-Fatura** | Comunicação de faturas à AT (webservice ou SAF-T) |
-| **CIUS-PT** | Especificação portuguesa de faturação eletrónica (setor público) |
-| **SII / TicketBAI** | Regimes fiscais de Espanha |
-| **SDR** | Sistema de Depósito e Recolha de embalagens (2026) |
-| **PCMP** | Preço de Custo Médio Ponderado (custeio de stock) |
-| **C/C** | Conta corrente |
-| **CEVMC** | Custo das Existências Vendidas e das Mercadorias Consumidas |
-| **XL** | Componente para grandes volumes/centros analíticos (PHC XL) |
-| **EyePeak** | Plataforma de logística/e-commerce que sincroniza com o PHC |
-| **Cegid Pulse** | Ecossistema de IA no ERP (assistente Cris, Smart Tools, PromptFunction) |
-| **Cegid Docs** | Gestão documental/arquivo digital legal na cloud |
-| **PEP** | Cegid PHC Evolution Program (formação/certificação de 140 h da Cegid Academy) |
-| **Snapshots** | Consultas T-SQL guardadas com variáveis (ex.: #stamp#) |
-| **Monitores** | Apresentações sequenciais de dados operacionais |
-| **Front Web** | Extranet web para clientes/fornecedores |
-| **Avenças** | Dossier de faturação recorrente |
-| **Rappel** | Desconto de volume retroativo (cliente/fornecedor) |
-| **Ignios** | Serviço de preenchimento automático de dados de empresa por NIF |
+| Termo                          | Significado                                                                            |
+| ------------------------------ | -------------------------------------------------------------------------------------- |
+| **Cegid PHC Evolution**        | ERP desktop+web sucessor do PHC CS (subscrição)                                        |
+| **PHC CS**                     | Nome histórico da plataforma (Client/Server)                                           |
+| **Gamas**                      | Corporate / Advanced / Enterprise (níveis funcionais)                                  |
+| **Planos**                     | Standard / Plus / Advanced / Premium / Ultimate (subscrição Evolution)                 |
+| **DI / Dossier Interno**       | Documento interno parametrizável (orçamentos, encomendas, folhas de obra…) — tabela BO |
+| **FT**                         | Documentos de Faturação (tabela)                                                       |
+| **CL / CL2**                   | Clientes / Clientes-Outros Dados (tabelas)                                             |
+| **RE**                         | Recibos (tabela)                                                                       |
+| **ref / stamp**                | Identificador do registo / campo de versão-concorrência                                |
+| **Xbase**                      | Linguagem de personalização desktop (sintaxe VFP)                                      |
+| **ObjRecebido**                | Objeto disponível nos eventos (Janela, Objecto, MeusDados)                             |
+| **IDU / Ecrãs Personalizados** | Ecrãs desenhados pelo utilizador                                                       |
+| **Framework PHC**              | Conjunto de ferramentas de personalização (desktop e web)                              |
+| **Supervisor**                 | Menu de administração (framework, tratamento da BD, monitores)                         |
+| **PHC On**                     | Acordo anual de atualizações + portal de formação/Calendário PHC                       |
+| **Comunidade PHC**             | Portal de parceiros/clientes (login Nº Cliente + ID Técnico)                           |
+| **Help Center**                | Manuais e artigos públicos (helpcenter.phccs.net)                                      |
+| **Dicionário de Dados**        | Consulta da estrutura/relações de todas as tabelas                                     |
+| **Análise Interna**            | Log de erros do código de utilizador (desktop)                                         |
+| **SAF-T (PT)**                 | Ficheiro de auditoria fiscal normalizado (faturação, transporte, inventário)           |
+| **ATCUD**                      | Código único do documento (validação de série + sequencial)                            |
+| **e-Fatura**                   | Comunicação de faturas à AT (webservice ou SAF-T)                                      |
+| **CIUS-PT**                    | Especificação portuguesa de faturação eletrónica (setor público)                       |
+| **SII / TicketBAI**            | Regimes fiscais de Espanha                                                             |
+| **SDR**                        | Sistema de Depósito e Recolha de embalagens (2026)                                     |
+| **PCMP**                       | Preço de Custo Médio Ponderado (custeio de stock)                                      |
+| **C/C**                        | Conta corrente                                                                         |
+| **CEVMC**                      | Custo das Existências Vendidas e das Mercadorias Consumidas                            |
+| **XL**                         | Componente para grandes volumes/centros analíticos (PHC XL)                            |
+| **EyePeak**                    | Plataforma de logística/e-commerce que sincroniza com o PHC                            |
+| **Cegid Pulse**                | Ecossistema de IA no ERP (assistente Cris, Smart Tools, PromptFunction)                |
+| **Cegid Docs**                 | Gestão documental/arquivo digital legal na cloud                                       |
+| **PEP**                        | Cegid PHC Evolution Program (formação/certificação de 140 h da Cegid Academy)          |
+| **Snapshots**                  | Consultas T-SQL guardadas com variáveis (ex.: #stamp#)                                 |
+| **Monitores**                  | Apresentações sequenciais de dados operacionais                                        |
+| **Front Web**                  | Extranet web para clientes/fornecedores                                                |
+| **Avenças**                    | Dossier de faturação recorrente                                                        |
+| **Rappel**                     | Desconto de volume retroativo (cliente/fornecedor)                                     |
+| **Ignios**                     | Serviço de preenchimento automático de dados de empresa por NIF                        |
 
 ---
 
 ## 15. Fontes e links de referência
 
 **Oficiais (públicos)**
+
 - Site Cegid PHC: https://phcsoftware.com/pt — produtos: `/pt/cegid-phc-cs`, `/pt/cegid-phc-evolution`, módulo Gestão: `/pt/modulos/phc-cs/phc-cs-modulo-phc-cs-gestao`
 - **Help Center Cegid PHC CS/Evolution**: https://helpcenter.phccs.net e http://phc.pt/portal (manuais SUG, artigos iDirecto, Novidades)
   - Novidades da versão (índice): https://www.phc.pt/portal/programs/ewpview.aspx?codigo=pncs&geo=pt&lang=pt-pt
@@ -802,6 +821,7 @@ Resumo fiel do conteúdo programático oficial — use-o como índice de estudo:
 - Microcredenciação IPT "Software Cegid PHC CS Advanced": https://portal2.ipt.pt/pt/cursos/microcredenciacao/Mc_-_SCPHCCSA/
 
 **Parceiros (PDFs públicos úteis)**
+
 - Brochura PHC Gestão CS (âmbito funcional): https://web.trimatriz.com/SITE_12/UserFiles/Downloads/PHCGestao.pdf
 - Diferenças entre gamas Corporate vs Advanced (v28): https://www.absinformatica.pt/uploads/cms/20210204173610_Diferencas_entre_Corporate_e_Advanced_PT.pdf
 - Novidades PHC CS v18/v19/v27 (Arentia/phc.pt): https://www.arentia.pt/api/backoffice/library/get?r=/&d=PDFs&f=Listagem_de_Novidades_v18&e=.pdf | http://www.phc.pt/enews/Listagem_de_Novidades_v19.pdf | http://www.phc.pt/enews/Listagem_Novidades_27.pdf
@@ -812,4 +832,4 @@ Resumo fiel do conteúdo programático oficial — use-o como índice de estudo:
 
 ---
 
-*Guia compilado em 2026-09-15 a partir de fontes oficiais Cegid PHC e documentação pública de parceiros. Os detalhes finos (listas exatas de parâmetros/campos por versão e gama) devem ser confirmados no Help Center da versão instalada e nos manuais in-app, que são a fonte primária e estão sempre atualizados.*
+_Guia compilado em 2026-09-15 a partir de fontes oficiais Cegid PHC e documentação pública de parceiros. Os detalhes finos (listas exatas de parâmetros/campos por versão e gama) devem ser confirmados no Help Center da versão instalada e nos manuais in-app, que são a fonte primária e estão sempre atualizados._
