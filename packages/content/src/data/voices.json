@@ -1,0 +1,39 @@
+{
+  "elevenlabs": [
+    ["Antoni — masculina calma (recomendada p/ Professor)", "ErXwobaYiN019PkySvjV"],
+    ["Adam — masculina grave", "pNInz6obpgDQGcFmaJgB"],
+    ["Arnold — masculina forte", "VR6AewLTigWG4xSOukaG"],
+    ["Sam — masculina jovem", "yoZ06aMxZJJ28mfd3POQ"],
+    ["Josh — masculina narrativa", "TxGEqnHWrfWFTfGW9XjX"],
+    ["Charlie — masculina britânica", "IKne3meq5aSn9XLyUdCD"],
+    ["Rachel — feminina", "21m00Tcm4TlvDq8ikWAM"],
+    ["Domi — feminina firme", "AZnzlk1XvdvUeBnXmlld"],
+    ["Bella — feminina suave", "EXAVITQu4vr4xnSDxMaL"],
+    ["Charlotte — feminina britânica", "Xb7hH06UJpJdRQ0yWdEw"]
+  ],
+  "groq": [
+    ["troy (masculina)", "troy"],
+    ["hannah (feminina)", "hannah"],
+    ["austin (masculina)", "austin"]
+  ],
+  "geminiVoices": [
+    ["⭐ Sulafat — feminina, calorosa (recomendada)", "Sulafat"],
+    ["Kore — feminina, firme", "Kore"],
+    ["Leda — feminina, jovem", "Leda"],
+    ["Aoede — feminina, leve", "Aoede"],
+    ["Achernar — feminina, suave", "Achernar"],
+    ["Laomedeia — feminina, animada", "Laomedeia"],
+    ["Gacrux — feminina, madura", "Gacrux"],
+    ["Vindemiatrix — feminina, gentil", "Vindemiatrix"],
+    ["Puck — masculina, animada", "Puck"],
+    ["Charon — masculina, grave", "Charon"],
+    ["Fenrir — masculina, expressiva", "Fenrir"],
+    ["Orus — masculina, firme", "Orus"],
+    ["Sadaltager — masculina, informativa", "Sadaltager"]
+  ],
+  "geminiModels": [
+    ["gemini-3.1-flash-tts-preview (novo · rápido)", "gemini-3.1-flash-tts-preview"],
+    ["gemini-2.5-flash-preview-tts", "gemini-2.5-flash-preview-tts"],
+    ["gemini-2.5-pro-preview-tts (máxima qualidade · mais lento)", "gemini-2.5-pro-preview-tts"]
+  ]
+}

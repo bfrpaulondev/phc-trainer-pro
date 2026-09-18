@@ -1,0 +1,48 @@
+[
+  {
+    "id": "groq",
+    "nome": "Groq (gpt-oss-120b)",
+    "type": "openai",
+    "url": "https://api.groq.com/openai/v1/chat/completions",
+    "model": "openai/gpt-oss-120b",
+    "codeModel": null
+  },
+  {
+    "id": "gemini",
+    "nome": "Gemini (flash-lite)",
+    "type": "gemini",
+    "model": "gemini-flash-lite-latest"
+  },
+  {
+    "id": "mistral",
+    "nome": "Mistral (small/codestral)",
+    "type": "openai",
+    "url": "https://api.mistral.ai/v1/chat/completions",
+    "model": "mistral-small-latest",
+    "codeModel": "codestral-latest"
+  },
+  {
+    "id": "cerebras",
+    "nome": "Cerebras (gpt-oss-120b)",
+    "type": "openai",
+    "url": "https://api.cerebras.ai/v1/chat/completions",
+    "model": "gpt-oss-120b",
+    "codeModel": null
+  },
+  {
+    "id": "nvidia",
+    "nome": "NVIDIA NIM (glm-5.3)",
+    "type": "openai",
+    "url": "https://integrate.api.nvidia.com/v1/chat/completions",
+    "model": "z-ai/glm-5.3",
+    "codeModel": "z-ai/glm-5.3"
+  },
+  {
+    "id": "openrouter",
+    "nome": "OpenRouter (multi)",
+    "type": "openai",
+    "url": "https://openrouter.ai/api/v1/chat/completions",
+    "model": null,
+    "codeModel": null
+  }
+]

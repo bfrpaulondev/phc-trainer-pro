@@ -1,0 +1,418 @@
+[
+  {
+    "id": "vendas",
+    "ico": "🛒",
+    "t": "Ciclo de Vendas",
+    "d": "Do primeiro contacto ao dinheiro na conta: o circuito completo que sustenta 80% do uso diário do módulo Gestão.",
+    "slides": [
+      {
+        "i": "🗂️",
+        "t": "1. Ficheiros",
+        "d": "Cliente (NIF, condição de pagamento, tabela de preços, vendedor) e artigos (família, unidade, preço, stock mín/máx) criados e limpos. Lixo aqui = lixo em tudo.",
+        "tip": "Use o Ignios (Advanced+) para preencher clientes pelo NIF."
+      },
+      {
+        "i": "📝",
+        "t": "2. Orçamento (DI)",
+        "d": "Proposta comercial sem efeito fiscal. Guarda preços/validade e serve de base à conversão. Tabela BO.",
+        "tip": "Dê ao orçamento uma série própria e numeração clara (ORC/2026/001)."
+      },
+      {
+        "i": "📦",
+        "t": "3. Encomenda (DI)",
+        "d": "Cliente aceitou: converte o orçamento em encomenda. Pode reservar/cativar stock — visível na ficha do artigo como 'reservado'.",
+        "tip": "Nunca deixe linhas pendentes esquecidas: fecham stock cativo para sempre."
+      },
+      {
+        "i": "🚚",
+        "t": "4. Guia de transporte (tipo 4)",
+        "d": "Mercadoria sai: guia com locais de carga/descarga, data/hora de início, matrícula e motorista. Comunicada à ANTES de circular (webservice ou SAF-T resumido).",
+        "tip": "Webservice devolve o Cód. Ident. AT — pode seguir por SMS ao motorista."
+      },
+      {
+        "i": "🧾",
+        "t": "5. Fatura (FT)",
+        "d": "Fatura a guia (conversão): stock baixa em definitivo, C/C do cliente lança a dívida, acumulados atualizam. Entra no SAF-T e leva QR+ATCUD.",
+        "tip": "Confira os 3 efeitos: stock, C/C e ficha do cliente."
+      },
+      {
+        "i": "💶",
+        "t": "6. Recibo (RE)",
+        "d": "Cliente paga: recibo liquida a fatura (total/parcial). Multibanco/SEPA/transferência identificam o recebimento.",
+        "tip": "Recibo sem liquidação = aging errado. Liquide sempre."
+      },
+      {
+        "i": "📊",
+        "t": "7. Cobrança & análise",
+        "d": "Atrasou? Aging + monitor de dívidas + mailing. No fim: análises de vendas por zona/vendedor/família e margem.",
+        "tip": "Rotina semanal de cobranças vale mais que heróis no fim do mês."
+      }
+    ]
+  },
+  {
+    "id": "compras",
+    "ico": "📦",
+    "t": "Ciclo de Compras",
+    "d": "Do aprovisionamento ao pagamento aprovado — onde se ganha margem (custo certo) e se evita rutura.",
+    "slides": [
+      {
+        "i": "📉",
+        "t": "1. Necessidade",
+        "d": "Análise de 'a encomendar'/ruturas ou necessidade da obra/produção dispara a compra. Ponto de encomenda bem calibrado = metade do trabalho.",
+        "tip": "Revista stocks máx/mín sazonalmente."
+      },
+      {
+        "i": "📨",
+        "t": "2. Encomenda a fornecedor (DI)",
+        "d": "Cria a encomenda com preços combinados; o artigo mostra 'encomendado a fornecedor'. Receções parciais mantêm o remanescente.",
+        "tip": "Use a tabela de referências do fornecedor para importar os códigos dele."
+      },
+      {
+        "i": "🏗️",
+        "t": "3. Receção (guia de entrada)",
+        "d": "Mercadoria chega: entrada por documento de compra/guia com conferência de quantidades e lotes (se aplicável).",
+        "tip": "Conferir na receção evita guerras de faturação depois."
+      },
+      {
+        "i": "🧾",
+        "t": "4. Fatura de compra",
+        "d": "Regista a fatura do fornecedor (IVA dedutível, custos acessórios): o PCMP é recalculado — o custo médio do stock muda aqui.",
+        "tip": "Compreenda a fórmula do PCMP: erros de preço de compra propagam-se a todas as vendas."
+      },
+      {
+        "i": "✅",
+        "t": "5. Aprovação de pagamento",
+        "d": "Circuito de aprovação (Enterprise: aprovação de dossiers) autoriza o pagamento — controlo interno de verdade.",
+        "tip": "Sem aprovação configurada, defina pelo menos acessos restritos a pagamentos."
+      },
+      {
+        "i": "💸",
+        "t": "6. Pagamento",
+        "d": "Pagamento (transferência/SEPA) liquida a fatura na C/C do fornecedor; adiantamentos são regularizados aqui.",
+        "tip": "Guia de pagamento em lote SEPA poupa horas no fim do mês."
+      }
+    ]
+  },
+  {
+    "id": "series",
+    "ico": "🧬",
+    "t": "Anatomia de uma Série de Documentos",
+    "d": "O objeto de configuração mais importante da faturação — 6 decisões que definem tudo.",
+    "slides": [
+      {
+        "i": "1️⃣",
+        "t": "Tipo (1-5)",
+        "d": "1/2/3 = fatura, simplificada, fatura-recibo (+ND/NC); 4 = transporte (guia); 5 = proforma. O tipo muda validações e obrigações.",
+        "tip": "Proforma (5) não movimenta nada — perfeita para propostas formais."
+      },
+      {
+        "i": "2️⃣",
+        "t": "Mapping SAF-T",
+        "d": "FT/FS/FR/ND/NC/GT… diz à AT o que o documento é. Mapping errado invalida o ficheiro.",
+        "tip": "Confirme o mapping ao criar séries novas — sempre."
+      },
+      {
+        "i": "3️⃣",
+        "t": "O que movimenta",
+        "d": "Stocks? Conta corrente? Tesouraria? Três interruptores com efeitos em cascata.",
+        "tip": "Guia (tipo 4) movimenta stock mas não C/C; fatura move os dois."
+      },
+      {
+        "i": "4️⃣",
+        "t": "Numeração",
+        "d": "Sequência por série/ano — sequencial e cronológica por lei. Numeração partida = problema com a AT.",
+        "tip": "Não crie duas séries com o mesmo tipo+numeração para o mesmo fim."
+      },
+      {
+        "i": "5️⃣",
+        "t": "ATCUD/validação",
+        "d": "Código de validação da série (dado pela AT) forma o ATCUD com o sequencial. Sem ele, a impressão é bloqueada.",
+        "tip": "Comunique séries novas à ANTES da primeira utilização (sobretudo em janeiro)."
+      },
+      {
+        "i": "6️⃣",
+        "t": "Layout & impressão",
+        "d": "Template com QR+ATCUD, logótipo, 'imprimir quando', cópias e acessos de reimpressão.",
+        "tip": "Após upgrades, imprima um documento de teste e valide QR/ATCUD."
+      }
+    ]
+  },
+  {
+    "id": "transporte",
+    "ico": "🚚",
+    "t": "Transporte de Mercadorias & AT",
+    "d": "O circuito que mais multas dá a quem o ignora: guias comunicadas antes de a mercadoria circular.",
+    "slides": [
+      {
+        "i": "📄",
+        "t": "1. Emitir a guia (tipo 4)",
+        "d": "Locais de carga/descarga (moradas da tabela), data e HORA de início do transporte, matrícula, motorista. Data efetiva de entrega nos documentos fiscais.",
+        "tip": "Valide o parâmetro 'Preenche e valida Local de Carga/Descarga' para não deixar campos vazios."
+      },
+      {
+        "i": "📡",
+        "t": "2. Comunicar à AT",
+        "d": "Dois métodos: webservice em tempo real (devolve Cód. Ident. AT) ou SAF-T (PT) resumido (MovementOfGoods com ShipFrom/ShipTo).",
+        "tip": "Webservice = prova imediata; SAF-T resumido = útil sem ligação na hora."
+      },
+      {
+        "i": "📲",
+        "t": "3. Código ao motorista",
+        "d": "Com série + módulo SMS configurados, o Cód. Ident. AT segue por SMS ao motorista automaticamente ao gravar.",
+        "tip": "Na estrada, a fiscalização pede o código — sem ele, coima."
+      },
+      {
+        "i": "🔄",
+        "t": "4. Converter em fatura",
+        "d": "No fim, fatura-se a guia (ou várias guias numa fatura): 'Faturar este documento' ou emissão automática.",
+        "tip": "Guias faturadas ficam marcadas — evite faturação duplicada."
+      },
+      {
+        "i": "↩️",
+        "t": "5. Devoluções",
+        "d": "Devolução de cliente: guia de devolução (GA) ou NC com reposição de stock conforme o caso.",
+        "tip": "NC que repõe stock exige série configurada para movimentar stocks."
+      }
+    ]
+  },
+  {
+    "id": "saft",
+    "ico": "🏛️",
+    "t": "SAF-T & e-Fatura sem medo",
+    "d": "O ciclo mensal de conformidade: exportar, validar, entregar — e perceber o XML.",
+    "slides": [
+      {
+        "i": "📤",
+        "t": "1. Exportar",
+        "d": "Menu de exportação do SAF-T (PT) de faturação do mês: o ficheiro XML com Header, Customer, Product, Invoice.",
+        "tip": "Exporte para pasta própria por mês/ano (ex.: exports/saft_202609.xml)."
+      },
+      {
+        "i": "🔍",
+        "t": "2. Inspecionar",
+        "d": "Abra o XML: DocumentType (FT/FS/FR/NC/ND), Hash, TaxExemptionReason (M01-M99), totais por taxa. Anulados não entram como ativos.",
+        "tip": "Procure os seus documentos de teste DO… ops, da sua empresa de treino — não os misture com produção."
+      },
+      {
+        "i": "✅",
+        "t": "3. Validar",
+        "d": "Validador do Portal das Finanças (ou do contabilista): estrutura + regras. Erro comum: motivos de isenção inválidos e sequências partidas.",
+        "tip": "Valide SEMPRE antes de entregar — e após mudar séries/parâmetros."
+      },
+      {
+        "i": "📨",
+        "t": "4. Entregar",
+        "d": "Submissão mensal no e-Fatura (ou o contabilista faz). Prazo: até dia 5 (regra geral — confirme o calendário atual).",
+        "tip": "O Calendário PHC (PHC On) lembra os prazos todos."
+      },
+      {
+        "i": "🔐",
+        "t": "5. Integridade",
+        "d": "Hash encadeada por série + nº de certificado do software: alterar documentos emitidos quebra a cadeia — é detetável.",
+        "tip": "Nunca 'arranje' dados por SQL em documentos certificados; use NC/anulação."
+      }
+    ]
+  },
+  {
+    "id": "cc",
+    "ico": "💰",
+    "t": "Conta Corrente & Cobranças",
+    "d": "Da fatura ao dinheiro: o ciclo que decide se a empresa sobrevive (lucro sem caixa não paga salários).",
+    "slides": [
+      {
+        "i": "📒",
+        "t": "1. Movimentos de C/C",
+        "d": "Faturas lançam dívida, recibos liquidam, adiantamentos creditam, juros/débitos ajustam — tudo tipificado por códigos de C/C.",
+        "tip": "Códigos de C/C bem desenhados = extractos que o cliente entende."
+      },
+      {
+        "i": "⏳",
+        "t": "2. Aging",
+        "d": "Saldos por idades mostram ONDE está o atraso (0-30/31-60/61-90/+90). É o mapa das cobranças.",
+        "tip": "Foque nos escalões +60: é aí que a dívida morre."
+      },
+      {
+        "i": "📣",
+        "t": "3. Aviso & contacto",
+        "d": "Mailing de C/C por documento + extracto de conta. Registe promessas de pagamento (nota/anexo).",
+        "tip": "Sem registo das interações, três colegas ligam ao mesmo cliente no mesmo dia."
+      },
+      {
+        "i": "🧾",
+        "t": "4. Recebimento",
+        "d": "Recibo/liquidação (MB, SEPA, transferência). Parcial? Fica saldo pendente — visível no aging.",
+        "tip": "Liquide documento a documento: 'recibo solto' sem liquidação estraga tudo."
+      },
+      {
+        "i": "⚖️",
+        "t": "5. Escalada",
+        "d": "Sem pagamento: carta → jurídico → recibo incobrável (com tratamento fiscal). Limite de crédito previne o próximo caso.",
+        "tip": "Regra de utilizador que bloqueia vendas acima do limite = cobranças a montante."
+      }
+    ]
+  },
+  {
+    "id": "tesouraria",
+    "ico": "🏦",
+    "t": "Tesouraria de ponta a ponta",
+    "d": "Caixa, bancos, previsões e orçamentos: o painel de bordo financeiro diário.",
+    "slides": [
+      {
+        "i": "🏦",
+        "t": "1. Contas",
+        "d": "Cada caixa/banco é uma Conta de Tesouraria (com IBAN); códigos de tesouraria tipificam movimentos.",
+        "tip": "Uma conta por banco real — nunca misture caixas."
+      },
+      {
+        "i": "📄",
+        "t": "2. Extracto & reconciliação",
+        "d": "Importa/regista o extracto bancário e reconcilia movimento a movimento com o ERP.",
+        "tip": "Reconciliar por totais esconde erros; faça movimento a movimento."
+      },
+      {
+        "i": "🔮",
+        "t": "3. Previsional",
+        "d": "Documentos por vencer + títulos + avenças alimentam a previsão de entradas/saídas.",
+        "tip": "Previsão só presta com documentos lançados em dia."
+      },
+      {
+        "i": "🎯",
+        "t": "4. Orçamental",
+        "d": "Orçamento aprovado vs realizado vs previsto: o trio que responde 'podemos investir?'",
+        "tip": "Desvios >10% merecem explicação escrita mensal."
+      },
+      {
+        "i": "🔁",
+        "t": "5. Operações",
+        "d": "Transferências entre contas, sangrias de caixa, débitos diretos SEPA, referências MB, open banking (Evolution).",
+        "tip": "Alerta de saldo mínimo evita o susto do dia 8 (salários)."
+      }
+    ]
+  },
+  {
+    "id": "integracao",
+    "ico": "🧮",
+    "t": "Gestão → Contabilidade",
+    "d": "Como os documentos comerciais viram lançamentos — a ponte que faz do PHC um ERP a sério.",
+    "slides": [
+      {
+        "i": "🗺️",
+        "t": "1. Plano de contas",
+        "d": "Contas SNC preparadas: 21 clientes, 22 fornecedores, 24 IVA, 71/72 vendas, 31/22 compras…",
+        "tip": "Desenhe o mapa documento→contas ANTES de configurar."
+      },
+      {
+        "i": "🧩",
+        "t": "2. Documentos pré-definidos",
+        "d": "Para cada tipo de documento do Gestão define-se o lançamento automático (contas, diário, regras).",
+        "tip": "Comece por 2-3 tipos (FT, compra, recibo) e evolua."
+      },
+      {
+        "i": "⚙️",
+        "t": "3. Configurar integração",
+        "d": "Contas de integração por cliente/fornecedor/IVA; descritivos com documento original (Advanced+).",
+        "tip": "Cliente sem conta de integração = lançamento rejeitado; valide ficheiros novos."
+      },
+      {
+        "i": "▶️",
+        "t": "4. Integrar lotes",
+        "d": "Integração periódica (diária/semanal/mensal) por lote de documentos; estornos e reintegrações têm procedimento próprio.",
+        "tip": "Nunca integre em produção sem testar o lote num clone."
+      },
+      {
+        "i": "📈",
+        "t": "5. Apuramentos",
+        "d": "IVA (liquidado vs dedutível) → declaração periódica; CEVMC e resultados no fecho; mapas de gestão.",
+        "tip": "Reconcilie totais Gestão × Contabilidade ANTES do fecho mensal."
+      }
+    ]
+  },
+  {
+    "id": "dev",
+    "ico": "🛠️",
+    "t": "Personalização segura",
+    "d": "O ciclo profissional de desenvolvimento na Framework PHC — do dicionário ao upgrade.",
+    "slides": [
+      {
+        "i": "🗺️",
+        "t": "1. Dicionário primeiro",
+        "d": "Descubra tabelas/campos/relações no Dicionário de Dados. Nunca adivinhe nomes.",
+        "tip": "O menu de opções de cada ecrã abre o dicionário já na tabela certa."
+      },
+      {
+        "i": "🧬",
+        "t": "2. Estender o modelo",
+        "d": "Campos de utilizador (colunas novas), tabelas de utilizador, valores por defeito — nunca ALTER TABLE no core.",
+        "tip": "Prefixo de projeto nos nomes (ex.: TreinoLimiteCredito) evita colisões."
+      },
+      {
+        "i": "📏",
+        "t": "3. Regras & eventos",
+        "d": "Regras validam negócio (bloqueios/avisos); eventos Xbase reagem a ações (Init, Clique, Após Atualizar…) com ObjRecebido.",
+        "tip": "Return .F. cancela o comportamento padrão — use com pinça."
+      },
+      {
+        "i": "🖥️",
+        "t": "4. IDUs & menus",
+        "d": "Ecrãs personalizados para fluxos que o standard não cobre, ligados a menus e acessos próprios.",
+        "tip": "Antes do IDU, confirme que um mapa/análise standard não resolve."
+      },
+      {
+        "i": "🧪",
+        "t": "5. Testar no clone",
+        "d": "Clone da BD → implementar → cenários (feliz, limite, erro) → Análise Interna/Log de Código limpos.",
+        "tip": "Documente: notas/projeto-X.md com código, testes e motivo."
+      },
+      {
+        "i": "🔄",
+        "t": "6. Upgrade-proof",
+        "d": "Personalizações vivem na BD e sobrevivem a reinstalações — mas cada upgrade exige revalidação completa.",
+        "tip": "Checklist de upgrade por personalização: sem ela, o upgrade é roleta."
+      }
+    ]
+  },
+  {
+    "id": "fecho",
+    "ico": "🗓️",
+    "t": "Fecho do mês (checklist)",
+    "d": "A rotina que separa uma empresa organizada de um incêndio mensal.",
+    "slides": [
+      {
+        "i": "🧾",
+        "t": "1. Documentos em dia",
+        "d": "Todas as guias faturadas, faturas emitidas no prazo, NC/ND com motivos, nada em estado 'não processado'.",
+        "tip": "Filtre documentos não processados antes de tudo."
+      },
+      {
+        "i": "📤",
+        "t": "2. SAF-T & AT",
+        "d": "Exportar SAF-T do mês, validar, entregar no e-Fatura até ao prazo; transportes todos comunicados.",
+        "tip": "Guarde o XML validado no arquivo (File Storage/Cegid Docs)."
+      },
+      {
+        "i": "🏦",
+        "t": "3. Bancos",
+        "d": "Extractos importados e reconciliados; transferências e SEPA executados; tesouraria previsional revista.",
+        "tip": "Reconciliação pendente = fecho falso."
+      },
+      {
+        "i": "📦",
+        "t": "4. Stocks",
+        "d": "Movimentos anómalos revistos; contagens cíclicas feitas; valor de stock (PCMP) plausível.",
+        "tip": "Quebra gigante num artigo? Investigue antes de ajustar."
+      },
+      {
+        "i": "🧮",
+        "t": "5. Contabilidade",
+        "d": "Integração do mês corrida e reconciliada (Gestão × Contabilidade); IVA apurado; mapas de gestão.",
+        "tip": "Totais de vendas/compras têm de bater ao cêntimo."
+      },
+      {
+        "i": "📊",
+        "t": "6. Reporting",
+        "d": "Aging atualizado, KPI de vendas/margens, dashboard da direção — decisão com dados frescos.",
+        "tip": "Automatize o envio (e-mail/SMTP) para a direção receber sozinha."
+      }
+    ]
+  }
+]

@@ -1,0 +1,112 @@
+[
+  {
+    "id": "PT",
+    "nome": "Portugal",
+    "ico": "🇵🇹",
+    "moeda": "EUR",
+    "fiscal": [
+      "IVA: 23% / 13% / 6% (continente; RAM e RAA com taxas próprias)",
+      "SAF-T (PT): faturação mensal, transportes (webservice ou resumido), inventário até 31/01",
+      "ATCUD + QR Code em todos os documentos fiscalmente relevantes",
+      "e-Fatura: webservice em tempo real ou SAF-T pelo contabilista",
+      "CIUS-PT / faturação eletrónica na contratação pública",
+      "Retenções na fonte de IRS/IRC e Imposto do Selo",
+      "SDR (2026): depósito de 0,10 € em embalagens de bebidas de uso único"
+    ],
+    "phc": [
+      "Executável PT com conformidade AT completa (software certificado)",
+      "Comunicação de séries à AT e código de validação na configuração das séries",
+      "Parâmetro 'Método de Envio de Documentos de Transporte' (webservice/SAF-T)",
+      "Motivos de isenção M01-M99 validados para webservice",
+      "Calendário PHC (PHC On) com obrigações nacionais",
+      "Cegid Docs: arquivo digital legal e pré-lançamento de faturas CIUS-PT"
+    ]
+  },
+  {
+    "id": "ES",
+    "nome": "Espanha",
+    "ico": "🇪🇸",
+    "moeda": "EUR",
+    "fiscal": [
+      "IVA geral 21% (reduzido/super-reduzido conforme produto — confirme valores vigentes)",
+      "SII — Suministro Inmediato de Información (AEAT) para abrangidos",
+      "TicketBAI no País Basco (e regimes forais)",
+      "Retenções de IRPF em faturas de profissionais/serviços",
+      "Operações intra-UE: reverse charge e Intrastat"
+    ],
+    "phc": [
+      "Executável ES: parâmetro geral com 4 opções (inclui SII e TicketBAI)",
+      "Funções internas de envio de documentos de Compras/Vendas para o SII (202601)",
+      "Campo 'Província' nos clientes (obrigatório para Documento Eletrónico)",
+      "Botão 'Faturar este documento' em séries tipo 4/5",
+      "Documentos Eletrónicos com EAN da empresa"
+    ]
+  },
+  {
+    "id": "AO",
+    "nome": "Angola",
+    "ico": "🇦🇴",
+    "moeda": "AOA (Kwanza)",
+    "fiscal": [
+      "IVA 14% no regime geral (regimes simplificado/transitório com taxas próprias — confirme valores vigentes)",
+      "SAF-T (AO) de faturação submetido à AGT",
+      "Retenções de Imposto Industrial / IRT conforme o caso",
+      "Regras de faturação e certificação locais (AGT)"
+    ],
+    "phc": [
+      "Comunidade/portal local e rede de parceiros ativa em Angola",
+      "Cegid Account e Cegid Pulse disponíveis (PT, AO, MZ e CV — 202601)",
+      "Programa de formação PHC Hi, Tech (entrada na carreira)",
+      "Configuração fiscal local via parâmetros/módulos de impostos"
+    ]
+  },
+  {
+    "id": "MZ",
+    "nome": "Moçambique",
+    "ico": "🇲🇿",
+    "moeda": "MZN (Metical)",
+    "fiscal": [
+      "IVA 16% (confirme o valor vigente e reduções)",
+      "NUIT nas fichas de clientes/fornecedores",
+      "Retenções de IRPC conforme regime",
+      "Obrigações declarativas locais em evolução (e-faturação) — confirme com parceiro"
+    ],
+    "phc": [
+      "Portal/comunidade local (mocambique.phcsoftware.com)",
+      "Cegid Account e Cegid Pulse disponíveis (202601)",
+      "Configuração de moeda, câmbios e impostos locais"
+    ]
+  },
+  {
+    "id": "CV",
+    "nome": "Cabo Verde",
+    "ico": "🇨🇻",
+    "moeda": "CVE (Escudo cabo-verdiano)",
+    "fiscal": [
+      "IVA 15% (confirme o valor vigente)",
+      "NIF local nas fichas e documentos",
+      "Obrigações declarativas da Direção Geral de Impostos"
+    ],
+    "phc": [
+      "Cegid Account e Cegid Pulse disponíveis (202601)",
+      "Rede de parceiros e formação local",
+      "Configuração fiscal via parâmetros de impostos"
+    ]
+  },
+  {
+    "id": "PE",
+    "nome": "Peru",
+    "ico": "🇵🇪",
+    "moeda": "PEN (Sol)",
+    "fiscal": [
+      "IGV 18% (confirme o valor vigente)",
+      "Retenção/retenções locais em vendas e serviços",
+      "Faturação eletrónica SUNAT (comprovantes eletrónicos)"
+    ],
+    "phc": [
+      "Executável PE: campo 'Taxa de retenção' e cálculo automático da retenção nas vendas (documentos de faturação)",
+      "Valor calculado da retenção editável conforme regras",
+      "Parâmetros fiscais locais"
+    ]
+  }
+]

@@ -1,0 +1,16 @@
+{
+  "name": "@phc/content",
+  "version": "6.0.0-alpha.0",
+  "private": true,
+  "type": "module",
+  "description": "Conteúdo estático do PHC Trainer Pro (extraído do app legado v5.3.0): missões, cartas, testes, enciclopédia, guia, prompts de IA.",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}

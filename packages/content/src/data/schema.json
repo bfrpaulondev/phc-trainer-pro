@@ -1,0 +1,672 @@
+{
+  "core": [
+    [
+      "ft",
+      "Documentos de Faturação — cabeçalho (faturas/FS/FR/ND/NC/guias conforme a série)",
+      "fdata, ndoc (tipo; filtro oficial documentado: ft.ndoc=1), nmdoc, no, estab, etotal, ettiliq, eivain1, anulado, tipodoc, carga, descar, ftstamp"
+    ],
+    [
+      "cl",
+      "Clientes — ficha",
+      "no (número), nome, ncont (nº contribuinte), morada, telefone, esaldo (saldo), tipo, inactivo, estab (filial), vendnm, descregiva, clstamp; campos de utilizador documentados: u_tabxno, u_amarelo"
+    ],
+    [
+      "cl2",
+      "Clientes — Outros Dados (ex.: país da morada, segundo o Help Center)",
+      "consultar Dicionário de Dados"
+    ],
+    [
+      "bo",
+      "Dossiers Internos — cabeçalho (orçamentos, encomendas, folhas de obra…)",
+      "ndos, nmdos, boano, dataobra, obrano, trab1, fref, etotaldeb, ousrdata, ousrhora, bostamp"
+    ],
+    [
+      "bi",
+      "Linhas de documentos/dossiers — relação observada: bi.bostamp ↔ bo.stamp (confirmar no Dicionário)",
+      "ref, qtt, design, armazem, zona, cor, tam, lordem, ettdeb, bifref, bostamp, oobistamp"
+    ],
+    [
+      "re",
+      "Recibos de clientes",
+      "rno, rdata, ndoc, nmdoc, reano, etotal, evirs, totalmoeda, usrdata, usrhora, usrinis, process, restamp"
+    ],
+    [
+      "st",
+      "Stocks e Serviços — artigos",
+      "ref, codigo, design, familia, stock, stmin, epv1 (preço venda 1), epcpond (custo médio ponderado — PCMP), epcusto, qttcli, qttfor, tipodesc, fornecedor, ststamp"
+    ],
+    [
+      "fn",
+      "Linhas de compras/faturas de fornecedor (confirmar papel exato no Dicionário)",
+      "ref, qtt, design, unidade, iva, evalacres, etiliquido, stns, fnstamp, fostamp, alvstamp, usrdata"
+    ],
+    [
+      "tabop",
+      "Ordens de Fabrico (Manufactor)",
+      "numop, st_tabof, stamp — exemplo oficial (Novidades v20): select numop, stamp from tabop (nolock) where st_tabof = …"
+    ],
+    [
+      "ft2",
+      "Tabela auxiliar de faturação (colhida da documentação; confirmar papel no Dicionário)",
+      "consultar Dicionário de Dados"
+    ],
+    [
+      "dic",
+      "Dicionário de Dados interno do PHC — metadados de tabelas/campos da instalação (a estrutura exata varia por versão; descobrir primeiro)",
+      "select column_name, data_type from information_schema.columns where table_name = 'dic' · select top 30 * from dic with (nolock)"
+    ]
+  ],
+  "universal": "Todas as tabelas PHC usam ref (identificador do registo) e stamp (versão/concorrência e ligações entre tabelas); leituras analíticas com with (nolock).",
+  "conv": [
+    "Campos de utilizador (framework) usam tipicamente o prefixo u_ (exemplos reais na documentação: cl.u_tabxno, cl.u_amarelo).",
+    "Ligações entre tabelas seguem o padrão <tabelapai>stamp (observado: bi.bostamp→bo, fn.fostamp→fo) — confirmar sempre no Dicionário de Dados, que mostra as relações oficiais desde a versão 2008.",
+    "Nomes de tabelas são curtos: ft faturação, cl clientes, cl2 outros dados, bo dossiers internos, bi linhas, re recibos, st artigos, fn compras (confirmar no Dicionário).",
+    "A autoridade final é o Dicionário de Dados da instalação (Supervisor → Tratamento da base de dados) — campos personalizados e tabelas de utilizador variam por empresa.",
+    "A instalação tem a tabela interna dic (Dicionário de Dados do PHC) com metadados de tabelas/campos — os scripts de descoberta incluem-na; como a estrutura da dic varia por versão, descubra-a primeiro (information_schema.columns where table_name = 'dic') antes de a consultar por nomes de coluna."
+  ],
+  "harvest": {
+    "cl": {
+      "n": 95,
+      "f": [
+        "no",
+        "estab",
+        "nome",
+        "clstamp",
+        "esaldo",
+        "tipo",
+        "u_tabxno",
+        "descregiva",
+        "ncont",
+        "morada",
+        "inactivo",
+        "u_amarelo",
+        "vendnm",
+        "telefone",
+        "codpost",
+        "zona",
+        "tipodesc",
+        "clivd",
+        "pais",
+        "autofact",
+        "local",
+        "conta",
+        "u_glnentrg",
+        "contacto",
+        "email"
+      ]
+    },
+    "pe": {
+      "n": 46,
+      "f": [
+        "nome",
+        "no",
+        "estab",
+        "ccusto",
+        "pestamp",
+        "hsemana",
+        "sexo",
+        "nasc",
+        "ncga",
+        "contrato",
+        "cinicio",
+        "cprofiss",
+        "dataadm",
+        "ebasemes",
+        "ccprofiss",
+        "sind",
+        "hdia",
+        "cfim",
+        "nbenef",
+        "dataout",
+        "nhabil",
+        "sitprof",
+        "dataupro",
+        "habsocial",
+        "status"
+      ]
+    },
+    "ft": {
+      "n": 44,
+      "f": [
+        "fdata",
+        "ettiliq",
+        "no",
+        "fno",
+        "ftstamp",
+        "etotal",
+        "tipodoc",
+        "anulado",
+        "nmdoc",
+        "estab",
+        "ndoc",
+        "descar",
+        "carga",
+        "eivain1",
+        "eivain2",
+        "eivain3",
+        "eivain4",
+        "eivain5",
+        "eivain6",
+        "eivain7",
+        "eivain8",
+        "eivain9",
+        "ftano",
+        "zona",
+        "ettiva"
+      ]
+    },
+    "st": {
+      "n": 43,
+      "f": [
+        "ref",
+        "design",
+        "stock",
+        "ststamp",
+        "codigo",
+        "epv1",
+        "epcpond",
+        "qttcli",
+        "familia",
+        "tipodesc",
+        "qttfor",
+        "stmin",
+        "epcusto",
+        "fornecedor",
+        "tabiva",
+        "opendata",
+        "usrdata",
+        "usrinis",
+        "usrhora",
+        "ousrhora",
+        "ousrdata",
+        "ousrinis",
+        "fornec",
+        "url",
+        "stns"
+      ]
+    },
+    "fi": {
+      "n": 30,
+      "f": [
+        "ref",
+        "qtt",
+        "etiliquido",
+        "ftstamp",
+        "iva",
+        "epv",
+        "design",
+        "oref",
+        "fistamp",
+        "bistamp",
+        "ivaincl",
+        "ndoc",
+        "motiseimp",
+        "alvstamp",
+        "composto",
+        "usr5",
+        "usr6",
+        "familia",
+        "usr3",
+        "usr1",
+        "usr2",
+        "usr4",
+        "etecoval",
+        "armazem",
+        "lordem"
+      ]
+    },
+    "bo": {
+      "n": 28,
+      "f": [
+        "ndos",
+        "dataobra",
+        "obrano",
+        "no",
+        "boano",
+        "bostamp",
+        "estab",
+        "etotaldeb",
+        "nmdos",
+        "trab1",
+        "fref",
+        "ousrdata",
+        "ousrhora",
+        "ebo12_iva",
+        "ebo22_iva",
+        "ebo32_iva",
+        "ebo42_iva",
+        "ebo52_iva",
+        "ebo62_iva",
+        "ebo11_iva",
+        "ebo21_iva",
+        "ebo31_iva",
+        "ebo41_iva",
+        "ebo51_iva",
+        "ebo61_iva"
+      ]
+    },
+    "pcsa": {
+      "n": 23,
+      "f": ["conta", "ano", "edeb", "ecre", "mes"]
+    },
+    "tabat": {
+      "n": 17,
+      "f": ["stamp"]
+    },
+    "pa": {
+      "n": 16,
+      "f": [
+        "pdata",
+        "nopat",
+        "marca",
+        "fechado",
+        "no",
+        "problema",
+        "tecnnm",
+        "pastamp",
+        "status",
+        "nome",
+        "cass",
+        "nosug"
+      ]
+    },
+    "bi": {
+      "n": 15,
+      "f": [
+        "ref",
+        "qtt",
+        "bistamp",
+        "ndos",
+        "armazem",
+        "bifref",
+        "bostamp",
+        "design",
+        "ettdeb",
+        "zona",
+        "lordem",
+        "oobistamp",
+        "cor",
+        "tam",
+        "unidade",
+        "iva",
+        "dataobra",
+        "edebito",
+        "qtt2",
+        "usrdata",
+        "obistamp",
+        "obranome",
+        "stipo",
+        "composto",
+        "ivaincl"
+      ]
+    },
+    "ng": {
+      "n": 12,
+      "f": ["dataaber", "camstamp", "encerrado", "novend", "status"]
+    },
+    "cm3": {
+      "n": 12,
+      "f": ["cm", "cmdesc"]
+    },
+    "pc": {
+      "n": 11,
+      "f": ["conta", "descricao", "integracao", "taxaiva"]
+    },
+    "pn": {
+      "n": 11,
+      "f": [
+        "fdata",
+        "etiliquido",
+        "zona",
+        "usr1",
+        "familia",
+        "segmento",
+        "no",
+        "tipo",
+        "nome",
+        "nmdoc",
+        "estab",
+        "usr2",
+        "usr3",
+        "usr4",
+        "usr5",
+        "ref",
+        "vendnm",
+        "etcusto",
+        "qtt",
+        "tabiva",
+        "iva",
+        "ftstamp",
+        "fno"
+      ]
+    },
+    "cc": {
+      "n": 9,
+      "f": [
+        "no",
+        "datalc",
+        "cmdesc",
+        "estab",
+        "debm",
+        "credm",
+        "moeda",
+        "edeb",
+        "nrdoc",
+        "cm",
+        "deb",
+        "cred",
+        "ecred",
+        "edebf",
+        "ccndoc",
+        "ccnmdoc",
+        "debf",
+        "credf",
+        "debfm",
+        "credfm",
+        "nome",
+        "dataven",
+        "ecredf",
+        "obs",
+        "ccstamp"
+      ]
+    },
+    "hs": {
+      "n": 9,
+      "f": [
+        "data",
+        "no",
+        "tydescricao",
+        "horasfalta",
+        "ccusto",
+        "nome",
+        "ntipo",
+        "tipohora",
+        "fdia",
+        "diasfalta",
+        "just",
+        "desconta"
+      ]
+    },
+    "acf": {
+      "n": 8,
+      "f": ["acfstamp", "tothoras", "dtini"]
+    },
+    "fo": {
+      "n": 7,
+      "f": [
+        "data",
+        "eivain",
+        "nome",
+        "fostamp",
+        "etotal",
+        "no",
+        "evalacres",
+        "edespinc",
+        "foano",
+        "adoc",
+        "ettiva",
+        "docnome",
+        "tipo",
+        "zona",
+        "usrdata",
+        "usrhora",
+        "usrinis",
+        "docdata",
+        "ousrinis",
+        "ousrdata",
+        "ousrhora",
+        "moeda",
+        "totalmoeda",
+        "tpdesc",
+        "pdata"
+      ]
+    },
+    "e1": {
+      "n": 7,
+      "f": [
+        "ncont",
+        "nomabrv",
+        "estab",
+        "nomecomp",
+        "morada",
+        "local",
+        "codpost",
+        "telefone",
+        "fax",
+        "email",
+        "cae",
+        "contacto",
+        "url",
+        "capsocial",
+        "codnatjur",
+        "consreg",
+        "mornum",
+        "morand",
+        "teleind",
+        "faxind",
+        "url1"
+      ]
+    },
+    "em": {
+      "n": 7,
+      "f": ["ousrdata", "clno", "codpais", "no", "u_dataexp", "usrdata", "emstamp"]
+    },
+    "ml": {
+      "n": 7,
+      "f": ["data", "conta", "mes", "edeb", "ecre", "ousrhora"]
+    },
+    "us": {
+      "n": 6,
+      "f": ["userno"]
+    },
+    "ft2": {
+      "n": 6,
+      "f": [
+        "ft2stamp",
+        "descregiva",
+        "u_extraum",
+        "u_extradois",
+        "tiposaft",
+        "motiseimp",
+        "assinatura",
+        "versaochave"
+      ]
+    },
+    "re": {
+      "n": 6,
+      "f": [
+        "rno",
+        "rdata",
+        "etotal",
+        "ndoc",
+        "restamp",
+        "nmdoc",
+        "reano",
+        "usrhora",
+        "evirs",
+        "usrdata",
+        "totalmoeda",
+        "process",
+        "no",
+        "usrinis",
+        "ousrinis",
+        "ousrdata",
+        "ousrhora",
+        "efinv",
+        "moeda",
+        "total",
+        "vendnm"
+      ]
+    },
+    "ftaux": {
+      "n": 6,
+      "f": ["ftstamp"]
+    },
+    "fl": {
+      "n": 6,
+      "f": ["no", "autofact", "esaldo", "nome", "ncont"]
+    },
+    "vi": {
+      "n": 6,
+      "f": ["data", "custo", "vistamp", "hora", "vnamarca", "tipo", "nome", "vendedor"]
+    },
+    "clb": {
+      "n": 6,
+      "f": ["no"]
+    },
+    "sz": {
+      "n": 6,
+      "f": ["no"]
+    },
+    "mh": {
+      "n": 6,
+      "f": ["nopat", "situacao", "data", "tecnico", "no", "nome", "ptipo"]
+    },
+    "plf": {
+      "n": 5,
+      "f": ["acfstamp", "no", "nmclb"]
+    },
+    "wwfv": {
+      "n": 5,
+      "f": ["no", "wwfstamp", "cval"]
+    },
+    "fn": {
+      "n": 5,
+      "f": [
+        "alvstamp",
+        "ref",
+        "fnstamp",
+        "qtt",
+        "evalacres",
+        "etiliquido",
+        "design",
+        "fostamp",
+        "stns",
+        "usrdata",
+        "unidade",
+        "iva"
+      ]
+    },
+    "pr": {
+      "n": 5,
+      "f": [
+        "custo",
+        "data",
+        "prstamp",
+        "no",
+        "nome",
+        "estab",
+        "nbenef",
+        "nhabil",
+        "sitprof",
+        "cprofiss",
+        "ncategoria",
+        "codrdtrab",
+        "ncont",
+        "czonag"
+      ]
+    },
+    "cam": {
+      "n": 5,
+      "f": ["ousrdata", "camstamp", "descricao", "gerado"]
+    },
+    "sl": {
+      "n": 5,
+      "f": ["segmento", "ref", "slstamp", "alvstamp", "fistamp", "origem"]
+    },
+    "ts": {
+      "n": 4,
+      "f": ["preco2", "preco1", "ndos"]
+    },
+    "u_usertabx": {
+      "n": 4,
+      "f": ["u_usertabxstamp", "tipocl"]
+    },
+    "tn": {
+      "n": 4,
+      "f": ["data", "tipo", "no", "snno"]
+    },
+    "inserted": {
+      "n": 4,
+      "f": ["no", "clstamp", "morada"]
+    },
+    "jt": {
+      "n": 4,
+      "f": ["ajust", "fiscal", "pct", "eval", "codigo"]
+    },
+    "tz": {
+      "n": 4,
+      "f": ["codigo", "tx90"]
+    },
+    "bt": {
+      "n": 3,
+      "f": [
+        "data",
+        "ref",
+        "estarere",
+        "eestarere",
+        "ereintact",
+        "taxa",
+        "estarenr",
+        "eestarenr",
+        "increm"
+      ]
+    },
+    "td": {
+      "n": 3,
+      "f": ["tiposaft", "ndoc", "lancacli", "docsext", "regrd"]
+    },
+    "sp": {
+      "n": 3,
+      "f": ["refi", "datai", "dataf", "reff"]
+    },
+    "sysobjects": {
+      "n": 3,
+      "f": ["name"]
+    },
+    "bl": {
+      "n": 3,
+      "f": ["banco", "esaldo"]
+    },
+    "va": {
+      "n": 3,
+      "f": ["matricula"]
+    },
+    "cu": {
+      "n": 3,
+      "f": ["cct", "descricao", "inactivo"]
+    },
+    "sa": {
+      "n": 3,
+      "f": ["armazem", "stock", "ref"]
+    },
+    "cts": {
+      "n": 3,
+      "f": ["u_dataexp", "nomeem", "nome", "noem", "usrdata"]
+    },
+    "wwfl": {
+      "n": 3,
+      "f": ["wwfstamp", "tabstamp", "wwflstamp"]
+    },
+    "stobs": {
+      "n": 3,
+      "f": ["stobs", "ref"]
+    },
+    "pf": {
+      "n": 3,
+      "f": ["pfstamp", "codigo"]
+    },
+    "usql": {
+      "n": 3,
+      "f": ["usqlstamp"]
+    },
+    "ag": {
+      "n": 2,
+      "f": ["codpais", "nome", "telefone", "no", "ncont", "morada", "local", "fax", "email", "url"]
+    },
+    "mo": {
+      "n": 2,
+      "f": ["u_func", "mostamp"]
+    }
+  }
+}

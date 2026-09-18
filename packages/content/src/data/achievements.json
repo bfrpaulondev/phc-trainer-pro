@@ -1,0 +1,146 @@
+[
+  {
+    "id": "primeira-pratica",
+    "ico": "🎬",
+    "t": "Primeira Prática",
+    "d": "Completou a primeira repetição de uma missão"
+  },
+  {
+    "id": "reps-25",
+    "ico": "🔁",
+    "t": "Constância",
+    "d": "25 repetições acumuladas"
+  },
+  {
+    "id": "reps-100",
+    "ico": "⚙️",
+    "t": "Prática Deliberada",
+    "d": "100 repetições acumuladas"
+  },
+  {
+    "id": "primeira-memoria",
+    "ico": "🧠",
+    "t": "Conhecimento Consolidado",
+    "d": "Primeira missão dominada ('sei de cor')"
+  },
+  {
+    "id": "dez-memoria",
+    "ico": "📐",
+    "t": "Banco Técnico",
+    "d": "10 missões dominadas"
+  },
+  {
+    "id": "todas-memoria",
+    "ico": "🎖️",
+    "t": "Domínio Integral",
+    "d": "Todas as missões dominadas"
+  },
+  {
+    "id": "streak-7",
+    "ico": "📅",
+    "t": "Semana de Estudo",
+    "d": "7 dias consecutivos de prática"
+  },
+  {
+    "id": "streak-30",
+    "ico": "🗓️",
+    "t": "Rotina Mensal",
+    "d": "30 dias consecutivos de prática"
+  },
+  {
+    "id": "cartas-25",
+    "ico": "🗂️",
+    "t": "Revisão Espaçada",
+    "d": "25 flashcards dominados"
+  },
+  {
+    "id": "cartas-100",
+    "ico": "📚",
+    "t": "Baralho Completo",
+    "d": "100 flashcards dominados"
+  },
+  {
+    "id": "testes-5",
+    "ico": "📝",
+    "t": "Cinco Exames",
+    "d": "5 testes de nível aprovados"
+  },
+  {
+    "id": "testes-todos",
+    "ico": "🏅",
+    "t": "Aprovação Plena",
+    "d": "Todos os testes aprovados"
+  },
+  {
+    "id": "provas-25",
+    "ico": "📸",
+    "t": "Portefólio de Evidências",
+    "d": "25 provas registadas"
+  },
+  {
+    "id": "provas-100",
+    "ico": "🗃️",
+    "t": "Dossier Completo",
+    "d": "100 provas registadas"
+  },
+  {
+    "id": "curso-ia",
+    "ico": "🎓",
+    "t": "Formação Personalizada",
+    "d": "Curso gerado por IA"
+  },
+  {
+    "id": "empresa",
+    "ico": "🏢",
+    "t": "Contexto Definido",
+    "d": "Escolheu um segmento de empresa de treino"
+  },
+  {
+    "id": "licoes-10",
+    "ico": "👨‍🏫",
+    "t": "Aluno Aplicado",
+    "d": "10 aulas guiadas assistidas"
+  },
+  {
+    "id": "fiscal",
+    "ico": "🏛️",
+    "t": "Conformidade",
+    "d": "Concluiu a missão SAF-T (L33)"
+  },
+  {
+    "id": "dev",
+    "ico": "🛠️",
+    "t": "Primeira Personalização",
+    "d": "Concluiu a missão de eventos Xbase (L46)"
+  },
+  {
+    "id": "projeto",
+    "ico": "🌟",
+    "t": "Implementação Completa",
+    "d": "Executou o projeto final (L56)"
+  },
+  {
+    "id": "contabilista",
+    "ico": "🧮",
+    "t": "Especialista Contabilidade",
+    "d": "Dominou todas as missões do pack Contabilidade (L57-L66)"
+  },
+  {
+    "id": "rh",
+    "ico": "🧑‍💼",
+    "t": "Especialista Pessoal",
+    "d": "Dominou todas as missões do pack Pessoal/Vencimentos (L67-L74)"
+  },
+  {
+    "id": "pos",
+    "ico": "🛒",
+    "t": "Especialista Retalho",
+    "d": "Dominou todas as missões do pack POS (L75-L82)"
+  },
+  {
+    "id": "suporte",
+    "ico": "🎧",
+    "t": "Especialista Pós-venda",
+    "d": "Dominou todas as missões do pack Suporte (L83-L89)"
+  }
+]

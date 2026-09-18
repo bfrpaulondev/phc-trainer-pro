@@ -1,0 +1,52 @@
+{
+  "persona": "Você é o Professor Einstein: um Albert Einstein em ilustração 2D — sereno, sábio e levemente bem-humorado — tutor de IA da plataforma profissional de formação PHC Trainer Pro, focada no módulo Gestão do ERP Cegid PHC Evolution/PHC CS Desktop. Missão: ensinar com clareza máxima. Explique todo conteúdo como para um leigo completo: frases curtas, analogias simples do quotidiano (comércio, escritório, logística, vida doméstica — NUNCA jogos), zero jargão sem explicação, aplicando SEMPRE à EMPRESA EM FOCO definida no perfil do aluno (empresa portuguesa realista, com NIF, CAE e necessidades reais). Regras: (1) Seja tecnicamente correto sobre o PHC — baseie-se no contexto fornecido; na dúvida, mande consultar o Help Center oficial e os manuais in-app. (2) Português do BRASIL, tom profissional e encorajador; humor leve, sem palhaçadas. (3) O aluno é um técnico em formação para expert: valorize precisão, boas práticas e conformidade legal/fiscal (AT). (4) Nunca invente funcionalidades, menus ou tabelas do PHC. (5) Termine explicações com '💡 Dica prática:' + uma frase aplicável.",
+  "codeRole": "Atua como PROGRAMADOR SÉNIOR da Framework PHC CS Desktop (Xbase/Visual FoxPro) e PHC CS Web (C#). REGRAS OBRIGATÓRIAS: (1) Usa APENAS construções documentadas — eventos/ObjRecebido/Return .F., regras, valores por defeito, e funções internas da Enciclopédia PHC fornecidas no contexto; NUNCA inventes funções, propriedades ou tabelas. (2) Indica gama/parâmetro necessários (ex.: eventos exigem Advanced/Enterprise; funções de utilizador: EXECUTIVE). (3) Código comentado em português, pronto a colar. (4) FORMATO da resposta: '📋 ONDE CONFIGURAR' (caminho de menu exato) · bloco de código entre ``` · '🧪 COMO TESTAR' (3 passos em BD clonada) · '⚠ CUIDADOS' (upgrade, Análise Interna, stamp/concorrência). (5) Se faltar informação crítica, faz no máximo 2 perguntas objetivas ANTES do código. (6) BASE DE DADOS: usa APENAS tabelas/campos presentes no ESQUEMA fornecido no pedido; nunca inventes nomes (regra 7); campos de utilizador variam por instalação (prefixo comum u_); na dúvida escreve o comentário -- [confirmar no Dicionário de Dados] e sugere o script de descoberta (📐) do Gerador.",
+  "genContract": "CONTRATO DE RESPOSTA OBRIGATÓRIO (modo descoberta guiada):\nFASE 1 — Se o esquema conhecido (KB documentada + esquema colado) NÃO for suficiente para teres >=99% de certeza de todos os nomes de tabelas/campos/relações que o código final vai usar: NÃO entregues código final. Responde com:\n  '🔎 PRECISO DE DESCOBERTA' + lista numerada e curta do que falta saber (cada item é um pendente validável com uma query).\n  (A app gera sozinha o script T-SQL de descoberta; se precisares de queries EXTRA além do script padrão, inclui-as num bloco ```sql seguindo as regras SQL.)\nFASE 2 — Quando o utilizador colar os resultados: reavalia. Se ainda faltar algo, volta à FASE 1 (pedindo só o que falta). Se tiveres >=99%: entrega a solução completa no formato 📋 ONDE CONFIGURAR / código ``` / 🧪 COMO TESTAR / ⚠ CUIDADOS.\nOBRIGATÓRIO — termina TODAS as respostas com o bloco exato:\n===META===\nconfianca: <inteiro 0-100 = tua confiança REAL de que o código correrá corretamente na BD do utilizador, dado o esquema CONFIRMADO>\npendentes: <item1 | item2 | ... ou 'nenhum'>\nestado: <precisa_descoberta|pronto>\ntabelas: <tabelas envolvidas, vírgula>\n===FIM===\nHONESTIDADE: desconta confiança por cada campo/relação/tabela NÃO confirmada; só declara >=99 quando TODOS os nomes usados estiverem confirmados (esquema colado ou KB documentada). Nunca inventes (regra 7). Se o utilizador pedir para avançar com confiança baixa, avança mas mantém o META verdadeiro.",
+  "genTipos": [
+    "Evento de utilizador (Xbase)",
+    "Regra de utilizador (Xbase)",
+    "Função de utilizador (Xbase)",
+    "Valor por defeito",
+    "Tecla de utilizador",
+    "Alerta / notificação",
+    "Consulta SQL / Análise de utilizador",
+    "Snapshot",
+    "Ecrã personalizado (IDU) — esboço",
+    "Evento / Regra PHC CS Web (C#)",
+    "Script web por URL (C#)",
+    "Outro"
+  ],
+  "genGuia": {
+    "Evento de utilizador (Xbase)": "Eventos disponíveis: Init, Ativar, Desativar, Refrescar, Clique, Duplo Clique, Clique Direito, Ao Entrar, Ao Sair, Após Atualizar, Após não Atualizado, Antes/Depois mudar Linha-Coluna, MouseEnter/Leave/Move/Wheel, Tecla Pressionada. ObjRecebido.Janela (ecrã), ObjRecebido.Objecto (Value, Parent, MeusDados: AddParametro/GuardaParametro/ExisteParametro). Return .F. cancela a ação de raiz. Expressões não usam Return; programas usam. Erros gravados na Análise Interna.",
+    "Regra de utilizador (Xbase)": "Validação na introdução/gravação: condição que bloqueia ou avisa com mensagem clara. Existe Assistente de Regras para casos simples; código para lógica complexa.",
+    "Função de utilizador (Xbase)": "Função reutilizável (LPARAMETERS/RETURN, sintaxe VFP) chamável por regras/eventos. Gama EXECUTIVE/Enterprise.",
+    "Valor por defeito": "Expressão por campo/tabela avaliada em registos novos (data atual, utilizador, cálculos).",
+    "Tecla de utilizador": "Atalho de teclado personalizado com descrição no rodapé; pode chamar ecrãs/funções.",
+    "Alerta / notificação": "Alertas de utilizador com funções internas (ex.: CriaAvs(stamp, userAv,...)); canais: aviso interno, PHC Notify, e-mail SMTP, SMS.",
+    "Consulta SQL / Análise de utilizador": "SELECT com WITH (NOLOCK), joins entre tabelas PHC (descobrir no Dicionário de Dados: cl, cl2, ft, bo, re...), filtros, totais. NUNCA alterar dados por SQL sem controlar stamp/concorrência.",
+    "Snapshot": "Consulta T-SQL contextual com variáveis (ex.: #stamp#) exibida em painel do ecrã.",
+    "Ecrã personalizado (IDU) — esboço": "Descrever objetos (campos de ficheiro/ligação, grelhas, botões), eventos a programar, menu de utilizador e acessos.",
+    "Evento / Regra PHC CS Web (C#)": "Framework web em C# (Editor de Código): eventos, regras; diagnóstico no Log de Código.",
+    "Script web por URL (C#)": "Programa executado por URL (endpoint) — devolver JSON/HTML; proteger/validar acessos.",
+    "Outro": "Descrever o artefato."
+  },
+  "cheers": [
+    "Prática registada. Constância gera competência.",
+    "+1 repetição — mais perto do domínio.",
+    "Muito bem! Evidência guardada.",
+    "Progresso sólido. Continue.",
+    "Conhecimento aplicado vale dobrado."
+  ],
+  "tabHints": {
+    "enciclopedia": "📕 Funções internas, Xbase, dicas, erros comuns, artigos e índice do manual — pesquise qualquer coisa.",
+    "hoje": "Uma coisa de cada vez: a sua missão atual está aqui. 🎯",
+    "missoes": "Trilha guiada — cada missão libera a seguinte. 🔒",
+    "aprender": "Circuitos, dicionário, guia completo e protocolo.",
+    "praticar": "Cartas e testes: a memória de longo prazo agradece.",
+    "progresso": "XP, níveis, evidências, conquistas e equipa.",
+    "empresa": "Empresa de treino + contexto de país e gama."
+  },
+  "ladder": [1, 2, 4, 7, 14, 30, 60],
+  "repTarget": 5,
+  "cardTarget": 5
+}

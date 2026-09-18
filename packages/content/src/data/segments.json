@@ -1,0 +1,538 @@
+[
+  {
+    "id": "distrib",
+    "ico": "📦",
+    "nome": "Distribuição & Serviços",
+    "desc": "Grossista/distribuidor com armazéns, rotas de entrega e clientes empresariais.",
+    "empresa": {
+      "nome": "Estrela do Tejo — Distribuição e Serviços, Lda.",
+      "curto": "Estrela do Tejo",
+      "prefixo": "ET",
+      "morada": "Rua do Comércio 45, 1100-150 Lisboa",
+      "cidade": "Lisboa",
+      "cae": "46900 — Comércio por grosso não especializado",
+      "cliente": "Hotel Baía Azul, Lda.",
+      "clienteCurto": "Hotel Baía Azul",
+      "fornecedor": "Ibertrónica — Eletrónica, S.A.",
+      "fornecedorCurto": "Ibertrónica",
+      "armazem1": "LISBOA-CENTRAL",
+      "armazem2": "PORTO-LOJA",
+      "artigos": [
+        "Caixa papel A4 500fls (4,20 €)",
+        "Toner compatível T-22 (19,90 €)",
+        "Cadeira escritório Office Pro (89,00 €)",
+        "Serviço entrega urgente (12,50 €)",
+        "Pack mensal material escritório (65,00 €)"
+      ],
+      "necessidades": [
+        "Tabelas de preços por cliente com validades",
+        "Controlo de crédito e cobranças (aging)",
+        "Guias de transporte comunicadas à AT",
+        "Avenças de fornecimento mensal",
+        "SAF-T mensal sem erros",
+        "Ruturas e ponto de encomenda"
+      ],
+      "nif": "510 629 768",
+      "nifCliente": "586 686 479",
+      "nifForn": "513 085 114"
+    },
+    "phcForte": ["Gestão (núcleo)", "Contabilidade (integração)", "Dashboard", "XL (volumes)"],
+    "futuro": ["Contabilidade", "Pessoal (motoristas/entregas)"],
+    "plano": {
+      "nota": "Distribuição vive de preços, crédito e transporte: domine séries, guias à AT, aging e SAF-T.",
+      "destaques": ["L11", "L13", "L18", "L20", "L28", "L33", "L34", "L35"]
+    }
+  },
+  {
+    "id": "hotel",
+    "ico": "🏨",
+    "nome": "Hotelaria & Alojamento",
+    "desc": "Hotel/apartamento turístico: diárias, épocas, OTA, taxa turística, pequeno-almoço.",
+    "empresa": {
+      "nome": "Hotel Baía Azul, Lda.",
+      "curto": "Hotel Baía Azul",
+      "prefixo": "HBA",
+      "morada": "Av. da Praia 12, 8200-001 Albufeira",
+      "cidade": "Albufeira",
+      "cae": "55110 — Hotéis com restaurante",
+      "cliente": "Travelstar — Agência de Viagens, Lda.",
+      "clienteCurto": "Travelstar",
+      "fornecedor": "Rouparia Sul — Têxteis, Lda.",
+      "fornecedorCurto": "Rouparia Sul",
+      "armazem1": "HOTEL-PRINCIPAL",
+      "armazem2": "BAR-RESTAURANTE",
+      "artigos": [
+        "Diária quarto duplo vista mar — época alta (95,00 €)",
+        "Diária quarto duplo — época baixa (65,00 €)",
+        "Pequeno-almoço buffet (12,00 €)",
+        "Taxa turística municipal/dia (2,00 €)",
+        "Massagem spa 50 min (60,00 €)",
+        "Transfer aeroporto (35,00 €)"
+      ],
+      "necessidades": [
+        "Avenças/contratos com agências (faturação recorrente)",
+        "Adiantamentos de OTA (Booking etc.) e regularização",
+        "Taxa turística nos documentos",
+        "Época alta/baixa com tabelas de preços",
+        "Recibos com retenção IRS (serviços)",
+        "Sazonalidade: tesouraria previsional"
+      ],
+      "nif": "546 159 478",
+      "nifCliente": "594 549 000",
+      "nifForn": "551 826 398"
+    },
+    "phcForte": ["Gestão (avenças, adiantamentos)", "POS (bar/restaurante)", "Tesouraria"],
+    "futuro": ["Pessoal (sazonais/vencimentos)", "POS", "Contabilidade"],
+    "plano": {
+      "nota": "Hotel: avenças das agências, adiantamentos de OTA e tesouraria sazonal são o seu campo de batalha.",
+      "destaques": ["L19", "L20", "L11", "L31", "L36", "L13", "L15"]
+    }
+  },
+  {
+    "id": "eletronica",
+    "ico": "🔌",
+    "nome": "Eletrónica & Retalho Tech",
+    "desc": "Loja de eletrónica: números de série, garantias, POS, e-commerce, promoções.",
+    "empresa": {
+      "nome": "Volt & Watt — Eletrónica, Lda.",
+      "curto": "Volt & Watt",
+      "prefixo": "VW",
+      "morada": "Rua de Santa Catarina 310, 4000-444 Porto",
+      "cidade": "Porto",
+      "cae": "47410 — Comércio a retalho de computadores e periféricos",
+      "cliente": "Código Atlântico — Consultoria IT, Lda.",
+      "clienteCurto": "Código Atlântico",
+      "fornecedor": "Distribtech Iberia, S.A.",
+      "fornecedorCurto": "Distribtech",
+      "armazem1": "LOJA-PORTO",
+      "armazem2": "ARMAZEM-ECOM",
+      "artigos": [
+        "Smartphone XPTO 128 GB (549,00 €)",
+        "Portátil Ultra 14 i7 (899,00 €)",
+        "Auscultadores BT NoiseX (79,90 €)",
+        "Powerbank 20 000 mAh (29,90 €)",
+        "Smart TV 55 4K (449,00 €)",
+        "Garantia estendida 24m — serviço (39,90 €)"
+      ],
+      "necessidades": [
+        "Números de série e garantias por equipamento",
+        "POS rápido com FS e Multibanco",
+        "Promoções/campanhas com validades",
+        "Stock de e-commerce sincronizado (EyePeak)",
+        "Marcas e famílias para rankings",
+        "Trocas/devoluções com NC"
+      ],
+      "nif": "539 874 701",
+      "nifCliente": "575 438 002",
+      "nifForn": "580 397 076"
+    },
+    "phcForte": [
+      "Gestão + POS",
+      "Equipamentos (séries)",
+      "EyePeak (e-commerce)",
+      "Suporte (garantias)"
+    ],
+    "futuro": ["POS", "Suporte", "Contabilidade"],
+    "plano": {
+      "nota": "Eletrónica: séries/garantias, POS com FS e promoções; e-commerce pede EyePeak e stock em dia.",
+      "destaques": ["L08", "L10", "L15", "L11", "L21", "L27", "L52"]
+    }
+  },
+  {
+    "id": "restaurante",
+    "ico": "🍽️",
+    "nome": "Restauração & Cafés",
+    "desc": "Restaurante/esplanada: POS, menus, fichas técnicas, lotes, fecho de caixa.",
+    "empresa": {
+      "nome": "Tasca do Mar — Restauração, Lda.",
+      "curto": "Tasca do Mar",
+      "prefixo": "TM",
+      "morada": "Cais dos Pescadores 8, 2900-002 Setúbal",
+      "cidade": "Setúbal",
+      "cae": "56110 — Restaurantes tipo tradicional",
+      "cliente": "Consumidor Final (vendas de balcão)",
+      "clienteCurto": "Consumidor Final",
+      "fornecedor": "Peixaria Costa Azul, Lda.",
+      "fornecedorCurto": "Peixaria Costa Azul",
+      "armazem1": "COZINHA",
+      "armazem2": "BAR",
+      "artigos": [
+        "Menu almoço (14,50 €)",
+        "Dourada grelhada (22,00 €)",
+        "Copo de vinho da casa (3,50 €)",
+        "Café (0,90 €)",
+        "Sobremesa do dia (5,50 €)",
+        "Menu grupo 10 pessoas (250,00 €)"
+      ],
+      "necessidades": [
+        "POS rápido + FS a consumidor final",
+        "Compostos/fichas técnicas (menu = componentes)",
+        "Lotes e validades (HACCP)",
+        "Fecho de caixa e sangrias (tesouraria)",
+        "Referências Multibanco/TPA",
+        "Quebras de stock (consumos sem venda)"
+      ],
+      "nif": "597 507 198",
+      "nifCliente": "562 348 727",
+      "nifForn": "546 382 860"
+    },
+    "phcForte": ["POS Front/Desktop", "Gestão (compostos, lotes)", "Tesouraria (caixa)"],
+    "futuro": ["POS", "Pessoal (turnos)"],
+    "plano": {
+      "nota": "Restauração: POS + FS no balcão, compostos na cozinha, lotes/validades e fecho de caixa rigoroso.",
+      "destaques": ["L15", "L13", "L21", "L09", "L10", "L26", "L30"]
+    }
+  },
+  {
+    "id": "construcao",
+    "ico": "🏗️",
+    "nome": "Construção & Obras",
+    "desc": "Empreiteiro: folhas de obra, medições, retenções, subcontratados, aprovações.",
+    "empresa": {
+      "nome": "Pedra Angular — Construções, Lda.",
+      "curto": "Pedra Angular",
+      "prefixo": "PA",
+      "morada": "Zona Industrial de Braga, lote 7, 4700-001 Braga",
+      "cidade": "Braga",
+      "cae": "41200 — Construção de edifícios",
+      "cliente": "Câmara Municipal de Braga (obra pública)",
+      "clienteCurto": "C. M. Braga",
+      "fornecedor": "Betuminhos Norte, S.A.",
+      "fornecedorCurto": "Betuminhos Norte",
+      "armazem1": "ESTALEIRO-CENTRAL",
+      "armazem2": "OBRA-EM-CURSO",
+      "artigos": [
+        "Mão de obra trolha (hora) (28,00 €)",
+        "Betão C25/30 m³ (95,00 €)",
+        "Aço A500 NR kg (1,35 €)",
+        "Empreitada parcial — medição (variável)",
+        "Aluguer grua/dia (180,00 €)"
+      ],
+      "necessidades": [
+        "Folhas de obra por empreitada (DI)",
+        "Faturação por medições parciais",
+        "Retenção/caução em garantia",
+        "Aprovação de dossiers e pagamentos (Enterprise)",
+        "Subcontratados com retenção IRS/IRC",
+        "Faturação eletrónica CIUS-PT (obras públicas)"
+      ],
+      "nif": "505 176 262",
+      "nifCliente": "570 048 974",
+      "nifForn": "581 326 040"
+    },
+    "phcForte": ["Gestão + Obras", "Aprovações (Enterprise)", "Documentos Eletrónicos/CIUS-PT"],
+    "futuro": ["Obras", "Contabilidade", "Pessoal"],
+    "plano": {
+      "nota": "Obras: folhas de obra, faturação por medições, retenções e CIUS-PT para o setor público.",
+      "destaques": ["L17", "L13", "L21", "L36", "L43", "L53", "L16"]
+    }
+  },
+  {
+    "id": "clinica",
+    "ico": "🩺",
+    "nome": "Clínica & Saúde",
+    "desc": "Clínica: consultas isentas de IVA, recibos, planos/avenças, RGPD reforçado.",
+    "empresa": {
+      "nome": "Clínica Vida Plena, Lda.",
+      "curto": "Vida Plena",
+      "prefixo": "CVP",
+      "morada": "Av. Sá da Bandeira 22, 3000-350 Coimbra",
+      "cidade": "Coimbra",
+      "cae": "86210 — Atividades de prática médica de clínica geral",
+      "cliente": "SeguraMais — Seguros de Saúde, S.A.",
+      "clienteCurto": "SeguraMais",
+      "fornecedor": "MedSupply Portugal, Lda.",
+      "fornecedorCurto": "MedSupply",
+      "armazem1": "CONSUMIVEIS",
+      "armazem2": "FARMACIA-INT",
+      "artigos": [
+        "Consulta clínica geral (50,00 €)",
+        "Sessão fisioterapia (40,00 €)",
+        "Plano saúde mensal — avença (89,00 €)",
+        "Exame ecografia (75,00 €)",
+        "Consulta domicílio (90,00 €)"
+      ],
+      "necessidades": [
+        "Isenção de IVA art. 9.º (motivo M01) nos serviços",
+        "Recibos (fatura-recibo) e retenções IRS de profissionais",
+        "Avenças de planos mensais",
+        "RGPD reforçado (dados de saúde)",
+        "Acordos com seguradoras (preços convencionados)",
+        "Marcações e agenda (Suporte)"
+      ],
+      "nif": "584 394 276",
+      "nifCliente": "562 233 440",
+      "nifForn": "562 931 414"
+    },
+    "phcForte": ["Gestão (FS/FR, avenças)", "RGPD", "Suporte (marcações)"],
+    "futuro": ["Pessoal", "Contabilidade"],
+    "plano": {
+      "nota": "Clínica: isenções M01, fatura-recibo, avenças com seguradoras e RGPD impecável.",
+      "destaques": ["L12", "L13", "L15", "L19", "L20", "L36", "L37"]
+    }
+  },
+  {
+    "id": "consultoria",
+    "ico": "💼",
+    "nome": "Consultoria & Serviços IT",
+    "desc": "Software/consultoria: horas, mensalidades, clientes UE, AD, reverse charge.",
+    "empresa": {
+      "nome": "Código Atlântico — Consultoria IT, Lda.",
+      "curto": "Código Atlântico",
+      "prefixo": "CA",
+      "morada": "Av. da República 90, 1050-001 Lisboa",
+      "cidade": "Lisboa",
+      "cae": "62010 — Atividades de programação informática",
+      "cliente": "Nordic Soft AB (Suécia — intra-UE)",
+      "clienteCurto": "Nordic Soft",
+      "fornecedor": "CloudHost Portugal, Lda.",
+      "fornecedorCurto": "CloudHost",
+      "armazem1": "EQUIPAMENTOS",
+      "armazem2": "STOCK-SW",
+      "artigos": [
+        "Hora de consultoria (75,00 €)",
+        "Mensalidade suporte managed (450,00 €)",
+        "Projeto desenvolvimento (fase) (7 500,00 €)",
+        "Licença software revenda (320,00 €)",
+        "Formação online/dia (900,00 €)"
+      ],
+      "necessidades": [
+        "Faturação intra-UE (reverse charge/autoliquidação, isenção)",
+        "Avenças mensais de suporte",
+        "Retenção IRS de prestadores (recibos verdes)",
+        "Adiantamentos de clientes por projeto",
+        "Faturação eletrónica e multimoeda",
+        "Serviços: sem stock, foco em C/C e tesouraria"
+      ],
+      "nif": "514 904 976",
+      "nifCliente": "530 000 733",
+      "nifForn": "508 353 386"
+    },
+    "phcForte": ["Gestão (avenças, moedas)", "Documentos Eletrónicos", "Tesouraria"],
+    "futuro": ["Pessoal (AD/despesas)", "Contabilidade", "Projetos"],
+    "plano": {
+      "nota": "Serviços IT: intra-UE/reverse charge, avenças, multimoeda e adiantamentos por projeto.",
+      "destaques": ["L12", "L20", "L11", "L19", "L24", "L31", "L36"]
+    }
+  },
+  {
+    "id": "industria",
+    "ico": "🏭",
+    "nome": "Manufatura & Indústria",
+    "desc": "Metalomecânica/moldes: composições, ordens de fabrico, lotes, custos de produção.",
+    "empresa": {
+      "nome": "Moldes Norte — Metalurgia, Lda.",
+      "curto": "Moldes Norte",
+      "prefixo": "MN",
+      "morada": "Zona Industrial da Marinha Grande, 2430-000 Marinha Grande",
+      "cidade": "Marinha Grande",
+      "cae": "25620 — Atividades de mecânica geral",
+      "cliente": "AutoPeças Ibéria, S.A.",
+      "clienteCurto": "AutoPeças Ibéria",
+      "fornecedor": "Açometal — Siderurgia, S.A.",
+      "fornecedorCurto": "Açometal",
+      "armazem1": "MATERIAS-PRIMAS",
+      "armazem2": "PRODUTOS-ACABADOS",
+      "artigos": [
+        "Molde injeção M-100 (12 500,00 €)",
+        "Peça estampada P-22 (un) (3,85 €)",
+        "Chapa aço S275 kg (1,20 €)",
+        "Hora máquina CNC (48,00 €)",
+        "Manutenção molde (serviço) (150,00 €)"
+      ],
+      "necessidades": [
+        "Compostos/BOM e consumos de componentes",
+        "Ordens de fabrico (Manufactor)",
+        "Lotes de matéria-prima e rastreio",
+        "Custeio PCMP com mão de obra e subcontratação",
+        "Inventários rigorosos",
+        "Encomendas longas: adiantamentos de clientes"
+      ],
+      "nif": "543 170 535",
+      "nifCliente": "580 603 369",
+      "nifForn": "553 335 782"
+    },
+    "phcForte": ["Manufactor", "Gestão (compostos, lotes)", "Stocks avançados"],
+    "futuro": ["Manufactor", "Contabilidade"],
+    "plano": {
+      "nota": "Indústria: compostos/BOM, lotes, PCMP com consumos e inventário rigoroso.",
+      "destaques": ["L09", "L10", "L23", "L25", "L26", "L27", "L24"]
+    }
+  },
+  {
+    "id": "oficina",
+    "ico": "🚗",
+    "nome": "Oficina & Pós-venda Auto",
+    "desc": "Oficina: PAT/intervenções, peças + mão de obra, viaturas, contratos.",
+    "empresa": {
+      "nome": "Pneu Seguro — Auto, Lda.",
+      "curto": "Pneu Seguro",
+      "prefixo": "PS",
+      "morada": "Estrada Nacional 1, km 120, 2400-000 Leiria",
+      "cidade": "Leiria",
+      "cae": "45200 — Manutenção e reparação de veículos automóveis",
+      "cliente": "Frota Municipal de Leiria",
+      "clienteCurto": "Frota Municipal",
+      "fornecedor": "Recambios Oeste, S.A.",
+      "fornecedorCurto": "Recambios Oeste",
+      "armazem1": "OFICINA-PECAS",
+      "armazem2": "BALCAO",
+      "artigos": [
+        "Mudança de óleo + filtro (35,00 €)",
+        "Pneu 205/55R16 (89,00 €)",
+        "Diagnóstico eletrónico (40,00 €)",
+        "Hora de oficina (42,00 €)",
+        "Inspeção pré-venda (25,00 €)"
+      ],
+      "necessidades": [
+        "Pedidos de assistência (PAT) com peças + mão de obra",
+        "Matrículas e histórico por viatura",
+        "Orçamentos aprovados pelo cliente",
+        "Contratos de manutenção para frotas",
+        "SMS ao cliente (estado da reparação)",
+        "Garantias de intervenções"
+      ],
+      "nif": "507 393 236",
+      "nifCliente": "593 295 331",
+      "nifForn": "558 356 079"
+    },
+    "phcForte": ["Suporte (PAT)", "Gestão", "Frota", "SMS"],
+    "futuro": ["Suporte", "Frota", "POS (balcão)"],
+    "plano": {
+      "nota": "Oficina: o Suporte manda — PAT com peças+mão de obra, orçamentos e histórico por viatura.",
+      "destaques": ["L17", "L14", "L21", "L08", "L28", "L19", "L43"]
+    }
+  },
+  {
+    "id": "agro",
+    "ico": "🌾",
+    "nome": "Agricultura & Agro",
+    "desc": "Exploração agrícola: lotes de colheita, sazonalidade, autofaturação, exportação.",
+    "empresa": {
+      "nome": "Quinta da Ribeira — Agro, Lda.",
+      "curto": "Quinta da Ribeira",
+      "prefixo": "QR",
+      "morada": "Estrada da Ribeira 3, 2000-000 Santarém",
+      "cidade": "Santarém",
+      "cae": "01130 — Cultura de produtos hortícolas",
+      "cliente": "Mercadona Portugal, S.A. (grande superfície)",
+      "clienteCurto": "Mercadona",
+      "fornecedor": "Agroquímica do Sul, Lda.",
+      "fornecedorCurto": "Agroquímica do Sul",
+      "armazem1": "CAMARA-FRIO",
+      "armazem2": "EXPEDICAO",
+      "artigos": [
+        "Tomate coração de boi kg (2,40 €)",
+        "Alface romana un (0,90 €)",
+        "Azeite virgem extra 5 L (45,00 €)",
+        "Cabaz misto 10 kg (22,00 €)",
+        "Serviço colheita/dia (85,00 €)"
+      ],
+      "necessidades": [
+        "Lotes por colheita e validades (perecíveis)",
+        "Autofaturação a produtores agrícolas",
+        "Intrastat e vendas intra-UE",
+        "Sazonalidade: previsional de tesouraria",
+        "Quebras (produto estragado)",
+        "Pesagem e unidades alternativas (kg/caixa)"
+      ],
+      "nif": "595 958 621",
+      "nifCliente": "525 932 313",
+      "nifForn": "567 238 393"
+    },
+    "phcForte": ["Gestão (lotes, unidades)", "Tesouraria", "Exportação/Intrastat"],
+    "futuro": ["Contabilidade", "Pessoal (sazonais)"],
+    "plano": {
+      "nota": "Agro: lotes/validades, autofaturação, unidades alternativas e quebras — perecíveis não perdoam.",
+      "destaques": ["L08", "L10", "L26", "L25", "L31", "L12", "L33"]
+    }
+  },
+  {
+    "id": "ecommerce",
+    "ico": "🛒",
+    "nome": "E-commerce & Online",
+    "desc": "Loja online: EyePeak, stock em tempo real, faturação massiva, transportadoras.",
+    "empresa": {
+      "nome": "Gadget Planet — Comércio Online, Lda.",
+      "curto": "Gadget Planet",
+      "prefixo": "GP",
+      "morada": "Largo do Mercado 21, 8000-000 Faro",
+      "cidade": "Faro",
+      "cae": "47910 — Comércio a retalho por correspondência ou Internet",
+      "cliente": "Consumidor online (particulares)",
+      "clienteCurto": "Consumidor online",
+      "fornecedor": "Shenzen Gadgets Co. (importação)",
+      "fornecedorCurto": "Shenzen Gadgets",
+      "armazem1": "FULFILLMENT-FARO",
+      "armazem2": "DROPSHIP",
+      "artigos": [
+        "Drone MiniCam 4K (199,00 €)",
+        "Relógio smart FitPro (59,90 €)",
+        "Coluna BT à prova de água (34,90 €)",
+        "Kit gaming teclado+rato (49,90 €)",
+        "Portes de envio (4,99 €)"
+      ],
+      "necessidades": [
+        "Sincronização de stock com a loja (EyePeak)",
+        "Faturação massiva automática (FS/faturas)",
+        "Guias de transporte por transportadora",
+        "Importação: custos acessórios e câmbios",
+        "Devoluções em volume (NC + stock)",
+        "Referências MB/MBWAY e pagamentos online"
+      ],
+      "nif": "508 975 565",
+      "nifCliente": "579 666 174",
+      "nifForn": "577 429 167"
+    },
+    "phcForte": ["EyePeak", "Gestão (emissão automática)", "Documentos de transporte"],
+    "futuro": ["EyePeak (logística)", "Contabilidade"],
+    "plano": {
+      "nota": "E-commerce: integração EyePeak, emissão automática em massa, transporte e devoluções.",
+      "destaques": ["L52", "L20", "L15", "L18", "L35", "L16", "L19"]
+    }
+  },
+  {
+    "id": "transportes",
+    "ico": "🚚",
+    "nome": "Transportes & Logística",
+    "desc": "Transportadora: documentos de transporte, viaturas, motoristas, fretes.",
+    "empresa": {
+      "nome": "Rota Certa — Transportes, Lda.",
+      "curto": "Rota Certa",
+      "prefixo": "RC",
+      "morada": "Zona Logística do Entroncamento, 2330-000 Entroncamento",
+      "cidade": "Entroncamento",
+      "cae": "49410 — Transportes rodoviários de mercadorias",
+      "cliente": "Estrela do Tejo — Distribuição, Lda.",
+      "clienteCurto": "Estrela do Tejo",
+      "fornecedor": "DieselPower — Combustíveis, S.A.",
+      "fornecedorCurto": "DieselPower",
+      "armazem1": "BASE-ENTRONCAMENTO",
+      "armazem2": "TRANSITO",
+      "artigos": [
+        "Frete nacional até 500 km (180,00 €)",
+        "Frete ibérico (450,00 €)",
+        "Movimentação palete (12,00 €)",
+        "Armazenagem/dia/palete (3,50 €)",
+        "Serviço expresso (95,00 €)"
+      ],
+      "necessidades": [
+        "Documentos de transporte 100% comunicados à AT",
+        "Viaturas e motoristas (Frota)",
+        "Subcontratação de fretes",
+        "Custos por viatura (combustível/portagens)",
+        "Guias globais vs por entrega",
+        "Faturação por contrato (avenças de frota)"
+      ],
+      "nif": "559 850 727",
+      "nifCliente": "583 822 207",
+      "nifForn": "565 144 642"
+    },
+    "phcForte": ["Gestão (transporte/AT)", "Frota", "SMS (motorista)"],
+    "futuro": ["Frota", "Contabilidade"],
+    "plano": {
+      "nota": "Transportes: guias e comunicação à AT são lei sagrada; Frota e custos por viatura fecham a conta.",
+      "destaques": ["L18", "L35", "L13", "L34", "L33", "L20", "L31"]
+    }
+  }
+]
