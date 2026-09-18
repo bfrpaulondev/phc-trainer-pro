@@ -1,0 +1,45 @@
+{
+  "name": "phc-trainer-pro",
+  "version": "6.0.0-alpha.0",
+  "private": true,
+  "description": "PHC Trainer Pro — plataforma multiutilizador de formação prática em Cegid PHC Evolution (monorepo pnpm)",
+  "type": "module",
+  "engines": {
+    "node": ">=20.19"
+  },
+  "packageManager": "pnpm@10.34.5",
+  "scripts": {
+    "dev": "concurrently -n api,web -c blue,magenta \"pnpm --filter @phc/api dev\" \"pnpm --filter @phc/web dev\"",
+    "dev:api": "pnpm --filter @phc/api dev",
+    "dev:web": "pnpm --filter @phc/web dev",
+    "build": "pnpm --filter @phc/web build",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write \"**/*.{ts,tsx,json,md,css,yml,yaml}\" --ignore-path .gitignore",
+    "format:check": "prettier --check \"**/*.{ts,tsx,json,md,css,yml,yaml}\" --ignore-path .gitignore",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r test",
+    "extract:legacy": "node scripts/extract-legacy-content.mjs",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.0",
+    "concurrently": "^10.0.5",
+    "eslint": "^9.39.0",
+    "globals": "^17.12.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.5.1",
+    "prettier": "^3.9.8",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.70.0"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,css,yml,yaml}": [
+      "prettier --write"
+    ]
+  }
+}

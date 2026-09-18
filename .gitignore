@@ -3,8 +3,28 @@
 Thumbs.db
 *.swp
 *~
+
 # backups locais de progresso (exportações do dojo)
 phc-dojo-progresso-*.json
 phc-trainer-progresso-*.json
 phc-dojo-provas-*.csv
 phc-trainer-provas-*.csv
+
+# monorepo
+node_modules/
+dist/
+coverage/
+*.tsbuildinfo
+.env
+.env.*
+!.env.example
+
+# testes / e2e
+playwright-report/
+test-results/
+blob-report/
+
+# logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
