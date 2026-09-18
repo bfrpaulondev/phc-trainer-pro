@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import {
   ArrowLeft,
@@ -22,7 +22,10 @@ import {
   REP_TARGET,
 } from "@phc/shared";
 import { useProgress } from "../stores/progress.ts";
+import { useUi } from "../stores/ui.ts";
 import { useAi, announceAchievements } from "../hooks/useAi.ts";
+import { openFocusFor } from "../features/focus/FocusModal.tsx";
+import { startLabLesson } from "../features/lesson/LessonDrawer.tsx";
 import { useTts } from "../hooks/useTts.ts";
 import { toast } from "../components/ui/toast.tsx";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card.tsx";
@@ -53,9 +56,16 @@ export function MissionDetailPage() {
   const [timerStart, setTimerStart] = useState<number | null>(null);
   const [elapsed, setElapsed] = useState<number | null>(null);
   const timerRef = useRef<number | null>(null);
+  const timerStartRef = useRef<number | null>(null);
 
   const path = useMemo(() => (state ? journeyPath(state.plan) : []), [state]);
   const pos = path.indexOf(id);
+  const setLastLab = useUi((s) => s.setLastLab);
+
+  // contexto do chat global: missão atual
+  useEffect(() => {
+    setLastLab(id);
+  }, [id, setLastLab]);
 
   if (!state || status !== "ready") {
     return (
@@ -101,7 +111,6 @@ export function MissionDetailPage() {
   const encRefs = ENC_REF[id] ?? [];
   const labEvid = state.evid.filter((e) => e.lab === id);
 
-  const timerStartRef = useRef<number | null>(null);
   function startTimer() {
     timerStartRef.current = Date.now();
     setTimerStart(timerStartRef.current);
@@ -187,6 +196,16 @@ export function MissionDetailPage() {
           ))}
         </div>
       )}
+
+      {/* ações principais */}
+      <div className="flex flex-wrap gap-2">
+        <Button size="lg" onClick={() => openFocusFor(id)}>
+          ▶ Iniciar passo a passo (Modo Foco)
+        </Button>
+        <Button size="lg" variant="secondary" onClick={() => startLabLesson(id, state)}>
+          🎓 Aula guiada
+        </Button>
+      </div>
 
       {/* objetivo + conceito */}
       <Card className="border-info/40">

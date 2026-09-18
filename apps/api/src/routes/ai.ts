@@ -3,7 +3,10 @@ import {
   aiChatRequestSchema,
   buildSystemPrompt,
   contextFromProgress,
+  encContext,
   missionContext,
+  schemaContext,
+  SQL_RULES,
   ttsRequestSchema,
 } from "@phc/shared";
 import { labById, theoryFor } from "@phc/content";
@@ -57,6 +60,17 @@ aiRouter.post("/chat", validate(aiChatRequestSchema), async (req, res) => {
     if (labId) {
       const lab = labById(labId);
       if (lab) sys += "\n\n" + missionContext(lab, theoryFor(labId));
+    }
+    // mini-RAG da Enciclopédia + regras SQL (como no legado v5.x)
+    const lastUser = [...finalMessages].reverse().find((m) => m.role === "user")?.content ?? "";
+    const enc = encContext(lastUser);
+    if (enc) sys += "\n\n" + enc;
+    if (/\bsql\b|select\s|query|consulta|tabela|campos?\b|base de dados/i.test(lastUser)) {
+      sys += "\n\n" + SQL_RULES + "\n\n" + schemaContext(lastUser, progress.state.dbSchema);
+    }
+    if (kind === "chat") {
+      sys +=
+        "\n\nResponda em no máximo 180 palavras. Use SEMPRE a EMPRESA EM FOCO do contexto como exemplo, em linguagem simples e profissional.";
     }
     finalMessages.unshift({ role: "system", content: sys });
   }

@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   addEvidenceSchema,
   applyAchievements,
+  bumpStatSchema,
   defaultProgress,
   labSt,
   rateCard,
@@ -137,6 +138,26 @@ progressRouter.post("/quiz", validate(submitQuizActionSchema), async (req, res) 
   submitQuiz(doc.state, lv, pct);
   const unlocked = applyAchievements(doc.state);
   res.json({ state: await save(doc, req.auth!.sub), unlocked });
+});
+
+/** POST /api/progress/stats — incrementa contador (lesson → também meta diária) */
+progressRouter.post("/stats", validate(bumpStatSchema), async (req, res) => {
+  const { kind } = req.body as { kind: "lesson" | "chat" | "dict" | "circ" | "explic" };
+  const doc = await getOrCreateProgress(req.auth!.sub);
+  const map = {
+    lesson: "lessons",
+    chat: "chats",
+    dict: "dict",
+    circ: "circ",
+    explic: "explics",
+  } as const;
+  const field = map[kind];
+  doc.state.stats[field] = (doc.state.stats[field] || 0) + 1;
+  if (kind === "lesson") {
+    const { bumpDaily } = await import("@phc/shared");
+    bumpDaily(doc.state, "lessons");
+  }
+  res.json({ state: await save(doc, req.auth!.sub) });
 });
 
 /** PUT /api/progress/company — define empresa de treino */

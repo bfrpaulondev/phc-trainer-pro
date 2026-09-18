@@ -23,7 +23,10 @@ import { Button, buttonVariants } from "../components/ui/button.tsx";
 import { cn } from "../lib/utils.ts";
 import { CircleProgress, ProgressBar } from "../components/ui/progress.tsx";
 import { Spinner } from "../components/ui/misc.tsx";
-import { ArrowRight, BookOpen, Brain, Flame, Target } from "lucide-react";
+import { ArrowRight, BookOpen, Brain, Flame, GraduationCap, Target } from "lucide-react";
+import { openFocusFor } from "../features/focus/FocusModal.tsx";
+import { startLabLesson } from "../features/lesson/LessonDrawer.tsx";
+import { useOnboard } from "../features/onboard/OnboardModal.tsx";
 
 export function JourneyPage() {
   const state = useProgress((s) => s.state);
@@ -87,8 +90,23 @@ export function JourneyPage() {
             <h2 className="text-lg font-semibold">{emp(curLab.t)}</h2>
             <p className="text-sm text-muted-foreground">{emp(curLab.goal)}</p>
             <div className="flex flex-wrap gap-2">
-              <Link to={`/missoes/${curLab.id}`} className={cn(buttonVariants(), "gap-2")}>
-                ▶ Abrir missão <ArrowRight className="h-4 w-4" />
+              <button
+                className={cn(buttonVariants(), "gap-2")}
+                onClick={() => openFocusFor(curLab.id)}
+              >
+                ▶ Iniciar passo a passo <ArrowRight className="h-4 w-4" />
+              </button>
+              <button
+                className={cn(buttonVariants({ variant: "secondary" }))}
+                onClick={() => startLabLesson(curLab.id, state)}
+              >
+                🎓 Aula guiada
+              </button>
+              <Link
+                to={`/missoes/${curLab.id}`}
+                className={cn(buttonVariants({ variant: "outline" }))}
+              >
+                Ver ficha completa
               </Link>
               <Link
                 to="/praticar?tab=cartas"
@@ -146,6 +164,9 @@ export function JourneyPage() {
         </Card>
       )}
 
+      {/* curso personalizado */}
+      <CourseCard />
+
       {/* números */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Stat
@@ -182,6 +203,67 @@ export function JourneyPage() {
         </CardContent>
       </Card>
     </div>
+  );
+}
+
+function CourseCard() {
+  const state = useProgress((s) => s.state)!;
+  const openWizard = useOnboard((s) => s.openWizard);
+  if (!state.plan) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-accent">
+            <GraduationCap className="mr-2 inline h-5 w-5" /> Crie o seu curso personalizado
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-2">
+          <p className="text-sm text-muted-foreground">
+            3 passos: segmento → empresa → objetivos. A IA monta o curso à sua medida (hotel,
+            eletrónica, obras… qualquer negócio).
+          </p>
+          <Button onClick={openWizard}>Começar agora</Button>
+        </CardContent>
+      </Card>
+    );
+  }
+  const ord = [...(state.plan.ordem ?? []), ...(state.plan.destaques ?? [])];
+  const next = ord.map((id) => labById(id)).find((l) => l && !(state.labs[l.id]?.c >= 1));
+  return (
+    <Card>
+      <CardHeader className="flex-row items-center justify-between space-y-0">
+        <CardTitle className="text-accent">
+          <GraduationCap className="mr-2 inline h-5 w-5" /> Curso personalizado
+        </CardTitle>
+        <Badge variant={state.plan.porIA ? "warning" : "muted"}>
+          {state.plan.porIA ? "por IA" : "segmento"}
+        </Badge>
+      </CardHeader>
+      <CardContent className="space-y-2">
+        <p className="text-sm text-muted-foreground">{state.plan.nota}</p>
+        {next ? (
+          <p className="text-sm">
+            Próxima recomendada:{" "}
+            <b>
+              {next.id} — {applyCompanyText(next.t, state.company)}
+            </b>
+            <Link
+              to={`/missoes/${next.id}`}
+              className={cn(buttonVariants({ size: "sm", variant: "outline" }), "ml-2")}
+            >
+              Abrir
+            </Link>
+          </p>
+        ) : (
+          <p className="text-sm text-muted-foreground">
+            Recomendadas já iniciadas — siga as repetições do dia!
+          </p>
+        )}
+        <button className="text-xs text-info hover:underline" onClick={openWizard}>
+          🎓 Refazer entrevista de curso
+        </button>
+      </CardContent>
+    </Card>
   );
 }
 

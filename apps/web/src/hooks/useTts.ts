@@ -1,6 +1,7 @@
 import { useCallback, useRef } from "react";
 import { speakBrowser, speakCloud, stopAudio } from "../lib/audio.ts";
 import { useProgress } from "../stores/progress.ts";
+import { useMascot } from "../stores/mascot.ts";
 
 /** voz do Professor: cloud (servidor) com fallback automático no navegador */
 export function useTts() {
@@ -13,6 +14,7 @@ export function useTts() {
       if (!settings?.tts || !text) return;
       stopAudio();
       const my = ++gen.current;
+      useMascot.getState().setMood("talk");
       const provider = settings.ttsProvider;
       const chunks = chunkText(text, 420);
       for (const c of chunks) {
@@ -33,6 +35,7 @@ export function useTts() {
           if (settings.ttsFallback !== false) await speakBrowser(c, settings.rate);
         }
       }
+      if (my === gen.current) useMascot.getState().setMood("idle");
     },
     [state],
   );

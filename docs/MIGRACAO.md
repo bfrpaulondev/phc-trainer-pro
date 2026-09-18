@@ -50,8 +50,8 @@
 
 1. **Iteração atual (feita):** fundação multiutilizador — contas, equipas, progresso no servidor,
    IA no servidor, conteúdo extraído, páginas nucleares, CI.
-2. **Iteração 2:** Modo Foco + mascote + aula guiada + onboarding/entrevista → paridade funcional
-   de estudo com o legado.
+2. **Iteração 2 (FEITA):** Modo Foco + mascote + aula guiada + chat global + onboarding/entrevista
+   - protocolo + CSV → paridade funcional de estudo com o legado.
 3. **Iteração 3:** deploy completo (Atlas + Render + Vercel) + PWA/offline + E2E no CI +
    convite por link/e-mail.
 4. **Corte:** anunciar no legado (banner), migrar utilizadores (import JSON), mover raiz do repo

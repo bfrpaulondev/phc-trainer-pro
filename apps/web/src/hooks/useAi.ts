@@ -4,6 +4,7 @@ import { ACHIEVEMENTS } from "@phc/content";
 import { aiCacheGet, aiCacheKeyFor, aiCacheSet } from "../lib/aiCache.ts";
 import { apiFetch } from "../lib/api.ts";
 import { toast } from "../components/ui/toast.tsx";
+import { useMascot } from "../stores/mascot.ts";
 
 interface ChatResponse {
   text: string;
@@ -30,6 +31,7 @@ export function useAi() {
   const chat = useCallback(async (req: AiChatInput): Promise<ChatResponse> => {
     setLoading(true);
     setError(null);
+    useMascot.getState().setMood("think");
     try {
       const r = await apiFetch<ChatResponse>("/api/ai/chat", { method: "POST", body: req });
       return r;
@@ -39,6 +41,7 @@ export function useAi() {
       throw e;
     } finally {
       setLoading(false);
+      useMascot.getState().setMood("idle");
     }
   }, []);
 

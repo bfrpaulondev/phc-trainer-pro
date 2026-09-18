@@ -1,9 +1,15 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useSession } from "../../stores/session.ts";
+import { useProgress } from "../../stores/progress.ts";
 import { AppFooter, AppHeader } from "./AppHeader.tsx";
 import { Spinner } from "../ui/misc.tsx";
 import { Toaster } from "../ui/toast.tsx";
+import { Mascot } from "../mascot/Mascot.tsx";
+import { ChatDrawer } from "../../features/chat/ChatDrawer.tsx";
+import { FocusModal } from "../../features/focus/FocusModal.tsx";
+import { LessonDrawer } from "../../features/lesson/LessonDrawer.tsx";
+import { OnboardModal, useOnboard } from "../../features/onboard/OnboardModal.tsx";
 
 /** bootstrap de sessão + guarda de rotas autenticadas */
 export function RequireAuth({ children }: { children?: React.ReactNode }) {
@@ -33,6 +39,22 @@ export function RequireAuth({ children }: { children?: React.ReactNode }) {
   return <>{children ?? <Outlet />}</>;
 }
 
+/** abre o wizard de onboarding na 1ª sessão (state.onboarded=false) */
+function OnboardGate() {
+  const state = useProgress((s) => s.state);
+  const status = useProgress((s) => s.status);
+  const openWizard = useOnboard((s) => s.openWizard);
+  const asked = useRef(false);
+  useEffect(() => {
+    if (status === "ready" && state && !state.onboarded && !asked.current) {
+      asked.current = true;
+      const t = setTimeout(openWizard, 600);
+      return () => clearTimeout(t);
+    }
+  }, [status, state, openWizard]);
+  return null;
+}
+
 export function AppLayout() {
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -41,6 +63,12 @@ export function AppLayout() {
         <Outlet />
       </main>
       <AppFooter />
+      <Mascot />
+      <ChatDrawer />
+      <FocusModal />
+      <LessonDrawer />
+      <OnboardModal />
+      <OnboardGate />
       <Toaster />
     </div>
   );

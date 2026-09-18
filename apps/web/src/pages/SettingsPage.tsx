@@ -5,6 +5,7 @@ import { apiFetch } from "../lib/api.ts";
 import { useSession } from "../stores/session.ts";
 import { useProgress } from "../stores/progress.ts";
 import { useTts } from "../hooks/useTts.ts";
+import { useOnboard } from "../features/onboard/OnboardModal.tsx";
 import { toast } from "../components/ui/toast.tsx";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card.tsx";
 import { Badge } from "../components/ui/badge.tsx";
@@ -20,6 +21,7 @@ export function SettingsPage() {
   const store = useProgress.getState;
   const { user, refreshMe, logout } = useSession();
   const tts = useTts();
+  const openWizard = useOnboard((s) => s.openWizard);
 
   const [name, setName] = useState(user?.name ?? "");
   const [importOpen, setImportOpen] = useState(false);
@@ -65,6 +67,9 @@ export function SettingsPage() {
           </Button>
           <Button variant="outline" onClick={() => setPwOpen(true)}>
             🔑 Alterar palavra-passe
+          </Button>
+          <Button variant="outline" onClick={() => openWizard()}>
+            🎓 Refazer entrevista de curso
           </Button>
         </CardContent>
       </Card>
@@ -331,6 +336,24 @@ export function SettingsPage() {
             </Button>
             <Button variant="outline" onClick={() => setImportOpen(true)}>
               ⬆ Importar do app legado
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => {
+                const rows = [["Data", "Missao", "Tipo", "Descricao"]];
+                for (const e of state.evid)
+                  rows.push([e.d, e.lab, e.kind, String(e.txt).replace(/;/g, ",")]);
+                const blob = new Blob([rows.map((r) => r.join(";")).join("\n")], {
+                  type: "text/csv;charset=utf-8",
+                });
+                const a = document.createElement("a");
+                a.href = URL.createObjectURL(blob);
+                a.download = `phc-trainer-provas-${new Date().toISOString().slice(0, 10)}.csv`;
+                a.click();
+                URL.revokeObjectURL(a.href);
+              }}
+            >
+              📸 Exportar provas (CSV)
             </Button>
             <input
               ref={fileRef}

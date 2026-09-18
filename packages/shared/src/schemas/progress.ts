@@ -157,6 +157,10 @@ export const submitQuizActionSchema = z.object({
   pct: z.number().min(0).max(100),
 });
 
+export const bumpStatSchema = z.object({
+  kind: z.enum(["lesson", "chat", "dict", "circ", "explic"]),
+});
+
 export const setCompanySchema = z.object({
   segId: z.string(),
   nome: z.string().max(120).optional(),

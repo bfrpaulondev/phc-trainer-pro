@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { ProgressState, UpdateProgressInput } from "@phc/shared";
+import type { ProgressState } from "@phc/shared";
 import { apiFetch } from "../lib/api.ts";
 
 interface StateResponse {
@@ -23,11 +23,12 @@ interface ProgressStore {
   addEvidence: (lab: string, kind: string, txt: string) => Promise<string[]>;
   removeEvidence: (index: number) => Promise<void>;
   rateCard: (idx: number, q: 0 | 1 | 2) => Promise<void>;
+  bumpStat: (kind: "lesson" | "chat" | "dict" | "circ" | "explic") => Promise<void>;
   submitQuiz: (lv: number, pct: number) => Promise<string[]>;
   setCompany: (segId: string, nome?: string, cidade?: string) => Promise<void>;
   setContexto: (pais: string, gama: string) => Promise<void>;
   updateSettings: (patch: Partial<ProgressState["settings"]>) => Promise<void>;
-  syncFull: (patch: UpdateProgressInput) => Promise<void>;
+  syncFull: (patch: Partial<ProgressState>) => Promise<void>;
   importLegacy: (
     raw: string,
   ) => Promise<{ labs: number; cards: number; evidences: number; achievements: number }>;
@@ -85,6 +86,9 @@ export const useProgress = create<ProgressStore>()((set, get) => {
     },
     async rateCard(idx, q) {
       apply(await call("/api/progress/cards/rate", { idx, q }));
+    },
+    async bumpStat(kind) {
+      apply(await call("/api/progress/stats", { kind }));
     },
     async submitQuiz(lv, pct) {
       return apply(await call("/api/progress/quiz", { lv, pct }));

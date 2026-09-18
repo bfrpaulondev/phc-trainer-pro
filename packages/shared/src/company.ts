@@ -59,9 +59,15 @@ export function applyCompanyText(text: string, c?: CompanyState | null): string 
     ["EMPRESA MODELO, LDA", c.nome],
     ["CLIENTE MODELO, LDA", c.cliente],
     ["FORNECEDOR MODELO, S.A.", c.fornecedor],
+    ["ARMAZEM-CENTRAL", c.armazem1],
+    ["ARMAZEM-LOJA2", c.armazem2],
+    ["cliente Modelo", c.clienteCurto ? `cliente ${c.clienteCurto}` : undefined],
+    ["fornecedor Modelo", c.fornecedorCurto ? `fornecedor ${c.fornecedorCurto}` : undefined],
+    ["Cliente Modelo", c.clienteCurto || c.cliente],
+    ["Fornecedor Modelo", c.fornecedorCurto || c.fornecedor],
     ["EMPRESA MODELO", c.curto || c.nome],
-    ["CLIENTE MODELO", c.clienteCurto || c.cliente],
-    ["FORNECEDOR MODELO", c.fornecedorCurto || c.fornecedor],
+    ["Empresa Modelo", c.curto || c.nome],
+    ["MOD-", c.prefixo ? `${c.prefixo}-` : undefined],
   ];
   for (const [from, to] of pairs) {
     if (to) out = out.split(from).join(to);

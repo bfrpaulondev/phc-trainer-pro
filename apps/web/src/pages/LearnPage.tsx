@@ -24,6 +24,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs.
 import { EmptyState } from "../components/ui/misc.tsx";
 import { CircleProgress } from "../components/ui/progress.tsx";
 import { cn } from "../lib/utils.ts";
+import { ProtocolTab } from "../features/learn/ProtocolTab.tsx";
 
 export function LearnPage() {
   const [params, setParams] = useSearchParams();
@@ -38,6 +39,7 @@ export function LearnPage() {
           <TabsTrigger value="enciclopedia">📕 Enciclopédia</TabsTrigger>
           <TabsTrigger value="guia">📚 Guia completo</TabsTrigger>
           <TabsTrigger value="gerador">🧰 Gerador de código</TabsTrigger>
+          <TabsTrigger value="protocolo">📜 Protocolo</TabsTrigger>
         </TabsList>
         <TabsContent value="circuitos">
           <CircuitosTab />
@@ -53,6 +55,9 @@ export function LearnPage() {
         </TabsContent>
         <TabsContent value="gerador">
           <GeradorTab />
+        </TabsContent>
+        <TabsContent value="protocolo">
+          <ProtocolTab />
         </TabsContent>
       </Tabs>
     </div>

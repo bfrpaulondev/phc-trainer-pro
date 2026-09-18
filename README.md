@@ -66,12 +66,17 @@ Abra http://localhost:5173 → **Criar conta** → **Equipa** → _crie a equipa
 - Equipa: painel comparativo do formador · chaves de IA cifradas · estado dos fornecedores
 - IA: chat/explicações com persona Professor Einstein + contexto da empresa/país/gama + mini-RAG da Enciclopédia — router no servidor
 - Voz: TTS via servidor (Gemini/ElevenLabs/Groq) com cache IndexedDB + fallback navegador
+- **Modo Foco**: wizard passo-a-passo (🔊 ouvir → 🧠 explicar → ✅ feito) → provas → perguntas → repetição
+- **Mascote Professor Einstein**: SVG animado (pisca, fala, "pensa" nas chamadas de IA, festeja), dicas por página, clique abre o **chat global** com contexto da missão
+- **Aula guiada**: explicação parágrafo-a-parágrafo com voz, auto-avanço, cache e modo económico
+- **Onboarding/entrevista de IA**: wizard 4 passos (segmento → empresa → objetivos → curso) que gera o plano personalizado (com fallback offline por segmento); abre automaticamente na 1ª sessão
+- **Protocolo de treino** (regras, metas de tempo, áudio de boas-vindas) + export CSV das provas
 - **Importação do progresso do app legado** (Definições → 💾 Importar) e exportação JSON
 - 40 testes unitários/API a passar · CI GitHub Actions
 
 ### 🛣 Próximos passos (ver docs/MIGRACAO.md)
 
-Modo Foco (wizard passo-a-passo) · mascote Einstein animado · onboarding/entrevista de IA · aula guiada parágrafo-a-parágrafo · PWA/offline na v6 · E2E Playwright com browsers · deploy Vercel+Render+Atlas.
+~~Modo Foco · mascote · aula guiada · onboarding/entrevista~~ ✅ **Fase 2 concluída** — resta: PWA/offline na v6 · E2E Playwright com browsers no CI · deploy Vercel+Render+Atlas (Fases 3–4).
 
 ### 📄 Licença
 

@@ -91,13 +91,22 @@ export interface SegmentCompany {
   [key: string]: unknown;
 }
 
+export interface SegmentPlan {
+  /** frase de foco do curso para o segmento */
+  nota: string;
+  /** missões prioritárias (ids L##) */
+  destaques: string[];
+}
+
 export interface Segment {
   id: string;
   ico: string;
   nome: string;
   desc: string;
   empresa: SegmentCompany;
-  [key: string]: unknown;
+  phcForte?: string;
+  futuro?: string;
+  plano: SegmentPlan;
 }
 
 export interface GlossaryTerm {
