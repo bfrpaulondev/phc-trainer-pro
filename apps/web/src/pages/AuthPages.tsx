@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, registerSchema } from "@phc/shared";
@@ -118,6 +118,8 @@ export function LoginPage() {
 export function RegisterPage() {
   const registerUser = useSession((s) => s.register);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const joinCode = searchParams.get("join");
   const [serverError, setServerError] = useState<string | null>(null);
   const {
     register,
@@ -139,7 +141,7 @@ export function RegisterPage() {
           setServerError(null);
           try {
             await registerUser(v.name, v.email, v.password);
-            navigate("/", { replace: true });
+            navigate(joinCode ? `/entrar/${joinCode}` : "/", { replace: true });
           } catch (e) {
             setServerError((e as Error).message);
           }

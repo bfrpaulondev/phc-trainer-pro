@@ -102,7 +102,22 @@ metaRouter.post("/import-legacy", validate(legacyImportSchema), async (req, res)
 
   // definições: apenas campos conhecidos (as chaves de IA do legado são descartadas)
   const settings = settingsSchema.safeParse(legacy.settings ?? {});
-  if (settings.success) merged.settings = { ...merged.settings, ...settings.data };
+  if (settings.success) {
+    const KNOWN = new Set([
+      "tts",
+      "rate",
+      "economy",
+      "ttsProvider",
+      "gmVoice",
+      "gmModel",
+      "elVoice",
+      "grVoice",
+      "ttsFallback",
+      "freeMode",
+    ]);
+    const clean = Object.fromEntries(Object.entries(settings.data).filter(([k]) => KNOWN.has(k)));
+    merged.settings = { ...merged.settings, ...clean } as typeof merged.settings;
+  }
 
   if (typeof legacy.dbSchema === "string") merged.dbSchema = legacy.dbSchema.slice(0, 24000);
   if (legacy.ai && typeof legacy.ai === "object") {

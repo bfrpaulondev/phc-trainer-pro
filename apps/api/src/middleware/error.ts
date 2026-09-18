@@ -1,5 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
+import * as Sentry from "@sentry/node";
 import { ApiError } from "../lib/errors.ts";
+import { env } from "../config/env.ts";
 
 export function notFoundHandler(req: Request, res: Response): void {
   res.status(404).json({ error: "Rota não encontrada", path: req.originalUrl });
@@ -36,5 +38,6 @@ export function errorHandler(
     return;
   }
   console.error("[api] erro não tratado:", err);
+  if (env.SENTRY_DSN) Sentry.captureException(err);
   res.status(500).json({ error: "Erro interno do servidor." });
 }

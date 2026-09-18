@@ -6,6 +6,7 @@ import { JourneyPage } from "./pages/JourneyPage.tsx";
 import { MissionsPage } from "./pages/MissionsPage.tsx";
 import { MissionDetailPage } from "./pages/MissionDetailPage.tsx";
 import { useSession } from "./stores/session.ts";
+import { JoinPage } from "./features/team/JoinPage.tsx";
 import { Spinner } from "./components/ui/misc.tsx";
 
 // code-splitting: páginas pesadas (conteúdo embutido) carregam sob demanda
@@ -72,6 +73,7 @@ export default function App() {
             </GuestOnly>
           }
         />
+        <Route path="/entrar/:code" element={<JoinPage />} />
         <Route
           path="/"
           element={

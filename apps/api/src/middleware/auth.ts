@@ -2,6 +2,7 @@ import type { NextFunction, Request, RequestHandler, Response } from "express";
 import type { ZodType } from "zod";
 import { z } from "zod";
 import { badRequest, forbidden, unauthorized } from "../lib/errors.ts";
+import { User } from "../models/User.ts";
 import { verifyAccessToken, type AccessClaims } from "../lib/jwt.ts";
 
 declare global {
@@ -19,15 +20,27 @@ function bearer(req: Request): string | null {
   return null;
 }
 
-/** exige access token válido */
-export function requireUser(req: Request, _res: Response, next: NextFunction): void {
+/**
+ * Exige access token válido e revalida o utilizador contra a BD —
+ * role/teamId são sempre atuais (o token pode ter claims desatualizados
+ * após criar/entrar/sair de equipa).
+ */
+export async function requireUser(req: Request, _res: Response, next: NextFunction): Promise<void> {
   const token = bearer(req);
   if (!token) throw unauthorized("Token de acesso em falta.");
+  let claims;
   try {
-    req.auth = verifyAccessToken(token);
+    claims = verifyAccessToken(token);
   } catch {
     throw unauthorized();
   }
+  const user = await User.findById(claims.sub).lean();
+  if (!user) throw unauthorized("Utilizador não encontrado.");
+  req.auth = {
+    sub: String(user._id),
+    role: user.role,
+    teamId: user.teamId ? String(user.teamId) : null,
+  };
   next();
 }
 

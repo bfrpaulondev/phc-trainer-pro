@@ -106,8 +106,9 @@ function NoTeam({ onDone }: { onDone: () => Promise<void> }) {
             <CardTitle>👨‍💻 Sou técnico — entrar com código</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            <Label>Código de convite</Label>
+            <Label htmlFor="join-code">Código de convite</Label>
             <Input
+              id="join-code"
               value={code}
               onChange={(e) => setCode(e.target.value.toUpperCase())}
               placeholder="Ex.: K7M2QX9P"
@@ -184,6 +185,19 @@ function TeamView({
               <Button
                 size="icon"
                 variant="ghost"
+                title="Copiar link de convite"
+                onClick={() => {
+                  navigator.clipboard.writeText(
+                    `${window.location.origin}/entrar/${team.inviteCode}`,
+                  );
+                  toast.success("Link de convite copiado!");
+                }}
+              >
+                <Copy className="h-4 w-4 text-info" />
+              </Button>
+              <Button
+                size="icon"
+                variant="ghost"
                 title="Gerar novo código"
                 onClick={async () => {
                   await apiFetch(`/api/teams/${teamId}/rotate-invite`, { method: "POST" });
@@ -232,7 +246,11 @@ function TeamView({
                 </THead>
                 <TBody>
                   {dash.data.members.map((m: MemberSummary) => (
-                    <TR key={m.userId} className={cnRow(m.name === userName)}>
+                    <TR
+                      key={m.userId}
+                      className={cnRow(m.name === userName)}
+                      data-testid="member-row"
+                    >
                       <TD>
                         <b>{m.name}</b>
                         {m.role === "trainer" && (

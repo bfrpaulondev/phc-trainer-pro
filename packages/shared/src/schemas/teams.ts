@@ -64,7 +64,7 @@ export const aiKeyNameSchema = z.enum(aiKeyNames);
 
 export const teamAiSettingsSchema = z.object({
   /** chave por fornecedor; string vazia apaga */
-  keys: z.record(aiKeyNameSchema, z.string().max(300)).optional(),
+  keys: z.partialRecord(aiKeyNameSchema, z.string().max(300)).optional(),
   order: z.array(aiProviderIdSchema).max(8).optional(),
 });
 export type TeamAiSettingsInput = z.infer<typeof teamAiSettingsSchema>;

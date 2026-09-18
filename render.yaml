@@ -1,0 +1,38 @@
+# Render Blueprint — deploy da API em 1 clique (New → Blueprint → escolher repo)
+# Docs: https://render.com/docs/blueprint-spec
+services:
+  - type: web
+    name: phc-trainer-api
+    runtime: node
+    plan: free
+    region: oregon # troque para frankfurt se preferir UE
+    buildCommand: corepack enable && pnpm install --frozen-lockfile
+    startCommand: pnpm --filter @phc/api start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: NODE_ENV
+        value: production
+      - key: MONGODB_URI
+        sync: false # cole a URI do Atlas (mongodb+srv://...)
+      - key: JWT_ACCESS_SECRET
+        generateValue: true
+      - key: JWT_REFRESH_SECRET
+        generateValue: true
+      - key: ENCRYPTION_KEY
+        generateValue: true
+      - key: CORS_ORIGIN
+        sync: false # https://<a-sua-web>.vercel.app
+      - key: ACCESS_TTL
+        value: 15m
+      - key: REFRESH_TTL_DAYS
+        value: "30"
+      - key: SENTRY_DSN
+        sync: false # opcional
+      - key: AI_KEY_GROQ
+        sync: false # opcionais — chaves globais de fallback
+      - key: AI_KEY_GEMINI
+        sync: false
+      - key: AI_KEY_NVIDIA
+        sync: false

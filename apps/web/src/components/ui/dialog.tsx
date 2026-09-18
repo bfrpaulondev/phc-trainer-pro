@@ -18,6 +18,7 @@ export function Dialog({
   className?: string;
   wide?: boolean;
 }) {
+  const titleId = React.useId();
   React.useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
@@ -38,6 +39,7 @@ export function Dialog({
       <div
         role="dialog"
         aria-modal="true"
+        aria-labelledby={title ? titleId : undefined}
         className={cn(
           "relative z-10 max-h-[88vh] w-full overflow-y-auto rounded-lg border border-border bg-card p-5 shadow-xl",
           wide ? "max-w-3xl" : "max-w-lg",
@@ -45,7 +47,9 @@ export function Dialog({
         )}
       >
         <div className="mb-3 flex items-start justify-between gap-4">
-          <h3 className="text-base font-semibold text-accent">{title}</h3>
+          <h3 id={titleId} className="text-base font-semibold text-accent">
+            {title}
+          </h3>
           <Button variant="ghost" size="icon" onClick={onClose} aria-label="Fechar">
             <X className="h-4 w-4" />
           </Button>

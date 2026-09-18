@@ -13,6 +13,14 @@ Alvo: **Web na Vercel** (ou Cloudflare Pages) · **API no Render** (ou Railway) 
 
 ## 2. API no Render
 
+### Opção A — Blueprint (recomendado, 1 clique)
+
+https://render.com → **New → Blueprint** → escolher o repo → o `render.yaml` na raiz cria o
+serviço com healthcheck, segredos gerados automaticamente (JWT ×2 + ENCRYPTION_KEY) e as
+variáveis marcadas `sync: false` para preencher: **MONGODB_URI** e **CORS_ORIGIN**.
+
+### Opção B — manual
+
 1. https://render.com → **New → Web Service** → repo `bfrpaulondev/phc-trainer-pro`.
 2. Configuração:
    - **Root Directory:** `apps/api`
@@ -33,7 +41,9 @@ Alvo: **Web na Vercel** (ou Cloudflare Pages) · **API no Render** (ou Railway) 
      Gere segredos com: `node -e "console.log(require('crypto').randomBytes(48).toString('base64url'))"`
 3. Deploy → teste `https://<api>.onrender.com/api/health` → `{"ok":true,...,"mongo":true}`.
 
-> **Alternativa Railway:** mesmo processo (New Project → repo → root `apps/api` → variáveis).
+> **Alternativa Railway/Docker:** o repositório inclui `apps/api/Dockerfile` (imagem node:22-slim,
+> runtime tsx, healthcheck integrado). Railway: New Project → repo →Detetar Dockerfile → variáveis.
+> Build local: `docker build -f apps/api/Dockerfile -t phc-api . && docker run --rm -p 4000:4000 --env-file apps/api/.env phc-api`
 
 ## 3. Web na Vercel
 
@@ -53,7 +63,23 @@ localStorage e envia-o por header — funciona mesmo onde cookies 3rd-party são
 1. sentry.io → dois projetos: `phc-api` (Node/Express) e `phc-web` (React).
 2. `SENTRY_DSN` no Render · `VITE_SENTRY_DSN` na Vercel. Sem DSN, nada é inicializado.
 
-## 5. Smoke test pós-deploy
+## 5. Testes antes/depois do deploy
+
+```bash
+# unitários + build (rápido)
+pnpm test && pnpm build
+
+# validação HTTP do fluxo completo (39 verificações: auth, equipas, SRS, chaves cifradas,
+# rotação de tokens, import legado) — sobe Mongo em memória + API automaticamente
+pnpm --filter @phc/api mongo:dev &   # ou Mongo local/Atlas via MONGODB_URI
+node scripts/api-flow-test.mjs
+
+# E2E Playwright (6 testes com browser real; requer `pnpm build` antes e ~2 GB RAM livres)
+pnpm --filter @phc/web exec playwright install --with-deps chromium   # 1ª vez
+pnpm test:e2e
+```
+
+## 6. Smoke test pós-deploy
 
 ```bash
 curl https://<api>.onrender.com/api/health
@@ -61,7 +87,13 @@ curl https://<api>.onrender.com/api/meta/content-stats   # labs:90, cards:139...
 # na web: criar conta → criar equipa → colar 1 chave (Groq grátis) → 🧠 Explicar numa missão
 ```
 
-## 6. Legado (GitHub Pages)
+## 7. Convites por link
+
+O formador copia em 👥 Equipa o **link de convite** `https://<web>/entrar/CODE`. Quem abrir:
+com sessão → entra automaticamente na equipa; sem sessão → registo preservando o código
+(`?join=CODE`) e entrada automática no fim.
+
+## 8. Legado (GitHub Pages)
 
 O PWA v5.3 continua publicado a partir da **raiz do repo** (Settings → Pages → main / root).
 Mantenha-o até ao corte final da v6 (ver `docs/MIGRACAO.md`). Depois do corte: mover legado

@@ -22,6 +22,11 @@ export default tseslint.config(
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
+    // scripts utilitários em JS puro (ex.: apps/api/scripts/dev-mongo.mjs)
+    files: ["**/*.{js,mjs,cjs}"],
+    languageOptions: { globals: { ...globals.node } },
+  },
+  {
     files: ["**/*.{ts,tsx}"],
     plugins: { "react-hooks": reactHooks },
     languageOptions: {

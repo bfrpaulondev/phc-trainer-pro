@@ -72,11 +72,14 @@ Abra http://localhost:5173 → **Criar conta** → **Equipa** → _crie a equipa
 - **Onboarding/entrevista de IA**: wizard 4 passos (segmento → empresa → objetivos → curso) que gera o plano personalizado (com fallback offline por segmento); abre automaticamente na 1ª sessão
 - **Protocolo de treino** (regras, metas de tempo, áudio de boas-vindas) + export CSV das provas
 - **Importação do progresso do app legado** (Definições → 💾 Importar) e exportação JSON
-- 40 testes unitários/API a passar · CI GitHub Actions
+- **Convite por link** (`/entrar/CODE`) + código de 8 caracteres
+- 40 testes unitários/API + **validação HTTP de 39 pontos do fluxo completo** (`scripts/api-flow-test.mjs`) + **6 E2E Playwright** no CI · Sentry (api+web) pronto · deploy pronto: `render.yaml` (blueprint 1-clique), `apps/api/Dockerfile`, `apps/web/vercel.json`
 
 ### 🛣 Próximos passos (ver docs/MIGRACAO.md)
 
-~~Modo Foco · mascote · aula guiada · onboarding/entrevista~~ ✅ **Fase 2 concluída** — resta: PWA/offline na v6 · E2E Playwright com browsers no CI · deploy Vercel+Render+Atlas (Fases 3–4).
+✅ **Fase 2 concluída** (Modo Foco · mascote · aula guiada · onboarding/entrevista · protocolo · CSV)
+✅ **Fase 3 concluída** (deploy blueprint/Docker/Vercel · E2E no CI · convite por link · Sentry · hardening)
+**Fase 4:** executar o deploy real (guias em `docs/DEPLOY.md`) + teste piloto com a equipa + PWA/offline na v6 + corte do legado.
 
 ### 📄 Licença
 

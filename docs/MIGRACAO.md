@@ -52,9 +52,12 @@
    IA no servidor, conteúdo extraído, páginas nucleares, CI.
 2. **Iteração 2 (FEITA):** Modo Foco + mascote + aula guiada + chat global + onboarding/entrevista
    - protocolo + CSV → paridade funcional de estudo com o legado.
-3. **Iteração 3:** deploy completo (Atlas + Render + Vercel) + PWA/offline + E2E no CI +
-   convite por link/e-mail.
-4. **Corte:** anunciar no legado (banner), migrar utilizadores (import JSON), mover raiz do repo
+3. **Iteração 3 (FEITA — infraestrutura):** deploy pronto (render.yaml blueprint, Dockerfile,
+   vercel.json c/ headers), E2E no CI, validação HTTP de 39 pontos (`scripts/api-flow-test.mjs`),
+   convite por link (`/entrar/CODE`), Sentry api+web, claims sempre frescos (role/equipa por BD).
+   **Falta: executar o deploy real + teste piloto** (contas Atlas/Render/Vercel do dono do projeto).
+4. **Iteração 4 (seguinte):** PWA/offline na v6 (vite-plugin-pwa + fila de sync) → corte:
+   anunciar no legado (banner), migrar utilizadores (import JSON), mover raiz do repo
    para `legacy/` ou desligar Pages.
 
 ## Como voltar a extrair conteúdo do legado
