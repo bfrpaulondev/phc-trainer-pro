@@ -1,0 +1,99 @@
+import { Router } from "express";
+import {
+  aiChatRequestSchema,
+  buildSystemPrompt,
+  contextFromProgress,
+  missionContext,
+  ttsRequestSchema,
+} from "@phc/shared";
+import { labById, theoryFor } from "@phc/content";
+import { badRequest } from "../lib/errors.ts";
+import { Team } from "../models/Team.ts";
+import { getOrCreateProgress } from "../models/Progress.ts";
+import { requireUser, validate } from "../middleware/auth.ts";
+import { routeChat, providersStatus, DEFAULT_ORDER } from "../services/aiRouter.ts";
+import { resolveTeamKeys } from "./teams.ts";
+import { elevenlabsTts, geminiTts, groqTts } from "../services/tts.ts";
+import { globalAiKeys } from "../config/env.ts";
+
+export const aiRouter = Router();
+aiRouter.use(requireUser);
+
+async function resolveKeysAndOrder(teamId: string | null, userId: string) {
+  const team = teamId ? await Team.findById(teamId) : null;
+  const keys = resolveTeamKeys(team);
+  return {
+    keys,
+    order: team?.aiOrder?.length ? team.aiOrder : DEFAULT_ORDER,
+    scope: team ? `team:${team._id}` : `user:${userId}`,
+  };
+}
+
+/** GET /api/ai/providers — estado dos fornecedores (configurado? origem? pausa?) */
+aiRouter.get("/providers", async (req, res) => {
+  const { keys, scope } = await resolveKeysAndOrder(req.auth!.teamId, req.auth!.sub);
+  res.json({ providers: providersStatus(keys, scope) });
+});
+
+/**
+ * POST /api/ai/chat — tutor de IA com auto-router no servidor.
+ * Se a primeira mensagem não for system, o servidor injeta a persona do
+ * Professor Einstein + contexto da empresa/país/gama do aluno + missão (labId).
+ */
+aiRouter.post("/chat", validate(aiChatRequestSchema), async (req, res) => {
+  const { messages, maxTokens, code, kind, labId } = req.body as ReturnType<
+    typeof aiChatRequestSchema.parse
+  >;
+  if (!messages.length) throw badRequest("Mensagens vazias.");
+
+  const progress = await getOrCreateProgress(req.auth!.sub);
+  if (progress.state.settings.economy && kind !== "generate") {
+    throw badRequest("Modo económico ativo — a IA está desligada para este aluno (Definições).");
+  }
+
+  const finalMessages = [...messages];
+  if (finalMessages[0]?.role !== "system") {
+    let sys = buildSystemPrompt(contextFromProgress(progress.state));
+    if (labId) {
+      const lab = labById(labId);
+      if (lab) sys += "\n\n" + missionContext(lab, theoryFor(labId));
+    }
+    finalMessages.unshift({ role: "system", content: sys });
+  }
+
+  const { keys, order, scope } = await resolveKeysAndOrder(req.auth!.teamId, req.auth!.sub);
+  const out = await routeChat({ scope, keys, order, messages: finalMessages, maxTokens, code });
+
+  // métricas leves no progresso (xp de chats)
+  progress.state.stats.chats = (progress.state.stats.chats || 0) + 1;
+  progress.markModified("state");
+  await progress.save().catch(() => undefined);
+
+  res.json({ text: out.text, provider: out.provider, cached: false });
+});
+
+/** POST /api/ai/tts — voz do Professor (Gemini/ElevenLabs/Groq) no servidor */
+aiRouter.post("/tts", validate(ttsRequestSchema), async (req, res) => {
+  const { text, provider, voice, model } = req.body as ReturnType<typeof ttsRequestSchema.parse>;
+  const { keys } = await resolveKeysAndOrder(req.auth!.teamId, req.auth!.sub);
+  if (provider === "gemini") {
+    const key = keys.gemini;
+    if (!key) throw badRequest("Chave Gemini não configurada (Definições → IA da equipa).");
+    res.json(await geminiTts(key, text, voice || "Sulafat", model));
+    return;
+  }
+  if (provider === "elevenlabs") {
+    const key = keys.elevenlabs;
+    if (!key) throw badRequest("Chave ElevenLabs não configurada.");
+    res.json(await elevenlabsTts(key, text, voice));
+    return;
+  }
+  const key = keys.groq;
+  if (!key) throw badRequest("Chave Groq não configurada.");
+  res.json(await groqTts(key, text, voice || "troy"));
+});
+
+/** GET /api/ai/status — resumo rápido (chaves globais ativas no servidor) */
+aiRouter.get("/status", (_req, res) => {
+  res.json({ globalKeys: Object.keys(globalAiKeys) });
+});

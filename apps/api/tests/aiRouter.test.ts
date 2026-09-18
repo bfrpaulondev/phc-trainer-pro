@@ -1,0 +1,80 @@
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { DEFAULT_ORDER, __test, routeChat } from "../src/services/aiRouter.ts";
+
+const KEYS = {
+  groq: "gsk_teste",
+  gemini: "gm_teste",
+  nvidia: "nvapi_teste",
+  mistral: "ms_teste",
+};
+
+function mockJsonResponse(body: unknown, status = 200) {
+  return vi.fn(
+    async () =>
+      ({
+        ok: status < 400,
+        status,
+        json: async () => body,
+        text: async () => JSON.stringify(body),
+      }) as unknown as globalThis.Response,
+  );
+}
+
+afterEach(() => {
+  __test.cooldowns.clear();
+  vi.unstubAllGlobals();
+});
+
+describe("routeChat", () => {
+  const msgs = [{ role: "user", content: "diga OK" }];
+
+  it("usa o 1º fornecedor saudável com chave", async () => {
+    vi.stubGlobal(
+      "fetch",
+      mockJsonResponse({ choices: [{ message: { content: "OK via groq" } }] }),
+    );
+    const r = await routeChat({ scope: "team:t1", keys: KEYS, messages: msgs });
+    expect(r.provider).toBe("groq");
+    expect(r.text).toBe("OK via groq");
+  });
+
+  it("402 põe em pausa (3h) e salta para o seguinte", async () => {
+    const responses = [
+      { ok: false, status: 402, json: async () => ({}), text: async () => "payment required" },
+      {
+        ok: true,
+        status: 200,
+        json: async () => ({ candidates: [{ content: { parts: [{ text: "OK via gemini" }] } }] }),
+        text: async () => "",
+      },
+    ];
+    let i = 0;
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => responses[Math.min(i++, 1)] as unknown as globalThis.Response),
+    );
+    const r = await routeChat({ scope: "team:t2", keys: KEYS, messages: msgs });
+    expect(r.provider).toBe("gemini");
+    expect(__test.isHealthy("team:t2", "groq")).toBe(false);
+  });
+
+  it("sem chaves → 502 com diagnóstico", async () => {
+    await expect(routeChat({ scope: "team:t3", keys: {}, messages: msgs })).rejects.toMatchObject({
+      status: 502,
+    });
+  });
+
+  it("modo código prioriza nvidia/mistral", async () => {
+    vi.stubGlobal(
+      "fetch",
+      mockJsonResponse({ choices: [{ message: { content: "select top 10 * from ft" } }] }),
+    );
+    const r = await routeChat({ scope: "team:t4", keys: KEYS, messages: msgs, code: true });
+    expect(r.provider).toBe("nvidia");
+  });
+
+  it("ordem por omissão começa nos rápidos", () => {
+    expect(DEFAULT_ORDER[0]).toBe("groq");
+    expect(DEFAULT_ORDER).toContain("nvidia");
+  });
+});
