@@ -10,6 +10,7 @@ import { ChatDrawer } from "../../features/chat/ChatDrawer.tsx";
 import { FocusModal } from "../../features/focus/FocusModal.tsx";
 import { LessonDrawer } from "../../features/lesson/LessonDrawer.tsx";
 import { OnboardModal, useOnboard } from "../../features/onboard/OnboardModal.tsx";
+import { initNetworkListeners, useSync } from "../../stores/sync.ts";
 
 /** bootstrap de sessão + guarda de rotas autenticadas */
 export function RequireAuth({ children }: { children?: React.ReactNode }) {
@@ -56,6 +57,11 @@ function OnboardGate() {
 }
 
 export function AppLayout() {
+  useEffect(() => initNetworkListeners(), []);
+  const refreshSync = useSync((s) => s.refresh);
+  useEffect(() => {
+    refreshSync();
+  }, [refreshSync]);
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <AppHeader />

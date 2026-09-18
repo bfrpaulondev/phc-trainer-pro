@@ -1,5 +1,5 @@
 /* PHC Trainer Pro — service worker (offline-first) */
-var CACHE = 'phc-trainer-v14';
+var CACHE = 'phc-trainer-v15';
 var CDN = [
   'https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.production.min.js',
   'https://cdn.jsdelivr.net/npm/react-dom@18.3.1/umd/react-dom.production.min.js',

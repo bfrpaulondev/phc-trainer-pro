@@ -2773,5 +2773,31 @@ if("serviceWorker" in navigator && location.protocol.indexOf("http")===0){
 }
 setTimeout(function(){if(!window.PHC_TRAINER_READY){var h=document.getElementById("bootHint");if(h)h.style.display="block"}},12000);
 </script>
+<script>
+/* ===== Banner de migração v6 — ativa-se editando migrate.json (enabled:true + url) ===== */
+(function(){
+  try{
+    fetch("migrate.json?ts="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){
+      if(!j||!j.enabled||!j.url||!/^https?:\/\//.test(String(j.url)))return;
+      var d=document.createElement("div");
+      d.setAttribute("role","banner");
+      d.style.cssText="position:fixed;top:0;left:0;right:0;z-index:9999;background:#0f2e1f;border-bottom:2px solid #3ddc84;color:#d9ffe9;font:14px 'Segoe UI',system-ui,sans-serif;padding:10px 16px;display:flex;gap:12px;align-items:center;justify-content:center;flex-wrap:wrap;box-shadow:0 4px 18px rgba(0,0,0,.4)";
+      var msg=document.createElement("span");
+      msg.textContent=String(j.message||"🚀 Chegou o PHC Trainer Pro v6 — multiutilizador, com contas e equipas.");
+      var a=document.createElement("a");
+      a.href=String(j.url);
+      a.textContent=String(j.cta||"Migrar agora →");
+      a.style.cssText="background:#3ddc84;color:#06281a;padding:6px 14px;border-radius:8px;font-weight:700;text-decoration:none;white-space:nowrap";
+      var x=document.createElement("button");
+      x.textContent="✕";x.title="Fechar";
+      x.style.cssText="background:transparent;border:1px solid #3ddc8455;color:#9fe8b8;border-radius:6px;padding:2px 8px;cursor:pointer";
+      x.onclick=function(){d.remove();try{sessionStorage.setItem("phcMigBanner","1")}catch(e){}};
+      d.appendChild(msg);d.appendChild(a);d.appendChild(x);
+      var hidden=false;try{hidden=sessionStorage.getItem("phcMigBanner")==="1"}catch(e){}
+      if(!hidden)document.body.appendChild(d);
+    }).catch(function(){});
+  }catch(e){}
+})();
+</script>
 </body>
 </html>

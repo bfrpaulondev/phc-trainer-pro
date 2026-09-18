@@ -56,9 +56,12 @@
    vercel.json c/ headers), E2E no CI, validação HTTP de 39 pontos (`scripts/api-flow-test.mjs`),
    convite por link (`/entrar/CODE`), Sentry api+web, claims sempre frescos (role/equipa por BD).
    **Falta: executar o deploy real + teste piloto** (contas Atlas/Render/Vercel do dono do projeto).
-4. **Iteração 4 (seguinte):** PWA/offline na v6 (vite-plugin-pwa + fila de sync) → corte:
-   anunciar no legado (banner), migrar utilizadores (import JSON), mover raiz do repo
-   para `legacy/` ou desligar Pages.
+4. **Iteração 4 (FEITA — código):** PWA/offline na v6 (vite-plugin-pwa + fila de sync + indicador
+   offline) e **banner de migração embutido no legado** (adormecido; ativa-se editando `migrate.json`
+   na raiz — `enabled:true` + URL da v6; sw.js bumped para v15).
+
+5. **Corte final (depende do dono do projeto):** checklist completa em **`FAZER-DEPOIS.md`**
+   (deploy → piloto → ativar banner → desligar Pages / mover raiz para `legacy/`).
 
 ## Como voltar a extrair conteúdo do legado
 

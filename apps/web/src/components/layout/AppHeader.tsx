@@ -8,6 +8,7 @@ import { useProgress } from "../../stores/progress.ts";
 import { Badge } from "../ui/badge.tsx";
 import { Button } from "../ui/button.tsx";
 import { cn } from "../../lib/utils.ts";
+import { useSync } from "../../stores/sync.ts";
 
 const NAV = [
   { to: "/", label: "Jornada", icon: Target, end: true },
@@ -17,6 +18,30 @@ const NAV = [
   { to: "/equipa", label: "Equipa", icon: Users },
   { to: "/definicoes", label: "Definições", icon: Settings },
 ];
+
+function SyncIndicator() {
+  const online = useSync((s) => s.online);
+  const pending = useSync((s) => s.pending);
+  const syncing = useSync((s) => s.syncing);
+  const drain = useSync((s) => s.drain);
+  if (online && pending === 0) return null;
+  return (
+    <span className="flex items-center gap-1.5">
+      {!online && (
+        <Badge variant="destructive" title="Sem ligação — as ações ficam guardadas no dispositivo">
+          📴 Offline
+        </Badge>
+      )}
+      {pending > 0 && (
+        <button onClick={() => void drain()} title="Sincronizar agora" className="cursor-pointer">
+          <Badge variant="warning">
+            {syncing ? "↻ a sincronizar…" : `☁️ ${pending} pendente(s) · sincronizar`}
+          </Badge>
+        </button>
+      )}
+    </span>
+  );
+}
 
 export function AppHeader() {
   const { user, logout } = useSession();
@@ -49,6 +74,7 @@ export function AppHeader() {
         </Link>
 
         <div className="flex items-center gap-2">
+          <SyncIndicator />
           {state && (
             <>
               <Badge variant="warning" title="Dias consecutivos">
